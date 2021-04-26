@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LMS.Grupp4.Core\LMS.Grupp4.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MapperProfiles\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Bogus" Version="33.0.2" />
+  </ItemGroup>
+
+</Project>
