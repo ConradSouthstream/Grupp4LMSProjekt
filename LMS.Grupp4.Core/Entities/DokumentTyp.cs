@@ -10,10 +10,10 @@ namespace LMS.Grupp4.Core.Entities
     {
         public int Id { get; set; }
         public string Namn { get; set; }
+        public int DokumentId { get; set; }
 
         //Navigation property
         public Dokument Dokument { get; set; }
-        public int DokumentId { get; set; }
     }
 }
 

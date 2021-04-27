@@ -13,7 +13,6 @@ namespace LMS.Grupp4.Core.Entities
 
 
         //Navigation property
-        public Aktivitet Aktivitet { get; set; }
-        public int AktivitetId { get; set; }
+        public ICollection<Aktivitet> Aktiviteter { get; set; }
     }
 }

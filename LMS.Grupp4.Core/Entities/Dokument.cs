@@ -12,16 +12,16 @@ namespace LMS.Grupp4.Core.Entities
         public string Namn { get; set; }
         public string Beskrivning { get; set; }
         public DateTime UppladdningsDatum { get; set; }
+        public int? KursId { get; set; }
+        public int? ModulId { get; set; }
+        public int? AktivitetId { get; set; }
 
         //Navigation property 
-        public virtual Anvandare Anvandare { get; set; }
-        public virtual Kurs Kurs { get; set; }
-        public int? KursId { get; set; }
+        public  Anvandare Anvandare { get; set; }
+        public Kurs Kurs { get; set; }
 
-        public virtual Modul Modul { get; set; }
-        public int? ModulId { get; set; }
-        public virtual Aktivitet  Aktivitet { get; set; }
-        public int? AktivitetId { get; set; }
+        public  Modul Modul { get; set; }
+        public  Aktivitet  Aktivitet { get; set; }
 
 
     }

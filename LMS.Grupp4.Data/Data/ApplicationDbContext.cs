@@ -8,7 +8,7 @@ using System.Text;
 
 namespace LMS.Grupp4.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<Anvandare, IdentityRole, string >
+    public class ApplicationDbContext : IdentityDbContext<Anvandare,IdentityRole,string>
     {
         public DbSet<Kurs> Kurser { get; set; }
         public DbSet<AnvandareKurs> AnvandareKurser { get; set; }
