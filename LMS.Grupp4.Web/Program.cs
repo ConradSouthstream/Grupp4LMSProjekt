@@ -25,7 +25,6 @@ namespace LMS.Grupp4.Web
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
-                // await AddAppRoles(scope.ServiceProvider);
                 var config = services.GetRequiredService<IConfiguration>();
                 var adminPW = config["AdminPw"];
                 try
