@@ -10,14 +10,13 @@ namespace LMS.Grupp4.Core.Entities
 {
     public class Anvandare : IdentityUser
     {
+        //Ärver från IdentityUserProperties
         public string EfterNamn { get; set; }
         public string ForeNamn { get; set; }
-        [NotMapped]
-        public string FullNamn => $"{ForeNamn} {EfterNamn}";
-        public string Mejl { get; set; }
-        public string Losenord { get; set; }
+        public string Avatar { get; set; }
+
         public ICollection<AnvandareKurs> Kurser { get; set; }
-        public ICollection<Dokument> Dokumenter { get; set; }
+        public ICollection<Dokument> Dokument { get; set; }
 
 
     }

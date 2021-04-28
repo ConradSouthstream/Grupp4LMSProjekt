@@ -15,11 +15,12 @@ namespace LMS.Grupp4.Core.Entities
         public int? KursId { get; set; }
         public int? ModulId { get; set; }
         public int? AktivitetId { get; set; }
+        public int? DokumentTypId { get; set; }
 
         //Navigation property 
         public  Anvandare Anvandare { get; set; }
         public Kurs Kurs { get; set; }
-
+        public DokumentTyp DokumentTyp { get; set; }
         public  Modul Modul { get; set; }
         public  Aktivitet  Aktivitet { get; set; }
 

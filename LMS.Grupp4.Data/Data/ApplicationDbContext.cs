@@ -12,6 +12,19 @@ namespace LMS.Grupp4.Data
     {
         public DbSet<Kurs> Kurser { get; set; }
         public DbSet<AnvandareKurs> AnvandareKurser { get; set; }
+        public DbSet <Anvandare>  Anvandare{ get; set; }
+        public DbSet<Dokument> Dokument { get; set; }
+        public DbSet<Modul> Moduler { get; set; }
+        public DbSet<DokumentTyp> DokumentTyper { get; set; }
+        public  DbSet<Aktivitet> Aktiviteter{ get; set; }
+
+        public DbSet<AktivitetTyp> AktivitetTyper { get; set; }
+
+
+
+
+
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

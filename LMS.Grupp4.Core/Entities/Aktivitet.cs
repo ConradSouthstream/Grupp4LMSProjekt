@@ -16,7 +16,8 @@ namespace LMS.Grupp4.Core.Entities
         public int ModulId { get; set; }
         public int AktivitetTypId { get; set; }
 
-        //Navigation property       
+        //Navigation property
+        public ICollection<Dokument> Dokument { get; set; }
         public Modul Modul { get; set; }
         public AktivitetTyp AktivitetTyp { get; set; }
 
