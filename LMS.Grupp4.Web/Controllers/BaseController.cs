@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LMS.Grupp4.Core.Enum;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace LMS.Grupp4.Web.Controllers
             if (typeOfMessageObject != null)
                 ViewBag.TypeOfMessage = typeOfMessageObject as string;
             else
-                ViewBag.TypeOfMessage = "info";
+                ViewBag.TypeOfMessage = TypeOfMessage.Info;
         }
     }
 }

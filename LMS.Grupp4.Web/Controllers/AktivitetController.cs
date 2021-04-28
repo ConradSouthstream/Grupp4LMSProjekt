@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LMS.Grupp4.Core.Entities;
+using LMS.Grupp4.Core.Enum;
 using LMS.Grupp4.Core.IRepository;
 using LMS.Grupp4.Core.ViewModels.Aktivitet;
 using LMS.Grupp4.Web.Utils;
@@ -66,6 +67,7 @@ namespace LMS.Grupp4.Web.Controllers
                 Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(id.Value);
                 if (modul != null)
                 {
+                    viewModel.ModulId = modul.ModulId;
                     viewModel.ModulNamn = modul.ModulNamn;                    
                     viewModel.ModulStartTid = modul.StartTid;
                     viewModel.ModulSlutTid = modul.SlutTid;
@@ -85,7 +87,7 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             ViewBag.Message = "Det gick inte gå till sidan för att skapa aktivitet";
-            ViewBag.TypeOfMessage = "error";
+            ViewBag.TypeOfMessage = TypeOfMessage.Error;
 
             return RedirectToAction(nameof(Index));
         }
@@ -93,18 +95,59 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(AktivitetCreateViewModel viewModel)//IFormCollection collection)
-        {
-            try
+        public ActionResult Create(AktivitetCreateViewModel viewModel)
+        {            
+            if (ModelState.IsValid)
             {
-                // TODO implementera create
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    Aktivitet aktivitet = m_Mapper.Map<Aktivitet>(viewModel);
+
+                    // TODO implementera create mot Repository
+                    // Post
+                    // https://www.c-sharpcorner.com/article/http-get-put-post-and-delete-verbs-in-asp-net-web-api/
+                    // Read = Get
+                    // Update = Put
+                    // Create = Post
+                    // Delete = Delete
+
+                    m_UnitOfWork.AktivitetRepository.PostAktivitetAsync(aktivitet);
+                    if(m_UnitOfWork.AktivitetRepository.SaveAsync())
+                    {// Vi har sparat en ny aktivitet. Redirect till listning
+                        TempData["message"] = $"Har skapat aktivitet {viewModel.AktivitetNamn}";
+                        TempData["typeOfMessage"] = TypeOfMessage.Info;
+
+                        return RedirectToAction(nameof(Index));
+                    }                    
+                }
+                catch (Exception) 
+                { }
             }
-            catch
+
+
+            // Kommer vi hit har något gått fel
+
+            ViewBag.Message = "Det gick inte skapa aktiviteten";
+            ViewBag.TypeOfMessage = TypeOfMessage.Error;
+
+            // Vi måste uppdatera viss data om modulen som inte view bindar till modellen
+            Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
+            if (modul != null)
             {
-                return View();
+                viewModel.ModulId = modul.ModulId;
+                viewModel.ModulNamn = modul.ModulNamn;
+                viewModel.ModulSlutTid = modul.SlutTid;
+                viewModel.ModulStartTid = modul.StartTid;
             }
+
+            // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
+            List<AktivitetTyp> lsAktivitetTyper = m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
+            List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, viewModel.AktivitetTypId.ToString());
+            viewModel.AktivitetTyper = lsAktivitetTyperDropDown;
+
+            return View(viewModel);
         }
+
 
         // GET: AktivitetController/Edit/5
         public ActionResult Edit(int? id)
@@ -149,7 +192,7 @@ namespace LMS.Grupp4.Web.Controllers
                         if (m_UnitOfWork.AktivitetRepository.SaveAsync())
                         {
                             TempData["message"] = $"Har uppdaterat aktivitet {viewModel.AktivitetNamn}";
-                            TempData["typeOfMessage"] = "info";
+                            TempData["typeOfMessage"] = TypeOfMessage.Info;                           
 
                             return RedirectToAction(nameof(Index));
                         }
@@ -163,12 +206,13 @@ namespace LMS.Grupp4.Web.Controllers
             // Kommer vi hit har något gått fel
 
             ViewBag.Message = "Det gick inte redigera aktiviteten";
-            ViewBag.TypeOfMessage = "error";
+            ViewBag.TypeOfMessage = TypeOfMessage.Error;
 
-            // Vi måste uppdatera viss data om modulen som inte view bindar till modelen
+            // Vi måste uppdatera viss data om modulen som inte view bindar till modellen
             Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
             if(modul != null)
             {
+                viewModel.ModulId = modul.ModulId;
                 viewModel.ModulNamn = modul.ModulNamn;
                 viewModel.ModulSlutTid = modul.SlutTid;
                 viewModel.ModulStartTid = modul.StartTid;

@@ -26,6 +26,8 @@ namespace LMS.Grupp4.Data.MapperProfiles
                 .ForMember(dest => dest.ModulSlutTid, from => from.MapFrom(ms => ms.Modul.SlutTid));
 
             CreateMap<AktivitetEditViewModel, Aktivitet>();
+
+            CreateMap<AktivitetCreateViewModel, Aktivitet>();
         }
     }
 }

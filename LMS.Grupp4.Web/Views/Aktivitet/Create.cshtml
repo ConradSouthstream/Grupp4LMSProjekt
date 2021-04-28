@@ -6,6 +6,8 @@
 
 <h1>@ViewData["Title"] </h1>
 
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
 <h4>Modul: @Model.ModulNamn - (@Model.ModulStartTid.ToShortDateString() till @Model.ModulSlutTid.ToShortDateString())</h4>
 <hr />
 <div class="row">
@@ -24,10 +26,10 @@
             </div>
 
             <!--<div class="form-group">
-        <label asp-for="AktivitetId" class="control-label"></label>
-        <input asp-for="AktivitetId" class="form-control" />
-        <span asp-validation-for="AktivitetId" class="text-danger"></span>
-    </div>-->
+                <label asp-for="AktivitetId" class="control-label"></label>
+                <input asp-for="AktivitetId" class="form-control" />
+                <span asp-validation-for="AktivitetId" class="text-danger"></span>
+            </div>-->
 
             <div class="form-group">
                 <label asp-for="AktivitetNamn" class="control-label"></label>
@@ -55,25 +57,25 @@
                 <span asp-validation-for="AktivitetTypId" class="text-danger"></span>
             </div>-->
             <!--<div class="form-group">
-        <label asp-for="ModulId" class="control-label"></label>
-        <input asp-for="ModulId" class="form-control" />
-        <span asp-validation-for="ModulId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ModulNamn" class="control-label"></label>
-        <input asp-for="ModulNamn" class="form-control" />
-        <span asp-validation-for="ModulNamn" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ModulStartTid" class="control-label"></label>
-        <input asp-for="ModulStartTid" class="form-control" />
-        <span asp-validation-for="ModulStartTid" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ModulSlutTid" class="control-label"></label>
-        <input asp-for="ModulSlutTid" class="form-control" />
-        <span asp-validation-for="ModulSlutTid" class="text-danger"></span>
-    </div>-->
+                <label asp-for="ModulId" class="control-label"></label>
+                <input asp-for="ModulId" class="form-control" />
+                <span asp-validation-for="ModulId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModulNamn" class="control-label"></label>
+                <input asp-for="ModulNamn" class="form-control" />
+                <span asp-validation-for="ModulNamn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModulStartTid" class="control-label"></label>
+                <input asp-for="ModulStartTid" class="form-control" />
+                <span asp-validation-for="ModulStartTid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModulSlutTid" class="control-label"></label>
+                <input asp-for="ModulSlutTid" class="form-control" />
+                <span asp-validation-for="ModulSlutTid" class="text-danger"></span>
+            </div>-->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

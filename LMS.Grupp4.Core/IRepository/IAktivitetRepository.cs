@@ -41,5 +41,11 @@ namespace LMS.Grupp4.Core.IRepository
         /// </summary>
         /// <param name="aktivitet">Referense till Aktivitet som skall uppdateras</param>
         void PutAktivitetAsync(Aktivitet aktivitet);
+
+        /// <summary>
+        /// Metoden skapar en ny aktivitet
+        /// </summary>
+        /// <param name="aktivitet">Referense till Aktivitet som skall skapas</param>
+        void PostAktivitetAsync(Aktivitet aktivitet);
     }
 }

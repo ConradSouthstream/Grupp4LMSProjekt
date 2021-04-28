@@ -1,6 +1,8 @@
-﻿@if (ViewBag.Message != null)
+﻿@using LMS.Grupp4.Core.Enum;
+
+@if (ViewBag.Message != null)
 {
-    if (ViewBag.TypeOfMessage != null && ViewBag.TypeOfMessage == "error")
+    if (ViewBag.TypeOfMessage != null && ViewBag.TypeOfMessage == TypeOfMessage.Error) //"error")
     {
         <div class="alert alert-danger" role="alert">
             @ViewBag.Message

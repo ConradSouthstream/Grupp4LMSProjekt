@@ -75,8 +75,25 @@ namespace LMS.Grupp4.Data.Repositories
         /// <param name="aktivitet">Referense till Aktivitet som skall uppdateras</param>
         public void PutAktivitetAsync(Aktivitet aktivitet)
         {
+            if (aktivitet is null)
+                throw new ArgumentNullException("AktivitetRepository.PutAktivitetAsync. Refernsen till Aktiviter är null");
+
             // TODO
             throw new NotImplementedException("AktivitetRepository -> PutAktivitetAsync");
+        }
+
+
+        /// <summary>
+        /// Metoden skapar en ny aktivitet
+        /// </summary>
+        /// <param name="aktivitet">Referense till Aktivitet som skall skapas</param>
+        public void PostAktivitetAsync(Aktivitet aktivitet)
+        {
+            if (aktivitet is null)
+                throw new ArgumentNullException("AktivitetRepository.PostAktivitetAsync. Refernsen till Aktiviter är null");
+
+            // TODO
+            throw new NotImplementedException("AktivitetRepository -> PostAktivitetAsync");
         }
 
 
