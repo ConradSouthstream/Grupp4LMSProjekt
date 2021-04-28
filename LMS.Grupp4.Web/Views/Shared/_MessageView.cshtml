@@ -1,0 +1,15 @@
+﻿@if (ViewBag.Message != null)
+{
+    if (ViewBag.TypeOfMessage != null && ViewBag.TypeOfMessage == "error")
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+}

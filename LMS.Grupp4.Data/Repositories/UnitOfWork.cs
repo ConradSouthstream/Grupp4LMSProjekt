@@ -19,6 +19,11 @@ namespace LMS.Grupp4.Data.Repositories
         public IAktivitetRepository AktivitetRepository { get; private set; }
 
         /// <summary>
+        /// Repository för Modul
+        /// </summary>
+        public IModulRepository ModulRepository { get; private set; }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         /// <param name="applicationDbContext">Referense till context</param>
@@ -27,6 +32,7 @@ namespace LMS.Grupp4.Data.Repositories
             m_dbContext = applicationDbContext;
 
             AktivitetRepository = new AktivitetRepository(m_dbContext);
+            ModulRepository = new ModulRepository(m_dbContext);
         }
 
 
@@ -34,9 +40,12 @@ namespace LMS.Grupp4.Data.Repositories
         /// Metod som skall spara uppdaterad data i repositories
         /// </summary>
         /// <returns>Task</returns>
-        public async Task CompleteAsync()
+        //public async Task CompleteAsync()
+        public bool CompleteAsync()
         {
-            await AktivitetRepository.SaveAsync();
+            // TODO Fixa async
+            //await AktivitetRepository.SaveAsync();
+            return AktivitetRepository.SaveAsync();
         }
     }
 }

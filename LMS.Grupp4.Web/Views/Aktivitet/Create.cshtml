@@ -1,0 +1,90 @@
+﻿@model LMS.Grupp4.Core.ViewModels.Aktivitet.AktivitetCreateViewModel
+
+@{
+    ViewData["Title"] = "Skapa aktivitet";
+}
+
+<h1>@ViewData["Title"] </h1>
+
+<h4>Modul: @Model.ModulNamn - (@Model.ModulStartTid.ToShortDateString() till @Model.ModulSlutTid.ToShortDateString())</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div>
+                <input type="hidden" asp-for="ModulId" />
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="AktivitetTypId" class="control-label">Aktivitettyp</label>
+                @Html.DropDownList("AktivitetTypId", Model.AktivitetTyper, new { @class = "form-control" })
+                <span asp-validation-for="AktivitetTypId" class="text-danger"></span>
+            </div>
+
+            <!--<div class="form-group">
+        <label asp-for="AktivitetId" class="control-label"></label>
+        <input asp-for="AktivitetId" class="form-control" />
+        <span asp-validation-for="AktivitetId" class="text-danger"></span>
+    </div>-->
+
+            <div class="form-group">
+                <label asp-for="AktivitetNamn" class="control-label"></label>
+                <input asp-for="AktivitetNamn" class="form-control" />
+                <span asp-validation-for="AktivitetNamn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTid" class="control-label"></label>
+                <input asp-for="StartTid" class="form-control" />
+                <span asp-validation-for="StartTid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SlutTid" class="control-label"></label>
+                <input asp-for="SlutTid" class="form-control" />
+                <span asp-validation-for="SlutTid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Beskrivning" class="control-label"></label>
+                <input asp-for="Beskrivning" class="form-control" />
+                <span asp-validation-for="Beskrivning" class="text-danger"></span>
+            </div>
+            <!--<div class="form-group">
+                <label asp-for="AktivitetTypId" class="control-label"></label>
+                <input asp-for="AktivitetTypId" class="form-control" />
+                <span asp-validation-for="AktivitetTypId" class="text-danger"></span>
+            </div>-->
+            <!--<div class="form-group">
+        <label asp-for="ModulId" class="control-label"></label>
+        <input asp-for="ModulId" class="form-control" />
+        <span asp-validation-for="ModulId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ModulNamn" class="control-label"></label>
+        <input asp-for="ModulNamn" class="form-control" />
+        <span asp-validation-for="ModulNamn" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ModulStartTid" class="control-label"></label>
+        <input asp-for="ModulStartTid" class="form-control" />
+        <span asp-validation-for="ModulStartTid" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ModulSlutTid" class="control-label"></label>
+        <input asp-for="ModulSlutTid" class="form-control" />
+        <span asp-validation-for="ModulSlutTid" class="text-danger"></span>
+    </div>-->
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
