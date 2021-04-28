@@ -21,8 +21,16 @@ namespace LMS.Grupp4.Core.Entities
         public Modul Modul { get; set; }
         public AktivitetTyp AktivitetTyp { get; set; }
 
+        [Required]
+        public DateTime SlutTid { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        public string Beskrivning { get; set; }
 
 
-
+        [ForeignKey("AktivitetTyp")]
+        public int AktivitetTypId { get; set; }
+        public AktivitetTyp AktivitetTyp { get; set; }
     }
 }
