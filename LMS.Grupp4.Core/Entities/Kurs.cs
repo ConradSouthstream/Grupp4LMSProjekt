@@ -15,7 +15,7 @@ namespace LMS.Grupp4.Core.Entities
         public string Beskrivning { get; set; }
 
 
-        //Navigation property
+        //Navigation prope
         public ICollection<Dokument> Dokument { get; set; }
         public ICollection<Modul> Moduler { get; set; }
         public  ICollection<AnvandareKurs> Anvandare { get; set; }
