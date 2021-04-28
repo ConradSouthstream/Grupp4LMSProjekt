@@ -22,15 +22,15 @@ namespace LMS.Grupp4.Data.Data
                 fake = new Faker("sv");
                 var userManager = services.GetRequiredService<UserManager<Anvandare>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                if (db.Anvandare.Any())
+                {
+                    return;
+                }
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
 
-                //if (db.Anvandare.Any())
-                //{
-                //    return;
-                //}
-               // List<Anvandare> users = GetUsers();
-               // await db.AddRangeAsync(users);
+                // List<Anvandare> users = GetUsers();
+                // await db.AddRangeAsync(users);
 
                 var aktivitetTyper = new List<AktivitetTyp>();
 
