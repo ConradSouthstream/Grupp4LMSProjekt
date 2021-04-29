@@ -1,5 +1,5 @@
 ﻿@model AnvandareDto
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated && User.IsInRole("Larare"))
 {
 <h1 class="bg-info text-white">Skapa ny användare</h1>
 <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>

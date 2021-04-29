@@ -19,6 +19,10 @@
 </div>
 @if (User.Identity.IsAuthenticated)
 {
+    if (User.IsInRole("Larare") )
+    {
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Administrera användare</a>
+    }
     <table class="table table-sm">
     @foreach (var claim in User.Claims)
     {
