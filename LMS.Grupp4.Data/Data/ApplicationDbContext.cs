@@ -34,6 +34,7 @@ namespace LMS.Grupp4.Data
             base.OnModelCreating(builder);
 
             builder.Entity<AnvandareKurs>().HasKey(a => new { a.AnvandareId, a.KursId });
+            builder.Entity<Dokument>().Property(d => d.UppladdningsDatum).HasDefaultValueSql("getdate()");
         }
     }
 }

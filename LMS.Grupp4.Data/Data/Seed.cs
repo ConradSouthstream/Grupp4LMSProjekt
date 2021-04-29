@@ -22,15 +22,12 @@ namespace LMS.Grupp4.Data.Data
                 fake = new Faker("sv");
                 var userManager = services.GetRequiredService<UserManager<Anvandare>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                if (db.Anvandare.Any())
-                {
-                    return;
-                }
+                //if (db.Anvandare.Any())
+                //{
+                //    return;
+                //}
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
-
-                // List<Anvandare> users = GetUsers();
-                // await db.AddRangeAsync(users);
 
                 var aktivitetTyper = new List<AktivitetTyp>();
 
@@ -46,60 +43,6 @@ namespace LMS.Grupp4.Data.Data
 
                 await db.AddRangeAsync(aktivitetTyper);
 
-
-
-                //Skapar Kurser, Moduler och Aktiviteter
-                var kurser = new List<Kurs>();
-                var moduler = new List<Modul>();
-                var aktiviteter = new List<Aktivitet>();
-
-                for (int i = 0; i < 10; i++)
-                {
-                    //första kursen skapas 10 veckor tidigare från dagens datum
-                    DateTime startdatum = DateTime.Now.AddDays(((i + 1) * 35)-105);
-                    var kurs = new Kurs
-                    {                        
-                        Namn = fake.Company.CatchPhrase(),
-                        Beskrivning = fake.Hacker.Verb(),
-                        StartDatum = startdatum,
-                        SlutDatum = startdatum.AddDays(35)
-                    };
-                    //varje kurs tillsätter 5 moduler
-                    for (int moduli = 0; moduli < 5; moduli++)
-                    {
-                        var modul = new Modul
-                        {
-                            Namn = fake.Company.CatchPhrase(),
-                            Beskrivning = fake.Hacker.Verb(),
-                            Kurs = kurs,
-                            StartDatum = startdatum.AddDays(((moduli + 1) * 7) - 7),
-                            SlutDatum = startdatum.AddDays((moduli + 1) * 7)
-                        };
-                        //varje modul tillsätter 2 aktiviteter
-                        for (int aktiviteti = 0; aktiviteti < 2; aktiviteti++)
-                        {
-                            var aktivitet = new Aktivitet
-                            {
-                                Namn = fake.Company.CatchPhrase(),
-                                Beskrivning = fake.Hacker.Verb(),
-                                AktivitetTyp = fake.Random.ListItem<AktivitetTyp>(aktivitetTyper),
-                                Modul = modul,
-                                StartDatum = startdatum.AddDays(((moduli + 1) * 3.5) - 3.5),
-                                SlutDatum = startdatum.AddDays((moduli + 1) * 3.5)
-                            };
-                            aktiviteter.Add(aktivitet);
-                        }
-                        moduler.Add(modul);
-                    }
-                    kurser.Add(kurs);
-                }
-
-                await db.AddRangeAsync(kurser);
-                
-                await db.AddRangeAsync(moduler);
-                
-                await db.AddRangeAsync(aktiviteter);
-
                 var roleNames = new[] { "Elev", "Larare" };
 
                 foreach (var roleName in roleNames)
@@ -112,9 +55,91 @@ namespace LMS.Grupp4.Data.Data
                     if (!result.Succeeded) throw new Exception(string.Join("\n", result.Errors));
                 }
 
+                //Skapar Kurser, Moduler och Aktiviteter
+                var kurser = new List<Kurs>();
+                var moduler = new List<Modul>();
+                var aktiviteter = new List<Aktivitet>();
+                var elever = new List<Anvandare>();
+                var enrollments = new List<AnvandareKurs>();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    //första kursen skapas 10 veckor tidigare från dagens datum
+                    DateTime startdatum = DateTime.Now.AddDays(((i + 1) * 35)-105);
+                    var kurs = new Kurs
+                    {
+                        Namn = fake.Company.CatchPhrase(),
+                        Beskrivning = fake.Lorem.Paragraph(),
+                        StartDatum = startdatum,
+                        SlutDatum = startdatum.AddDays(35),
+                    };                                                           
+                    for (int Useri = 0; Useri < 3; Useri++)
+                    {
+                        var fName = fake.Name.FirstName();
+                        var lName = fake.Name.LastName();
+
+                        var user = new Anvandare
+                        {
+                            ForeNamn = fName,
+                            EfterNamn = lName,
+                            Email = fake.Internet.Email($"{fName}{lName}"),
+                            Avatar = fake.Internet.Avatar(),
+
+                        };
+                        user.UserName = user.Email;
+                        await userManager.FindByEmailAsync(user.Email);
+                        await userManager.CreateAsync(user, adminPw);
+                        await userManager.AddToRoleAsync(user, "Elev");
+                        elever.Add(user);
+                        var enrollment = new AnvandareKurs
+                        {
+                            Kurs = kurs,
+                            Anvandare = user,
+                            Betyg = fake.Random.Int(1, 5)
+                        };
+                       enrollments.Add(enrollment);
+                    }
+                    //varje kurs tillsätter 5 moduler
+                    for (int moduli = 0; moduli < 5; moduli++)
+                    {
+                        var modul = new Modul
+                        {
+                            Namn = fake.Lorem.Word(),
+                            Beskrivning = fake.Lorem.Paragraph(),
+                            Kurs = kurs,
+                            StartDatum = startdatum.AddDays(((moduli + 1) * 7) - 7),
+                            SlutDatum = startdatum.AddDays((moduli + 1) * 7)
+                        };
+                        //varje modul tillsätter 2 aktiviteter
+                        for (int aktiviteti = 0; aktiviteti < 2; aktiviteti++)
+                        {
+                            var aktivitet = new Aktivitet
+                            {
+                                Namn = fake.Company.CatchPhrase(),
+                                Beskrivning = fake.Lorem.Paragraph(),
+                                AktivitetTyp = fake.Random.ListItem<AktivitetTyp>(aktivitetTyper),
+                                Modul = modul,
+                                StartDatum = startdatum.AddDays(((moduli + 1) * 3.5) - 3.5),
+                                SlutDatum = startdatum.AddDays((moduli + 1) * 3.5)
+                            };
+                            aktiviteter.Add(aktivitet);
+                        }
+                        moduler.Add(modul);
+                    }
+                    kurser.Add(kurs);
+                }
+
+
+                await db.AddRangeAsync(enrollments);
+                await db.AddRangeAsync(kurser);
+                                
+                await db.AddRangeAsync(moduler);
+                
+                await db.AddRangeAsync(aktiviteter);
+
+                //Skapar statiska elev och lärar konto
                 var larareEmail = "larare@lms.se";
                 var elevEmail = "elev@lms.se";
-
                 var foundLarare = await userManager.FindByEmailAsync(larareEmail);
                 var foundElev = await userManager.FindByEmailAsync(elevEmail);
 
@@ -128,71 +153,32 @@ namespace LMS.Grupp4.Data.Data
                 };
                 var elev = new Anvandare
                 {
+                    ForeNamn="Elev",
+                    EfterNamn="en",
+                    Avatar = fake.Internet.Avatar(),
                     UserName = elevEmail,
                     Email = elevEmail,
                 };
-
                 var addLarareResult = await userManager.CreateAsync(admin, adminPw);
-                var addElevResult = await userManager.CreateAsync(elev, adminPw);
-
+                var addelevResult = await userManager.CreateAsync(elev, adminPw);
                 if (!addLarareResult.Succeeded) throw new Exception(string.Join("\n", addLarareResult.Errors));
-                if (!addElevResult.Succeeded) throw new Exception(string.Join("\n", addElevResult.Errors));
-
+                if (!addelevResult.Succeeded) throw new Exception(string.Join("\n", addelevResult.Errors));
                 var larareUser = await userManager.FindByEmailAsync(larareEmail);
                 var elevUser = await userManager.FindByEmailAsync(elevEmail);
-
                 if (await userManager.IsInRoleAsync(larareUser, "Larare")) return;
                 if (await userManager.IsInRoleAsync(elevUser, "Elev")) return;
-
                 await userManager.AddToRoleAsync(larareUser, "Larare");
                 await userManager.AddToRoleAsync(elevUser, "Elev");
-
-                var enrollments = new List<AnvandareKurs>();
-
-                //foreach (var student in users)
-                //{
-                //    foreach (var course in courses)
-                //    {
-                //        if (fake.Random.Int(0, 5) == 0)
-                //        {
-                //            var enrollment = new AnvandareKurs
-                //            {
-                //                Kurs = course,
-                //                Anvandare = student,
-                //                // Grade = fake.Random.Int(1, 5)
-                //            };
-                //            enrollments.Add(enrollment);
-                //        }
-                //    }
-                //}
-
-                await db.AddRangeAsync(enrollments);
+                var statiskElevEnrollment = new AnvandareKurs
+                {
+                    Kurs = kurser.First(),
+                    Anvandare = elev,
+                    Betyg = fake.Random.Int(1, 5)
+                };
+                await db.AddRangeAsync(statiskElevEnrollment);
                 await db.SaveChangesAsync();
             }
 
-        }
-
-        private static List<Anvandare> GetUsers()
-        {
-            var users = new List<Anvandare>();
-
-            for (int i = 0; i < 200; i++)
-            {
-                var fName = fake.Name.FirstName();
-                var lName = fake.Name.LastName();
-
-                var user = new Anvandare
-                {
-                    ForeNamn = fName,
-                    EfterNamn = lName,
-                    Email = fake.Internet.Email($"{fName} {lName}"),
-                    Avatar = fake.Internet.Avatar(),
-                };
-
-                users.Add(user);
-            }
-
-            return users;
         }
     }
 }
