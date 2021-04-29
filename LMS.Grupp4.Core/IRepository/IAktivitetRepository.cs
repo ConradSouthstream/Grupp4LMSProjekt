@@ -40,12 +40,20 @@ namespace LMS.Grupp4.Core.IRepository
         /// Metoden uppdaterar data om en Aktivitet
         /// </summary>
         /// <param name="aktivitet">Referense till Aktivitet som skall uppdateras</param>
+        /// <exception cref="ArgumentNullException">Kastas om referensen till Aktivitet är null</exception>
         void PutAktivitetAsync(Aktivitet aktivitet);
 
         /// <summary>
         /// Metoden skapar en ny aktivitet
         /// </summary>
         /// <param name="aktivitet">Referense till Aktivitet som skall skapas</param>
+        /// <exception cref="ArgumentNullException">Kastas om referensen till Aktivitet är null</exception>
         void PostAktivitetAsync(Aktivitet aktivitet);
+
+        /// <summary>
+        /// Metoden raderar en Aktivitet
+        /// </summary>
+        /// <param name="iAktivitetId">Id för Aktivitet som skall raderas</param>
+        void DeleteAktivitetAsync(int iAktivitetId);
     }
 }

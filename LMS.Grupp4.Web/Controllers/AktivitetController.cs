@@ -87,7 +87,7 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             ViewBag.Message = "Det gick inte gå till sidan för att skapa aktivitet";
-            ViewBag.TypeOfMessage = TypeOfMessage.Error;
+            ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
 
             return RedirectToAction(nameof(Index));
         }
@@ -114,6 +114,7 @@ namespace LMS.Grupp4.Web.Controllers
                     m_UnitOfWork.AktivitetRepository.PostAktivitetAsync(aktivitet);
                     if(m_UnitOfWork.AktivitetRepository.SaveAsync())
                     {// Vi har sparat en ny aktivitet. Redirect till listning
+
                         TempData["message"] = $"Har skapat aktivitet {viewModel.AktivitetNamn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
 
@@ -124,9 +125,7 @@ namespace LMS.Grupp4.Web.Controllers
                 { }
             }
 
-
             // Kommer vi hit har något gått fel
-
             ViewBag.Message = "Det gick inte skapa aktiviteten";
             ViewBag.TypeOfMessage = TypeOfMessage.Error;
 
@@ -227,24 +226,65 @@ namespace LMS.Grupp4.Web.Controllers
         }
 
         // GET: AktivitetController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id.HasValue)
+            {
+                Aktivitet aktivitet = m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
+                if (aktivitet != null)
+                {
+                    AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
+                    return View(viewModel);
+                }
+            }
+
+            return View(null);
         }
 
-        // POST: AktivitetController/Delete/5
+        // POST: AktivitetController/DeleteAktivitet/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteAktivitet(int? AktivitetId, string AktivitetNamn)
         {
-            try
+            if (AktivitetId.HasValue)
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    m_UnitOfWork.AktivitetRepository.DeleteAktivitetAsync(AktivitetId.Value);
+
+                    if (m_UnitOfWork.AktivitetRepository.SaveAsync())
+                    {// Aktiviteten är raderad
+
+                        TempData["message"] = $"Raderade aktiviteten {AktivitetNamn}";
+                        TempData["typeOfMessage"] = TypeOfMessage.Info;
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {// Det gick inte radera aktiviteten
+
+                        Aktivitet aktivitet = m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(AktivitetId.Value);
+                        if (aktivitet != null)
+                        {
+                            AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
+
+                            ViewBag.Message = "Det gick inte radera aktiviteten";
+                            ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
+
+                            return View(nameof(Delete), viewModel);
+                        }
+                    }
+                }
+                catch(Exception)
+                {
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            // Hamnar man här har något gått fel
+            TempData["message"] = "Det gick inte radera aktiviteten";
+            TempData["typeOfMessage"] = TypeOfMessage.Error;
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

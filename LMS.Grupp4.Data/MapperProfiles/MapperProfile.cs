@@ -28,6 +28,12 @@ namespace LMS.Grupp4.Data.MapperProfiles
             CreateMap<AktivitetEditViewModel, Aktivitet>();
 
             CreateMap<AktivitetCreateViewModel, Aktivitet>();
+
+            CreateMap<Aktivitet, AktivitetDeleteViewModel>()
+                .ForMember(dest => dest.ModulNamn, from => from.MapFrom(m => m.Modul.ModulNamn))
+                .ForMember(dest => dest.ModulStartTid, from => from.MapFrom(m => m.Modul.StartTid))
+                .ForMember(dest => dest.ModulSlutTid, from => from.MapFrom(m => m.Modul.SlutTid))
+                .ForMember(dest => dest.AktivitetTypNamn, from => from.MapFrom(a => a.AktivitetTyp.AktivitetTypNamn));
         }
     }
 }

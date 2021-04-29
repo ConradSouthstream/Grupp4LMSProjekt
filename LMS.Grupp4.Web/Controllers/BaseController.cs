@@ -16,9 +16,9 @@ namespace LMS.Grupp4.Web.Controllers
 
             var typeOfMessageObject = TempData["typeOfMessage"];
             if (typeOfMessageObject != null)
-                ViewBag.TypeOfMessage = typeOfMessageObject as string;
+                ViewBag.TypeOfMessage = (int)typeOfMessageObject;
             else
-                ViewBag.TypeOfMessage = TypeOfMessage.Info;
+                ViewBag.TypeOfMessage = (int)TypeOfMessage.Info;
         }
     }
 }

@@ -2,7 +2,14 @@
 
 @if (ViewBag.Message != null)
 {
-    if (ViewBag.TypeOfMessage != null && ViewBag.TypeOfMessage == TypeOfMessage.Error) //"error")
+    int iTypeOfMessage = (int)TypeOfMessage.Info;
+
+    if (ViewBag.TypeOfMessage != null)
+    {
+        iTypeOfMessage = (int)ViewBag.TypeOfMessage;
+    }
+
+    if (iTypeOfMessage == 0)
     {
         <div class="alert alert-danger" role="alert">
             @ViewBag.Message

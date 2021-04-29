@@ -17,6 +17,7 @@ namespace LMS.Grupp4.Data.Repositories
         /// </summary>
         private readonly ApplicationDbContext m_DbContext;
 
+        // TODO Radera. Endast test
         private ICollection<Aktivitet> m_lsAktiviteter = null;
         private List<AktivitetTyp> m_lsAktivitetTyper = null;
 
@@ -73,12 +74,13 @@ namespace LMS.Grupp4.Data.Repositories
         /// Metoden uppdaterar data om en Aktivitet
         /// </summary>
         /// <param name="aktivitet">Referense till Aktivitet som skall uppdateras</param>
+        /// <exception cref="ArgumentNullException">Kastas om referensen till Aktivitet är null</exception>
         public void PutAktivitetAsync(Aktivitet aktivitet)
         {
             if (aktivitet is null)
-                throw new ArgumentNullException("AktivitetRepository.PutAktivitetAsync. Refernsen till Aktiviter är null");
+                throw new ArgumentNullException("AktivitetRepository.PutAktivitetAsync. Referensen till Aktiviter är null");
 
-            // TODO
+            // TODO Implementera PutAktivitetAsync
             throw new NotImplementedException("AktivitetRepository -> PutAktivitetAsync");
         }
 
@@ -87,13 +89,37 @@ namespace LMS.Grupp4.Data.Repositories
         /// Metoden skapar en ny aktivitet
         /// </summary>
         /// <param name="aktivitet">Referense till Aktivitet som skall skapas</param>
+        /// <exception cref="ArgumentNullException">Kastas om referensen till Aktivitet är null</exception>
         public void PostAktivitetAsync(Aktivitet aktivitet)
         {
             if (aktivitet is null)
-                throw new ArgumentNullException("AktivitetRepository.PostAktivitetAsync. Refernsen till Aktiviter är null");
+                throw new ArgumentNullException("AktivitetRepository.PostAktivitetAsync. Referensen till Aktiviter är null");
 
-            // TODO
+            // TODO Implementera PostAktivitetAsync
             throw new NotImplementedException("AktivitetRepository -> PostAktivitetAsync");
+        }
+
+        /// <summary>
+        /// Metoden raderar en Aktivitet
+        /// </summary>
+        /// <param name="iAktivitetId">Id för Aktivitet som skall raderas</param>
+        public void DeleteAktivitetAsync(int iAktivitetId)
+        {
+            // TODO Implementera DeleteAktivitetAsync
+            throw new NotImplementedException("AktivitetRepository -> DeleteAktivitetAsync");
+        }
+
+
+        /// <summary>
+        /// Async metod som sparar ändringar
+        /// </summary>
+        /// <returns>true om några ändringar sparas. Annars returneras false</returns>
+        //public async Task<bool> SaveAsync()
+        public bool SaveAsync()
+        {
+            // TODO Ändra SaveAsync to context
+            //return (await m_DbContext.SaveChangesAsync()) >= 0;
+            return true;
         }
 
 
@@ -167,19 +193,6 @@ namespace LMS.Grupp4.Data.Repositories
             }
 
             return lsAktiviteter;
-        }
-
-
-        /// <summary>
-        /// Async metod som sparar ändringar
-        /// </summary>
-        /// <returns>true om några ändringar sparas. Annars returneras false</returns>
-        //public async Task<bool> SaveAsync()
-        public bool SaveAsync()
-        {
-            // TODO Ändra SaveAsync to context
-            //return (await m_DbContext.SaveChangesAsync()) >= 0;
-            return true;
         }
     }
 }
