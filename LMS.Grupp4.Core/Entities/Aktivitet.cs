@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Core.Entities
 {
@@ -39,6 +42,10 @@ namespace LMS.Grupp4.Core.Entities
         /// </summary>
         [Required(ErrorMessage = "Ni måste ha en beskrivning av aktiviteten")]
         [StringLength(255, ErrorMessage = "Max längd är 255 tecken")]
+        public int Id { get; set; }
+        public string Namn { get; set; }
+        public DateTime StartDatum { get; set; }
+        public DateTime SlutDatum { get; set; }
         public string Beskrivning { get; set; }
 
         /// <summary>
@@ -46,6 +53,12 @@ namespace LMS.Grupp4.Core.Entities
         /// </summary>
         [ForeignKey("AktivitetTyp")]
         public int AktivitetTypId { get; set; }
+        public int ModulId { get; set; }
+        public int AktivitetTypId { get; set; }
+
+        //Navigation property
+        public ICollection<Dokument> Dokument { get; set; }
+        public Modul Modul { get; set; }
         public AktivitetTyp AktivitetTyp { get; set; }
 
         /// <summary>
