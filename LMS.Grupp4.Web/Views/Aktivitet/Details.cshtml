@@ -4,37 +4,37 @@
     ViewData["Title"] = "Detaljer för aktivitet";
 }
 
-<h1>Detaljer för @Model.AktivitetNamn</h1>
+<h1>@ViewData["Title"] @Model.Namn</h1>
 
 @if (Model != null)
 {
 <div>
-    <h4>Modul: @Model.ModulNamn - (@Model.ModulStartTid.ToShortDateString() till @Model.ModulSlutTid.ToShortDateString())</h4>
+    <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AktivitetId)
+            @Html.DisplayNameFor(model => model.Id)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AktivitetId)
+            @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AktivitetNamn)
+            @Html.DisplayNameFor(model => model.Namn)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AktivitetNamn)
+            @Html.DisplayFor(model => model.Namn)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartTid)
+            @Html.DisplayNameFor(model => model.StartDatum)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartTid)
+            @Html.DisplayFor(model => model.StartDatum)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SlutTid)
+            @Html.DisplayNameFor(model => model.SlutDatum)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SlutTid)
+            @Html.DisplayFor(model => model.SlutDatum)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Beskrivning)
@@ -65,6 +65,6 @@ else
 }
 
 <div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.AktivitetId }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     <a asp-action="Index">Back to List</a>
 </div>

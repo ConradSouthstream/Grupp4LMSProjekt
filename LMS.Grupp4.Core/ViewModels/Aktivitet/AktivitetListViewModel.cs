@@ -1,41 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Core.ViewModels.Aktivitet
 {
     public class AktivitetListViewModel
     {
-        /// <summary>
-        /// Primär nyckel. Id
-        /// </summary>
-        public int AktivitetId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Aktivitetens namn
         /// </summary>
         [DisplayName("Aktivitetens namn")]
-        public string AktivitetNamn { get; set; }
+        public string Namn { get; set; }
 
         /// <summary>
-        /// Tid när aktiviteten starta
+        /// Datum när aktiviteten starta
         /// </summary>
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DisplayName("Starttid")]
-        public DateTime StartTid { get; set; }
+        [DisplayName("Startdatum")]
+        public DateTime StartDatum { get; set; }
 
         /// <summary>
-        /// Tid när aktiviteten slutar
+        /// Datum när aktiviteten slutar
         /// </summary>
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DisplayName("Sluttid")]
-        public DateTime SlutTid { get; set; }
+        [DisplayName("Slutdatum")]
+        public DateTime SlutDatum { get; set; }
 
         /// <summary>
         /// Beskrivning av aktiviteten
@@ -49,6 +42,9 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         [DisplayName("Aktivitetstyp")]
         public string AktivitetTypNamn { get; set; }
 
+        [DisplayName("Modulens id")]
+        public int ModulId { get; set; }
+
         /// <summary>
         /// Modulens namn
         /// </summary>
@@ -56,19 +52,19 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         public string ModulNamn { get; set; }
 
         /// <summary>
-        /// Modulens starttid
+        /// Modulens startdatum
         /// </summary>
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DisplayName("Modulens starttid")]
-        public DateTime ModulStartTid { get; set; }
+        [DisplayName("Modulens startdatum")]
+        public DateTime ModulStartDatum { get; set; }
 
         /// <summary>
-        /// Modulens sluttid
+        /// Modulens slutdatum
         /// </summary>
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DisplayName("Modulens sluttid")]
-        public DateTime ModulSlutTid { get; set; }
+        [DisplayName("Modulens slutdatum")]
+        public DateTime ModulSlutDatum { get; set; }
     }
 }

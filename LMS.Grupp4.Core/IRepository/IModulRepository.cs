@@ -1,14 +1,21 @@
 ﻿using LMS.Grupp4.Core.Entities;
+using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Core.IRepository
 {
     public interface IModulRepository
     {
         /// <summary>
-        /// Metoden returnerar sökt Modul eller null
+        /// Async metod som returnerar sökt Modul eller null
         /// </summary>
         /// <param name="iModulId">ModulId för sökt Modul</param>
-        /// <returns>Sökt Modul eller null</returns>
-        Modul GetModulAsync(int iModulId);
+        /// <returns>Task med sökt Modul eller null</returns>
+        Task<Modul> GetModulAsync(int iModulId);
+
+        /// <summary>
+        /// Async metod som sparar ändringar
+        /// </summary>
+        /// <returns>true om några ändringar sparas. Annars returneras false</returns>
+        Task<bool> SaveAsync();
     }
 }

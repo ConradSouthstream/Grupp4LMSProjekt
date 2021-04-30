@@ -34,7 +34,7 @@ namespace LMS.Grupp4.Web.Controllers
         {
             GetMessageFromTempData();
 
-            List<Aktivitet> lsAktiviteter = m_UnitOfWork.AktivitetRepository.GetAktivitetAsync();
+            List<Aktivitet> lsAktiviteter = await m_UnitOfWork.AktivitetRepository.GetAktiviteterAsync();
             List<AktivitetListViewModel> lsAktivitetListViewModel = new List<AktivitetListViewModel>();
 
             foreach (Aktivitet aktivitet in lsAktiviteter)
@@ -48,7 +48,7 @@ namespace LMS.Grupp4.Web.Controllers
         {
             if (id.HasValue)
             {
-                Aktivitet aktivitet = m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
+                Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
                 AktivitetDetailsViewModel viewModel = m_Mapper.Map<AktivitetDetailsViewModel>(aktivitet);
                 return View(viewModel);
             }
@@ -57,29 +57,29 @@ namespace LMS.Grupp4.Web.Controllers
         }
 
         // GET: AktivitetController/Create/1
-        public ActionResult Create(int? id)
+        public async Task<ActionResult> Create(int? id)
         {
             if (id.HasValue)
             {
                 AktivitetCreateViewModel viewModel = new AktivitetCreateViewModel();
 
                 // Hämta information om Model
-                Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(id.Value);
+                Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(id.Value);
                 if (modul != null)
                 {
-                    viewModel.ModulId = modul.ModulId;
-                    viewModel.ModulNamn = modul.ModulNamn;                    
-                    viewModel.ModulStartTid = modul.StartTid;
-                    viewModel.ModulSlutTid = modul.SlutTid;
+                    viewModel.ModulId = modul.Id;
+                    viewModel.ModulNamn = modul.Namn;                    
+                    viewModel.ModulStartDatum = modul.StartDatum;
+                    viewModel.ModulSlutDatum = modul.SlutDatum;
                 }
 
                 // Sätt upp startvärden för kalendrar
                 DateTime dtNow = DateTime.Now;
-                viewModel.StartTid = dtNow;
-                viewModel.SlutTid = dtNow.AddDays(1);
+                viewModel.StartDatum = dtNow;
+                viewModel.SlutDatum = dtNow.AddDays(1);
 
                 // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
-                List<AktivitetTyp> lsAktivitetTyper = m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
+                List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
                 List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, viewModel.AktivitetTypId.ToString());
                 viewModel.AktivitetTyper = lsAktivitetTyperDropDown;
 
@@ -95,7 +95,7 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(AktivitetCreateViewModel viewModel)
+        public async Task<ActionResult> Create(AktivitetCreateViewModel viewModel)
         {            
             if (ModelState.IsValid)
             {
@@ -103,7 +103,6 @@ namespace LMS.Grupp4.Web.Controllers
                 {
                     Aktivitet aktivitet = m_Mapper.Map<Aktivitet>(viewModel);
 
-                    // TODO implementera create mot Repository
                     // Post
                     // https://www.c-sharpcorner.com/article/http-get-put-post-and-delete-verbs-in-asp-net-web-api/
                     // Read = Get
@@ -111,11 +110,11 @@ namespace LMS.Grupp4.Web.Controllers
                     // Create = Post
                     // Delete = Delete
 
-                    m_UnitOfWork.AktivitetRepository.PostAktivitetAsync(aktivitet);
-                    if(m_UnitOfWork.AktivitetRepository.SaveAsync())
+                    await m_UnitOfWork.AktivitetRepository.PostAktivitetAsync(aktivitet);
+                    if(await m_UnitOfWork.AktivitetRepository.SaveAsync())
                     {// Vi har sparat en ny aktivitet. Redirect till listning
 
-                        TempData["message"] = $"Har skapat aktivitet {viewModel.AktivitetNamn}";
+                        TempData["message"] = $"Har skapat aktivitet {viewModel.Namn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
 
                         return RedirectToAction(nameof(Index));
@@ -130,17 +129,17 @@ namespace LMS.Grupp4.Web.Controllers
             ViewBag.TypeOfMessage = TypeOfMessage.Error;
 
             // Vi måste uppdatera viss data om modulen som inte view bindar till modellen
-            Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
+            Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
             if (modul != null)
             {
-                viewModel.ModulId = modul.ModulId;
-                viewModel.ModulNamn = modul.ModulNamn;
-                viewModel.ModulSlutTid = modul.SlutTid;
-                viewModel.ModulStartTid = modul.StartTid;
+                viewModel.ModulId = modul.Id;
+                viewModel.ModulNamn = modul.Namn;
+                viewModel.ModulSlutDatum = modul.SlutDatum;
+                viewModel.ModulStartDatum = modul.StartDatum;
             }
 
             // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
-            List<AktivitetTyp> lsAktivitetTyper = m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
+            List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
             List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, viewModel.AktivitetTypId.ToString());
             viewModel.AktivitetTyper = lsAktivitetTyperDropDown;
 
@@ -149,18 +148,18 @@ namespace LMS.Grupp4.Web.Controllers
 
 
         // GET: AktivitetController/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if(id.HasValue)
             {
-                Aktivitet aktivitet = m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
+                Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
 
                 if (aktivitet != null)
                 {
                     AktivitetEditViewModel viewModel = m_Mapper.Map<AktivitetEditViewModel>(aktivitet);
 
                     // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
-                    List<AktivitetTyp> lsAktivitetTyper = m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
+                    List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
                     List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, aktivitet.AktivitetTypId.ToString());
                     viewModel.AktivitetTyper = lsAktivitetTyperDropDown;
 
@@ -174,9 +173,9 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AktivitetEditViewModel viewModel)
+        public async Task<ActionResult> Edit(int id, AktivitetEditViewModel viewModel)
         {
-            if (id == viewModel.AktivitetId)
+            if (id == viewModel.Id)
             {
                 if (ModelState.IsValid)
                 {
@@ -185,12 +184,12 @@ namespace LMS.Grupp4.Web.Controllers
                         Aktivitet aktivitet = m_Mapper.Map<Aktivitet>(viewModel);
 
                         // Uppdatera aktivitet
-                        m_UnitOfWork.AktivitetRepository.PutAktivitetAsync(aktivitet);
+                        m_UnitOfWork.AktivitetRepository.PutAktivitet(aktivitet);
 
                         // Spara uppdateringen
-                        if (m_UnitOfWork.AktivitetRepository.SaveAsync())
+                        if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
                         {
-                            TempData["message"] = $"Har uppdaterat aktivitet {viewModel.AktivitetNamn}";
+                            TempData["message"] = $"Har uppdaterat aktivitet {viewModel.Namn}";
                             TempData["typeOfMessage"] = TypeOfMessage.Info;                           
 
                             return RedirectToAction(nameof(Index));
@@ -208,17 +207,17 @@ namespace LMS.Grupp4.Web.Controllers
             ViewBag.TypeOfMessage = TypeOfMessage.Error;
 
             // Vi måste uppdatera viss data om modulen som inte view bindar till modellen
-            Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
+            Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
             if(modul != null)
             {
-                viewModel.ModulId = modul.ModulId;
-                viewModel.ModulNamn = modul.ModulNamn;
-                viewModel.ModulSlutTid = modul.SlutTid;
-                viewModel.ModulStartTid = modul.StartTid;
+                viewModel.ModulId = modul.Id;
+                viewModel.ModulNamn = modul.Namn;
+                viewModel.ModulSlutDatum = modul.SlutDatum;
+                viewModel.ModulStartDatum = modul.StartDatum;
             }
 
             // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
-            List<AktivitetTyp> lsAktivitetTyper = m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
+            List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
             List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, viewModel.AktivitetTypId.ToString());
             viewModel.AktivitetTyper = lsAktivitetTyperDropDown;
 
@@ -226,11 +225,11 @@ namespace LMS.Grupp4.Web.Controllers
         }
 
         // GET: AktivitetController/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id.HasValue)
             {
-                Aktivitet aktivitet = m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
+                Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
                 if (aktivitet != null)
                 {
                     AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
@@ -244,15 +243,15 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/DeleteAktivitet/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteAktivitet(int? AktivitetId, string AktivitetNamn)
+        public async Task<ActionResult> DeleteAktivitet(int? AktivitetId, string AktivitetNamn)
         {
             if (AktivitetId.HasValue)
             {
                 try
                 {
-                    m_UnitOfWork.AktivitetRepository.DeleteAktivitetAsync(AktivitetId.Value);
+                    await m_UnitOfWork.AktivitetRepository.DeleteAktivitetAsync(AktivitetId.Value);
 
-                    if (m_UnitOfWork.AktivitetRepository.SaveAsync())
+                    if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
                     {// Aktiviteten är raderad
 
                         TempData["message"] = $"Raderade aktiviteten {AktivitetNamn}";
@@ -263,7 +262,7 @@ namespace LMS.Grupp4.Web.Controllers
                     else
                     {// Det gick inte radera aktiviteten
 
-                        Aktivitet aktivitet = m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(AktivitetId.Value);
+                        Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(AktivitetId.Value);
                         if (aktivitet != null)
                         {
                             AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);

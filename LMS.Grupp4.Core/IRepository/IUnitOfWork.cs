@@ -21,7 +21,6 @@ namespace LMS.Grupp4.Core.IRepository
         /// Metod som skall spara uppdaterad data i repositories
         /// </summary>
         /// <returns>Task</returns>
-        //Task CompleteAsync();
-        bool CompleteAsync();// TODO Fixa Task
+        Task CompleteAsync();
     }
 }

@@ -1,10 +1,12 @@
 using LMS.Grupp4.Core.Entities;
+using LMS.Grupp4.Core.IRepository;
 using LMS.Grupp4.Data;
+using LMS.Grupp4.Data.MapperProfiles;
+using LMS.Grupp4.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +56,10 @@ namespace LMS.Grupp4.Web
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
+
+            services.AddAutoMapper(typeof(MapperProfile));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

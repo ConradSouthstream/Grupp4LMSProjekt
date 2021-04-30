@@ -16,22 +16,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AktivitetId)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AktivitetNamn)
+                @Html.DisplayNameFor(model => model.Namn)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartTid)
+                @Html.DisplayNameFor(model => model.StartDatum)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SlutTid)
+                @Html.DisplayNameFor(model => model.StartDatum)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Beskrivning)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AktivitetTypNamn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModulId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ModulNamn)
@@ -42,34 +45,37 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AktivitetId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AktivitetNamn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartTid)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SlutTid)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Beskrivning)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AktivitetTypNamn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModulNamn)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.AktivitetId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.AktivitetId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.AktivitetId })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Namn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDatum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SlutDatum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Beskrivning)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AktivitetTypNamn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModulId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModulNamn)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

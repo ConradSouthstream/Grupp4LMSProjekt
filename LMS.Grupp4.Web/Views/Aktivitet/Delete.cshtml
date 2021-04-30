@@ -4,40 +4,38 @@
     ViewData["Title"] = "Radera aktivitet";
 }
 
-<h1>@ViewData["Title"]</h1>
-
 @{ await Html.RenderPartialAsync("_MessageView"); }
 
 @if (Model != null)
 {
     <h3>Vill ni radera aktiviteten?</h3>
     <div>
-        <h4>Modul: @Model.ModulNamn - (@Model.ModulStartTid.ToShortDateString() till @Model.ModulSlutTid.ToShortDateString())</h4>
+        <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
         <hr />
         <dl class="row">
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.AktivitetId)
+                @Html.DisplayNameFor(model => model.Id)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.AktivitetId)
+                @Html.DisplayFor(model => model.Id)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.AktivitetNamn)
+                @Html.DisplayNameFor(model => model.Namn)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.AktivitetNamn)
+                @Html.DisplayFor(model => model.Namn)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StartTid)
+                @Html.DisplayNameFor(model => model.StartDatum)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StartTid)
+                @Html.DisplayFor(model => model.StartDatum)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.SlutTid)
+                @Html.DisplayNameFor(model => model.SlutDatum)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.SlutTid)
+                @Html.DisplayFor(model => model.SlutDatum)
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Beskrivning)
@@ -72,8 +70,8 @@
         </dl>
 
         <form asp-action="DeleteAktivitet">
-            <input type="hidden" value="@Model.AktivitetId" id="AktivitetId" name="AktivitetId" />
-            <input type="hidden" value="@Model.AktivitetNamn" id="AktivitetNamn" name="AktivitetNamn" />
+            <input type="hidden" value="@Model.Id" id="AktivitetId" name="AktivitetId" />
+            <input type="hidden" value="@Model.Namn" id="AktivitetNamn" name="AktivitetNamn" />
             <input type="submit" value="Radera" class="btn btn-danger" />
         </form>
     </div>

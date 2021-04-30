@@ -3,7 +3,7 @@ using LMS.Grupp4.Core.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -16,88 +16,149 @@ namespace LMS.Grupp4.Web.Controllers
             m_UnitOfWork = uow;
         }
 
-        // [Remote(action: "CompareFirstName", controller:"Garages",
-        // AdditionalFields = nameof(LastName),
-        // ErrorMessage ="First Name and Last Name cannot match")]
-
         /// <summary>
-        /// Metoden kontrollera att starttid och slutiderna är ok valda
-        /// Ok innebär att starttid är innan sluttid.
-        /// Aktiviteten startar och slutar inom en modul
-        /// 
+        /// Metoden kontrollera att startdatum och slutdatum är ok valda
+        /// Ok innebär att startdatum är innan slutdatum.
+        /// Aktiviteten startar och slutar inom modulen
         /// </summary>
-        /// <param name="StartTid"></param>
-        /// <param name="SlutTid"></param>
-        /// <param name="ModulId"></param>
-        /// <param name="AktivitetId"></param>
-        /// <returns></returns>
-        public JsonResult IfValidDatesEditStartTid(DateTime StartTid, DateTime SlutTid, int ModulId, int AktivitetId)
+        /// <param name="StartDatum">Aktivitetens StartDatum</param>
+        /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
+        /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
+        /// <param name="AktivitetId">Aktivitetens id</param>
+        /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
+        public async Task<JsonResult> IfValidDatesEditStartDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int AktivitetId)
         {
             bool bValid = false;
 
-            // TODO RADERA
+            // TODO Temp inför merging
             return Json(true);
 
-            Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
-            if(modul != null)
+            Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
+            if (modul != null)
             {
-                if(StartTid < SlutTid)
+                DateTime dtStartDatumDate = StartDatum.Date;
+                DateTime dtSlutDatumDate = SlutDatum.Date;
+
+                if (dtStartDatumDate <= dtSlutDatumDate)
                 {// Starttid och sluttid är ok. Kontrollera att tiderna är inom modulen
 
-                    if(modul.StartTid <= StartTid && modul.SlutTid >= SlutTid)
+                    if (modul.StartDatum.Date <= dtStartDatumDate && modul.SlutDatum.Date >= dtSlutDatumDate)
                     {// Nya tiderna är inom modulens tidsram
                      // Kontrollera att nya tiderna inte överlappar med andra aktiviteter
 
-                        // Hämta modulens aktiviteter
-                        List<Aktivitet> lsModulAktiviteter = m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId);
-                        foreach(Aktivitet aktivitet in lsModulAktiviteter)
-                        {
-                            // TODO SKRIV KLART
-                            // aktivitet.StartTid
-                            // aktivitet.SlutTid
-                        }
-
-                        // TODO Sätt på rätt plats
                         bValid = true;
+                        DateTime startDate;
+                        DateTime endDate;
+
+                        List<Aktivitet> lsAktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId);
+                        foreach (var aktivitet in lsAktiviteter)
+                        {
+                            if (aktivitet.Id != AktivitetId)
+                            {
+                                startDate = aktivitet.StartDatum.Date;
+                                endDate = aktivitet.SlutDatum.Date;
+
+                                if (startDate >= dtStartDatumDate && endDate >= dtStartDatumDate)
+                                {// Aktivitetens StartDatum finns inom en tidigare aktivitet
+                                    bValid = false;
+                                }
+                                else if (startDate >= dtSlutDatumDate && endDate >= dtSlutDatumDate)
+                                {// Aktivitetens SlutDatum finns inom en tidigare aktivitet
+                                    bValid = false;
+                                }
+
+                                if (bValid == false)
+                                {
+                                    return Json("Modulen har redan aktivitet under valt tidsintervall");
+                                }
+                            }
+                        }
                     }
                     else
                     {
-                        bValid = false;
-                        return Json("Valda tider är utanför modulens tidsram");
+                        return Json("Valda datum är utanför modulens tidsram");
                     }
                 }
                 else
                 {
-                    bValid = false;
-                    return Json("Starttiden måste vara innan sluttiden");
+                    return Json("Startdatum måste vara innan slutdatum");
                 }
             }
 
             return Json(bValid);
         }
 
-        public JsonResult IfValidDatesEditSlutTid(DateTime StartTid, DateTime SlutTid, int ModulId, int AktivitetId)
-        {
-            bool bValid = true;
 
-            // TODO RADERA
+        /// <summary>
+        /// Metoden kontrollera att startdatum och slutdatum är ok valda
+        /// Ok innebär att startdatum är innan slutdatum.
+        /// Aktiviteten startar och slutar inom modulen
+        /// </summary>
+        /// <param name="StartDatum">Aktivitetens StartDatum</param>
+        /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
+        /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
+        /// <param name="AktivitetId">Aktivitetens id</param>
+        /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
+        public async Task<JsonResult> IfValidDatesEditSlutDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int AktivitetId)
+        {
+            bool bValid = false;
+
+            // TODO Temp inför merging
             return Json(true);
 
-            Modul modul = m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
+            Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
             if (modul != null)
             {
-                if (StartTid < SlutTid)
-                {
-                    // TODO SKRIV KLART
+                DateTime dtStartDatumDate = StartDatum.Date;
+                DateTime dtSlutDatumDate = SlutDatum.Date;
+
+                if (dtStartDatumDate <= dtSlutDatumDate)
+                {// Starttid och sluttid är ok. Kontrollera att tiderna är inom modulen
+
+                    if (modul.StartDatum.Date <= dtStartDatumDate && modul.SlutDatum.Date >= dtSlutDatumDate)
+                    {// Nya tiderna är inom modulens tidsram
+                     // Kontrollera att nya tiderna inte överlappar med andra aktiviteter
+
+                        bValid = true;
+                        DateTime startDate;
+                        DateTime endDate;
+
+                        List<Aktivitet> lsAktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId);
+                        foreach (var aktivitet in lsAktiviteter)
+                        {
+                            if (aktivitet.Id != AktivitetId)
+                            {
+                                startDate = aktivitet.StartDatum.Date;
+                                endDate = aktivitet.SlutDatum.Date;
+
+                                if (startDate >= dtStartDatumDate && endDate >= dtStartDatumDate)
+                                {// Aktivitetens StartDatum finns inom en tidigare aktivitet
+                                    bValid = false;
+                                }
+                                else if (startDate >= dtSlutDatumDate && endDate >= dtSlutDatumDate)
+                                {// Aktivitetens SlutDatum finns inom en tidigare aktivitet
+                                    bValid = false;
+                                }
+
+                                if (bValid == false)
+                                {
+                                    return Json("Modulen har redan aktivitet under valt tidsintervall");
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return Json("Valda datum är utanför modulens tidsram");
+                    }
                 }
                 else
                 {
-                    bValid = false;
-                    return Json("");
+                    return Json("Startdatum måste vara innan slutdatum");
                 }
             }
 
-            return Json("ERROR"); //Json(bValid);
+            return Json(bValid);
         }
     }
 }

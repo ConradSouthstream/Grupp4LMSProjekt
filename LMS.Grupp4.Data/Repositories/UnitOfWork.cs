@@ -35,17 +35,14 @@ namespace LMS.Grupp4.Data.Repositories
             ModulRepository = new ModulRepository(m_dbContext);
         }
 
-
         /// <summary>
         /// Metod som skall spara uppdaterad data i repositories
         /// </summary>
         /// <returns>Task</returns>
-        //public async Task CompleteAsync()
-        public bool CompleteAsync()
+        public async Task CompleteAsync()
         {
-            // TODO Fixa async
-            //await AktivitetRepository.SaveAsync();
-            return AktivitetRepository.SaveAsync();
+            await ModulRepository.SaveAsync();
+            await AktivitetRepository.SaveAsync();
         }
     }
 }

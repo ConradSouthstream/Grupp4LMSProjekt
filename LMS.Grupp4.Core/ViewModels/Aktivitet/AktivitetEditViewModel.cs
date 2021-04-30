@@ -9,42 +9,37 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
 {
     public class AktivitetEditViewModel
     {
-        /// <summary>
-        /// Primärnyckel. Id
-        /// </summary>
-        public int AktivitetId { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Aktivitetens namn
         /// </summary>
         [Required(ErrorMessage ="Ni måste ange namn på aktiviteten")]
-        [StringLength(255, ErrorMessage = "Max längd är 255 tecken")]
         [DisplayName("Aktivitetens namn")]
-        public string AktivitetNamn { get; set; }
+        public string Namn { get; set; }
 
         /// <summary>
-        /// Tid när aktiviteten starta
+        /// Datum när aktiviteten starta
         /// </summary>
-        [Required(ErrorMessage = "Ni måste ange en starttid för aktiviteten")]
+        [Required(ErrorMessage = "Ni måste ange en startdatum för aktiviteten")]
         [DataType(DataType.Date)]
-        [DisplayName("Starttid")]
-        [Remote(action: "IfValidDatesEditStartTid", controller: "AktivitetAsync", AdditionalFields = "SlutTid, ModulId, AktivitetId")]
-        public DateTime StartTid { get; set; }
+        [DisplayName("Startdatum")]
+        [Remote(action: "IfValidDatesEditStartDatum", controller: "AktivitetAsync", AdditionalFields = "SlutDatum, ModulId, AktivitetId")]
+        public DateTime StartDatum { get; set; }
 
         /// <summary>
-        /// Tid när aktiviteten slutar
+        /// Datum när aktiviteten slutar
         /// </summary>
-        [Required(ErrorMessage = "Ni måste ange en sluttid för aktiviteten")]
+        [Required(ErrorMessage = "Ni måste ange en slutdatum för aktiviteten")]
         [DataType(DataType.Date)]
-        [DisplayName("Sluttid")]
-        [Remote(action: "IfValidDatesEditSlutTid", controller: "AktivitetAsync", AdditionalFields = "StartTid, ModulId, AktivitetId")]
-        public DateTime SlutTid { get; set; }
+        [DisplayName("Slutdatum")]
+        [Remote(action: "IfValidDatesEditSlutDatum", controller: "AktivitetAsync", AdditionalFields = "StartDatum, ModulId, AktivitetId")]
+        public DateTime SlutDatum { get; set; }
 
         /// <summary>
         /// Beskrivning av aktiviteten
         /// </summary>
         [Required(ErrorMessage = "Ni måste ha en beskrivning av aktiviteten")]
-        [StringLength(255, ErrorMessage = "Max längd är 255 tecken")]
         [DisplayName("Beskrivning")]
         public string Beskrivning { get; set; }
 
@@ -67,20 +62,20 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         public string ModulNamn { get; set; }
 
         /// <summary>
-        /// Modulens starttid
+        /// Modulens startdatum
         /// </summary>
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DisplayName("Modulens starttid")]
-        public DateTime ModulStartTid { get; set; }
+        [DisplayName("Modulens startdatum")]
+        public DateTime ModulStartDatum { get; set; }
 
         /// <summary>
-        /// Modulens sluttid
+        /// Modulens slutdatum
         /// </summary>
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DisplayName("Modulens sluttid")]
-        public DateTime ModulSlutTid { get; set; }
+        [DisplayName("Modulens slutdatum")]
+        public DateTime ModulSlutDatum { get; set; }
 
 
         // Dropdown

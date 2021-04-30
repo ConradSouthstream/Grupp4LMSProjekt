@@ -20,7 +20,7 @@ namespace LMS.Grupp4.Web.Utils
             if(lsAktivitetTyper?.Count > 0)
             {
                 foreach (AktivitetTyp aktivitetTyp in lsAktivitetTyper)
-                    lsItems.Add(new SelectListItem { Text = aktivitetTyp.AktivitetTypNamn, Value = aktivitetTyp.AktivitetTypId.ToString() });
+                    lsItems.Add(new SelectListItem { Text = aktivitetTyp.Namn, Value = aktivitetTyp.Id.ToString() });
             }
 
             return lsItems;

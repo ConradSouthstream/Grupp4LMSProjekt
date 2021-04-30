@@ -10,14 +10,14 @@
 
 @if (Model != null)
 {
-    <h4>Modul: @Model.ModulNamn - (@Model.ModulStartTid.ToShortDateString() till @Model.ModulSlutTid.ToShortDateString())</h4>
+    <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
     <hr />
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Edit">
                 <div>
                     <input type="hidden" asp-for="ModulId" />
-                    <input type="hidden" asp-for="AktivitetId" />
+                    <input type="hidden" asp-for="Id" />
                 </div>
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -35,19 +35,19 @@
                 </div>-->
 
                 <div class="form-group">
-                    <label asp-for="AktivitetNamn" class="control-label"></label>
-                    <input asp-for="AktivitetNamn" class="form-control" />
-                    <span asp-validation-for="AktivitetNamn" class="text-danger"></span>
+                    <label asp-for="Namn" class="control-label"></label>
+                    <input asp-for="Namn" class="form-control" />
+                    <span asp-validation-for="Namn" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="StartTid" class="control-label"></label>
-                    <input asp-for="StartTid" class="form-control" />
-                    <span asp-validation-for="StartTid" class="text-danger"></span>
+                    <label asp-for="StartDatum" class="control-label"></label>
+                    <input asp-for="StartDatum" class="form-control" />
+                    <span asp-validation-for="StartDatum" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="SlutTid" class="control-label"></label>
-                    <input asp-for="SlutTid" class="form-control" />
-                    <span asp-validation-for="SlutTid" class="text-danger"></span>
+                    <label asp-for="SlutDatum" class="control-label"></label>
+                    <input asp-for="SlutDatum" class="form-control" />
+                    <span asp-validation-for="SlutDatum" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Beskrivning" class="control-label"></label>
