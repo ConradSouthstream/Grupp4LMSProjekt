@@ -5,10 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace LMS.Grupp4.Core.Entities
 {
-
+    /// <summary>
+    /// Anvandar entitet
+    /// </summary>
     public class Anvandare : IdentityUser
     {
 

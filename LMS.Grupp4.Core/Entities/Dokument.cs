@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.Grupp4.Core.Entities
 {
-  public  class Dokument
+    /// <summary>
+    /// Dokument entitet
+    /// </summary>
+    public class Dokument
     {
         public int Id { get; set; }
         public string Namn { get; set; }
@@ -19,12 +24,14 @@ namespace LMS.Grupp4.Core.Entities
         public int DokumentTypId { get; set; }
         public int AnvandareId { get; set; }
 
-        //Navigation property 
+
+
+        //Navigation property
         public Anvandare Anvandare { get; set; }
         public Kurs Kurs { get; set; }
         public DokumentTyp DokumentTyp { get; set; }
         public Modul Modul { get; set; }
-        public Aktivitet  Aktivitet { get; set; }
+        public Aktivitet Aktivitet { get; set; }
 
 
     }

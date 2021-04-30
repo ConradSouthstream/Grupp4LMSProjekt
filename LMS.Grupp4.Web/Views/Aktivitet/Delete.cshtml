@@ -1,0 +1,89 @@
+﻿@model LMS.Grupp4.Core.ViewModels.Aktivitet.AktivitetDeleteViewModel
+
+@{
+    ViewData["Title"] = "Radera aktivitet";
+}
+
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
+@if (Model != null)
+{
+    <h3>Vill ni radera aktiviteten?</h3>
+    <div>
+        <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Namn)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Namn)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StartDatum)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StartDatum)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SlutDatum)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SlutDatum)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Beskrivning)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Beskrivning)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AktivitetTypNamn)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AktivitetTypNamn)
+            </dd>
+            <!--<dt class="col-sm-2">
+                Html.DisplayNameFor(model => model.ModulNamn)
+            </dt>
+            <dd class="col-sm-10">
+                Html.DisplayFor(model => model.ModulNamn)
+            </dd>
+            <dt class="col-sm-2">
+                Html.DisplayNameFor(model => model.ModulStartTid)
+            </dt>
+            <dd class="col-sm-10">
+                Html.DisplayFor(model => model.ModulStartTid)
+            </dd>
+            <dt class="col-sm-2">
+                Html.DisplayNameFor(model => model.ModulSlutTid)
+            </dt>
+            <dd class="col-sm-10">
+                Html.DisplayFor(model => model.ModulSlutTid)
+            </dd>-->
+        </dl>
+
+        <form asp-action="DeleteAktivitet">
+            <input type="hidden" value="@Model.Id" id="AktivitetId" name="AktivitetId" />
+            <input type="hidden" value="@Model.Namn" id="AktivitetNamn" name="AktivitetNamn" />
+            <input type="submit" value="Radera" class="btn btn-danger" />
+        </form>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        Hittar inte sökt aktivitet
+    </div>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

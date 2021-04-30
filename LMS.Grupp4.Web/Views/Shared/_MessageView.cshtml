@@ -1,0 +1,24 @@
+﻿@using LMS.Grupp4.Core.Enum;
+
+@if (ViewBag.Message != null)
+{
+    int iTypeOfMessage = (int)TypeOfMessage.Info;
+
+    if (ViewBag.TypeOfMessage != null)
+    {
+        iTypeOfMessage = (int)ViewBag.TypeOfMessage;
+    }
+
+    if (iTypeOfMessage == 0)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-success" role="alert">
+            @ViewBag.Message
+        </div>
+    }
+}
