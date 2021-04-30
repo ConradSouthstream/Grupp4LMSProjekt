@@ -16,7 +16,7 @@ namespace LMS.Grupp4.Core.Entities
         public ICollection<Modul> Moduler { get; set; }
         [Display(Name = "Inskrivna Elever")]
         public ICollection<AnvandareKurs> AnvandareKurser { get; set; }
-
-
+        [Display(Name = "Status")]
+        public Status KursStatus { get; set; }
     }
 }

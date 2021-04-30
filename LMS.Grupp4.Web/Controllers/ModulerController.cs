@@ -48,7 +48,6 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Moduler/Create
         public IActionResult Create()
         {
-            // ViewData["KursId"] = new SelectList(_context.Kurser, "Id", "Id");
             var model = new Modul
             {
                 GetKursNamn = GetKursNamn(),
@@ -66,29 +65,12 @@ namespace LMS.Grupp4.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-               // modul.KursId = _context.Kurser.Single(m => m.Id == modul.KursId)
                 _context.Add(modul);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-           // ViewData["KursId"] = new SelectList(_context.Kurser, "Id", "Id", modul.KursId);
-
             return View(modul);
         }
-
-        //private async Task<IEnumerable<SelectListItem>> GeKursNamnAsync()
-        //{
-        //    var g = _context.Moduler;
-        //    return await _context.Moduler
-        //        .Select(p => p.Kurs.Namn)
-        //        .Distinct()
-        //        .Select(g => new SelectListItem
-        //        {
-        //            Text = g.ToString(),
-        //            Value = g.ToString(),
-        //        })
-        //        .ToListAsync();
-        //}
         private IEnumerable<SelectListItem> GetKursNamn()
 
         {

@@ -61,6 +61,7 @@ namespace LMS.Grupp4.Data.Data
                 var aktiviteter = new List<Aktivitet>();
                 var elever = new List<Anvandare>();
                 var enrollments = new List<AnvandareKurs>();
+               // var aktuellTid = DateTime.Now;
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -72,7 +73,20 @@ namespace LMS.Grupp4.Data.Data
                         Beskrivning = fake.Lorem.Paragraph(),
                         StartDatum = startdatum,
                         SlutDatum = startdatum.AddDays(35),
-                    };                                                           
+                    };
+                    if (kurs.SlutDatum < DateTime.Now && kurs.StartDatum< DateTime.Now)
+                    {
+                    kurs.KursStatus = Status.Avslutad;
+                    }
+                    if (kurs.StartDatum <= DateTime.Now && kurs.SlutDatum.AddHours(23) >= DateTime.Now)
+                    {
+                        kurs.KursStatus = Status.Pågår;
+                    }
+                    if (kurs.StartDatum > DateTime.Now.AddDays(1)&&kurs.SlutDatum> DateTime.Now)
+                    {
+                        kurs.KursStatus = Status.Kommande;
+                   }
+
                     for (int Useri = 0; Useri < 3; Useri++)
                     {
                         var fName = fake.Name.FirstName();

@@ -27,6 +27,10 @@
                 @Html.DisplayNameFor(model => model.Moduler)
             </th>
             <th></th>
+               <th>
+                      @Html.DisplayNameFor(model => model.KursStatus)
+
+               </th>
         </tr>
     </thead>
     <tbody>
@@ -43,15 +47,20 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Beskrivning)
-            </td><td>
-    @foreach (var modul in item.Moduler)
-    {
-        <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
-               @modul.Namn<br />
-                </a>
-    }
-</td>
-
+            </td>
+            <td>
+            </td>
+            <td>
+                @foreach (var modul in item.Moduler)
+                {
+                    <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
+                        @modul.Namn<br />
+                    </a>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KursStatus)
+            </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

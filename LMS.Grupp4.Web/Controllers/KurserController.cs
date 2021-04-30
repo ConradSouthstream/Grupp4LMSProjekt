@@ -10,11 +10,11 @@ using LMS.Grupp4.Data;
 
 namespace LMS.Grupp4.Web.Controllers
 {
-    public class KursController : Controller
+    public class KurserController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public KursController(ApplicationDbContext context)
+        public KurserController(ApplicationDbContext context)
         {
             _context = context;
         }
