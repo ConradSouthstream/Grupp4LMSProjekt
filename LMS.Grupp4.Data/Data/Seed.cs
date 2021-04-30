@@ -22,10 +22,10 @@ namespace LMS.Grupp4.Data.Data
                 fake = new Faker("sv");
                 var userManager = services.GetRequiredService<UserManager<Anvandare>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                //if (db.Anvandare.Any())
-                //{
-                //    return;
-                //}
+                if (db.Anvandare.Any())
+                {
+                    return;
+                }
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
 
@@ -66,7 +66,7 @@ namespace LMS.Grupp4.Data.Data
                 for (int i = 0; i < 10; i++)
                 {
                     //första kursen skapas 10 veckor tidigare från dagens datum
-                    DateTime startdatum = DateTime.Now.AddDays(((i + 1) * 35)-105);
+                    DateTime startdatum = DateTime.Now.AddDays(((i + 1) * 35)-105).Date;
                     var kurs = new Kurs
                     {
                         Namn = fake.Company.CatchPhrase(),
@@ -133,8 +133,8 @@ namespace LMS.Grupp4.Data.Data
                                 Beskrivning = fake.Lorem.Paragraph(),
                                 AktivitetTyp = fake.Random.ListItem<AktivitetTyp>(aktivitetTyper),
                                 Modul = modul,
-                                StartDatum = startdatum.AddDays(((moduli + 1) * 3.5) - 3.5),
-                                SlutDatum = startdatum.AddDays((moduli + 1) * 3.5)
+                                StartDatum = startdatum.AddDays(((moduli + 1) * 3) - 3),
+                                SlutDatum = startdatum.AddDays((moduli + 1) * 3)
                             };
                             aktiviteter.Add(aktivitet);
                         }
