@@ -1,0 +1,81 @@
+﻿@model IEnumerable<LMS.Grupp4.Core.ViewModels.Aktivitet.AktivitetListViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
+<p>
+    <a asp-action="Create" asp-route-id="1">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Namn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDatum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDatum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Beskrivning)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AktivitetTypNamn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModulId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModulNamn)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Namn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDatum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SlutDatum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Beskrivning)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AktivitetTypNamn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModulId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModulNamn)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
