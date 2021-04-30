@@ -1,0 +1,32 @@
+﻿@model AnvandareDto
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 class="bg-info text-white">Skapa ny användare</h1>
+<a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="ForNamn"></label>
+        <input asp-for="ForNamn" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EfterNamn"></label>
+        <input asp-for="EfterNamn" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Role"></label>
+        <input asp-for="Role" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Skapa användaren</button>
+</form>

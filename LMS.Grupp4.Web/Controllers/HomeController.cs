@@ -1,4 +1,5 @@
-﻿using LMS.Grupp4.Web.Models;
+﻿using LMS.Grupp4.Data;
+using LMS.Grupp4.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,15 +13,20 @@ namespace LMS.Grupp4.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext db;
 
-        public HomeController(ILogger<HomeController> logger)
+       
+
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
         {
             _logger = logger;
+            this.db = db;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var users = db.Users.ToList();
+            return View(users);
         }
 
         public IActionResult Privacy()
