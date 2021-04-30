@@ -1,5 +1,6 @@
 ﻿using LMS.Grupp4.Core.Dtos;
 using LMS.Grupp4.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,15 +10,17 @@ using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Web.Controllers
 {
-
+    [Authorize(Roles = "Larare")]
     public class AdminController : Controller
     {
         private readonly UserManager<Anvandare> userManager;
+        private readonly RoleManager<IdentityRole> roleManager;
         private readonly IPasswordHasher<Anvandare> passwordHasher;
 
-        public AdminController(UserManager<Anvandare> userManager, IPasswordHasher<Anvandare> passwordHasher)
+        public AdminController(UserManager<Anvandare> userManager, RoleManager<IdentityRole> roleManager,IPasswordHasher<Anvandare> passwordHasher)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.passwordHasher = passwordHasher;
         }
       
@@ -36,15 +39,25 @@ namespace LMS.Grupp4.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var role = await roleManager.FindByNameAsync(user.Role);
+                if (role == null)
+                    throw new ArgumentNullException("No such role");
+
                 var anvandare = new Anvandare
                 {
-                    UserName = user.Name,
+                    EfterNamn = user.EfterNamn,
+                    ForeNamn = user.ForNamn,
+                    UserName = user.Email,
                     Email = user.Email
                 };
 
                 var result = await userManager.CreateAsync(anvandare, user.Password);
                 if (result.Succeeded)
+                {
+                    // user created: add it to role
+                    var res = await userManager.AddToRoleAsync(anvandare, role.Name);
                     return RedirectToAction("Index");
+                }
                 else
                 {
                     foreach (var error in result.Errors)
