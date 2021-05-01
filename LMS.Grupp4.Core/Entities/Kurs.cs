@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LMS.Grupp4.Core.Entities
 {
-    public  class Kurs
+    public class Kurs
     {
         public int Id { get; set; }
         public string Namn { get; set; }
@@ -16,7 +16,20 @@ namespace LMS.Grupp4.Core.Entities
         public ICollection<Modul> Moduler { get; set; }
         [Display(Name = "Inskrivna Elever")]
         public ICollection<AnvandareKurs> AnvandareKurser { get; set; }
+        [Required]
+        public int KursStatusId { get; set; }
+        [EnumDataType(typeof(Status))]
         [Display(Name = "Status")]
-        public Status KursStatus { get; set; }
+        public Status KursStatus
+        {
+            get
+            {
+                return (Status)this.KursStatusId;
+            }
+            set
+            {
+                this.KursStatusId = (int)value;
+            }
+        }
     }
 }

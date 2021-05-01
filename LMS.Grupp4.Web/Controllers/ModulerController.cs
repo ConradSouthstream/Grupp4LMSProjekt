@@ -22,8 +22,8 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Moduler
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Moduler.Include(m => m.Kurs);
-            return View(await applicationDbContext.ToListAsync());
+            var moduler = _context.Moduler.Include(m => m.Kurs);
+            return View(await moduler.ToListAsync());
         }
 
         // GET: Moduler/Details/5
@@ -74,18 +74,18 @@ namespace LMS.Grupp4.Web.Controllers
         private IEnumerable<SelectListItem> GetKursNamn()
 
         {
-            var TypeName = _context.Kurser;
-            var GetTypeOfVehicle = new List<SelectListItem>();
-            foreach (var type in TypeName)
+            var KurserNamn = _context.Kurser;
+            var GetKursNamn = new List<SelectListItem>();
+            foreach (var type in KurserNamn)
             {
-                var newType = (new SelectListItem
+                var newNamn = (new SelectListItem
                 {
                     Text = type.Namn,
                     Value = type.Id.ToString(),
                 });
-                GetTypeOfVehicle.Add(newType);
+                GetKursNamn.Add(newNamn);
             }
-            return (GetTypeOfVehicle);
+            return (GetKursNamn);
         }
 
         // GET: Moduler/Edit/5

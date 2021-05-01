@@ -40,7 +40,7 @@ namespace LMS.Grupp4.Core.Entities
         /// </summary>
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
         public DateTime StartDatum { get; set; }
-        public int? KursId { get; set; }
+        public int KursId { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem> GetKursNamn { get; set; }
 

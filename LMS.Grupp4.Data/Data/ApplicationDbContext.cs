@@ -24,7 +24,6 @@ namespace LMS.Grupp4.Data
 
 
 
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

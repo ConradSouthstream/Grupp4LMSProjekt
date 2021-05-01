@@ -80,7 +80,7 @@ namespace LMS.Grupp4.Data.Data
                     }
                     if (kurs.StartDatum <= DateTime.Now && kurs.SlutDatum.AddHours(23) >= DateTime.Now)
                     {
-                        kurs.KursStatus = Status.Pågår;
+                        kurs.KursStatus = Status.Aktuell;
                     }
                     if (kurs.StartDatum > DateTime.Now.AddDays(1)&&kurs.SlutDatum> DateTime.Now)
                     {
