@@ -23,6 +23,9 @@ namespace LMS.Grupp4.Core.Entities
 
         public ICollection<AnvandareKurs> KurserAnvandare { get; set; }
         public ICollection<Dokument> Dokument { get; set; }
+        //Många till Många
+        public ICollection<Kurs> Kurser { get; set; }
+
 
 
     }

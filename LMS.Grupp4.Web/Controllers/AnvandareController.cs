@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Data;
+using AutoMapper;
+using LMS.Grupp4.Core.ViewModels.Elev;
 
 namespace LMS.Grupp4.Web.Controllers
 {
-    public class AnvandareKursController : Controller
+    public class AnvandareController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper mapper;
 
-        public AnvandareKursController(ApplicationDbContext context)
+        public AnvandareController(ApplicationDbContext context,IMapper mapper)
         {
             _context = context;
+            this.mapper = mapper;
         }
 
         // GET: AnvandareKurs
@@ -29,21 +33,26 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: AnvandareKurs/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
 
-            var anvandareKurs = await _context.AnvandareKurser
-                .Include(a => a.Anvandare)
-                .Include(a => a.Kurs)
-                .FirstOrDefaultAsync(m => m.AnvandareId == id);
-            if (anvandareKurs == null)
-            {
-                return NotFound();
-            }
+            //var anvandareKurs = await _context.AnvandareKurser
+            //    .Include(a => a.Anvandare)
+            //    .Include(a => a.Kurs)
+            //    .FirstOrDefaultAsync(m => m.AnvandareId == id);
+            //if (anvandareKurs == null)
+            //{
+            //    return NotFound();
+            //}
 
-            return View(anvandareKurs);
+            //return View(anvandareKurs);
+            var student = await mapper
+               .ProjectTo<AnvandarDetaljerViewModel>(_context.Anvandare)
+               .FirstOrDefaultAsync(s => s.Id == id);
+
+            return View(student);
         }
 
         // GET: AnvandareKurs/Create

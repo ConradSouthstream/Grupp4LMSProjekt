@@ -16,6 +16,10 @@ namespace LMS.Grupp4.Core.Entities
         public ICollection<Modul> Moduler { get; set; }
         [Display(Name = "Inskrivna Elever")]
         public ICollection<AnvandareKurs> AnvandareKurser { get; set; }
+
+        //Många till många
+        public ICollection<Anvandare> Anvandare { get; set; }
+
         [Required]
         public int KursStatusId { get; set; }
         [EnumDataType(typeof(Status))]

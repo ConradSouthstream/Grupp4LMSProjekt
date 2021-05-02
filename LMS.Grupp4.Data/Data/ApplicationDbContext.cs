@@ -32,7 +32,13 @@ namespace LMS.Grupp4.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<AnvandareKurs>().HasKey(a => new { a.AnvandareId, a.KursId });
+            //builder.Entity<AnvandareKurs>().HasKey(a => new { a.AnvandareId, a.KursId });
+            builder.Entity<Anvandare>()
+                .HasMany(s => s.Kurser)
+                .WithMany(c => c.Anvandare)
+                .UsingEntity<AnvandareKurs>(
+                    e => e.HasOne(e => e.Kurs).WithMany(c => c.AnvandareKurser),
+                    e => e.HasOne(e => e.Anvandare).WithMany(s => s.KurserAnvandare));
             builder.Entity<Dokument>().Property(d => d.UppladdningsDatum).HasDefaultValueSql("getdate()");
         }
     }
