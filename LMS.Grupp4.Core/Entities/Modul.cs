@@ -32,13 +32,19 @@ namespace LMS.Grupp4.Core.Entities
         /// <summary>
         /// Tid när modul slutar
         /// </summary>
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
+        //[CheckDate]
         public DateTime SlutDatum { get; set; }
 
         /// <summary>
         /// Tid när modul starta
         /// </summary>
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
+        //[CheckDate]
         public DateTime StartDatum { get; set; }
         public int KursId { get; set; }
         [NotMapped]

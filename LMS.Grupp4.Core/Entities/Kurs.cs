@@ -8,7 +8,11 @@ namespace LMS.Grupp4.Core.Entities
     {
         public int Id { get; set; }
         public string Namn { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDatum { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime SlutDatum { get; set; }
         public string Beskrivning { get; set; }
         //Navigation prope

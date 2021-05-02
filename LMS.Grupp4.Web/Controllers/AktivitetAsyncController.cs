@@ -1,5 +1,6 @@
 ﻿using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
+using LMS.Grupp4.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace LMS.Grupp4.Web.Controllers
             // TODO Temp inför merging
             return Json(true);
 
-            Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
+            var modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
             if (modul != null)
             {
                 DateTime dtStartDatumDate = StartDatum.Date;
@@ -159,6 +160,34 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             return Json(bValid);
+        }
+        public  Task<JsonResult>CheckModuleDate(DateTime startDatum,DateTime slutDatum,int kursId)
+        {
+
+
+
+            var kurs = _context.Kurser.Where(m => m.Id == modul.KursId).FirstOrDefault();
+
+            //var kurs = _context.Database.ExecuteSqlCommand("Select * from Kurser WHERE id = @modulId");
+            if (modul.StartDatum >= kurs.StartDatum && modul.SlutDatum <= kurs.SlutDatum)
+            {
+                if (modul.Kurs.Moduler.Count == 0)
+                {
+                    return ValidationResult.Success;
+                }
+                foreach (var item in modul.Kurs.Moduler)
+                {
+                    if (modul.StartDatum != item.StartDatum && modul.SlutDatum != item.SlutDatum)
+                    {
+                        return ValidationResult.Success;
+
+                    }
+                    return new ValidationResult("Modul kan inte överlapp en annan Modul Datum");
+                }
+
+            }
+            return new ValidationResult("Modul kan inte överlappa Kurs Datum !!");
+
         }
     }
 }
