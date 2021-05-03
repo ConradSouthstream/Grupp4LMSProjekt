@@ -25,7 +25,7 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="StartDatum">Aktivitetens StartDatum</param>
         /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
         /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
-        /// <param name="Id">Aktivitetens id eller -1 om anropet kommer från Create view</param>
+        /// <param name="Id">Aktivitetens id. Om anropet kommer från create view kommer värdet inte vara satt dvs. får det defaulta värdet. Default värde är -1</param>
         /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
         public async Task<JsonResult> IfValidDatesEditStartDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int Id = -1)
         {
@@ -96,7 +96,7 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="StartDatum">Aktivitetens StartDatum</param>
         /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
         /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
-        /// <param name="Id">Aktivitetens id eller -1 om anropet kommer från Create view</param>
+        /// <param name="Id">Aktivitetens id. Om anropet kommer från create view kommer värdet inte vara satt dvs. får det defaulta värdet. Default värde är -1</param>
         /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
         public async Task<JsonResult> IfValidDatesEditSlutDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int Id = -1)
         {

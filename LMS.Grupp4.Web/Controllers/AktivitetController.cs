@@ -73,7 +73,6 @@ namespace LMS.Grupp4.Web.Controllers
                     viewModel.ModulSlutDatum = modul.SlutDatum;
                 }
 
-                viewModel.Id = -1;
                 // Sätt upp startvärden för kalendrar
                 DateTime dtNow = DateTime.Now;
                 viewModel.StartDatum = dtNow;
@@ -87,7 +86,7 @@ namespace LMS.Grupp4.Web.Controllers
                 return View(viewModel);
             }
 
-            ViewBag.Message = "Det gick inte gå till sidan för att skapa aktivitet";
+            ViewBag.Message = "Det gick inte gå till sidan för att skapa aktiviteten";
             ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
 
             return RedirectToAction(nameof(Index));
@@ -96,13 +95,14 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(AktivitetCreateViewModel viewModel)
+        public async Task<ActionResult> Create([Bind("Namn, StartDatum, SlutDatum, Beskrivning, AktivitetTypId, ModulId")]AktivitetCreateViewModel viewModel)
         {            
             if (ModelState.IsValid)
             {
                 try
                 {
                     Aktivitet aktivitet = m_Mapper.Map<Aktivitet>(viewModel);
+                    //aktivitet.Id = 0;
 
                     // Post
                     // https://www.c-sharpcorner.com/article/http-get-put-post-and-delete-verbs-in-asp-net-web-api/
@@ -121,7 +121,7 @@ namespace LMS.Grupp4.Web.Controllers
                         return RedirectToAction(nameof(Index));
                     }                    
                 }
-                catch (Exception) 
+                catch (Exception exc) 
                 { }
             }
 
