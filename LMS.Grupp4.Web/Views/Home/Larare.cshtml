@@ -1,26 +1,26 @@
-﻿@{
+﻿@model IEnumerable<LMS.Grupp4.Core.Entities.Kurs>
+@{
     ViewData["Title"] = "Home Page";
 }
+<head>
+    <link rel="stylesheet" href="~/css/GeneralView.css" />
+</head>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-<div class="row">
+@*<div class="row">
     <div class="col-4">
 
     </div>
     <div class="col-8" id="accordion">
         <div class="card">
-            <div class="card-header" id="headingOne">
+            <div class="card-header" id="h1">
                 <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#@Model.First().Id" aria-expanded="true" aria-controls="on1">
                         Collapsible Group Item #1
                     </button>
                 </h5>
             </div>
 
-            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="on1" class="collapse show" aria-labelledby="h1" data-parent="#accordion">
                 <div class="card-body">
                     Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
                 </div>
@@ -64,4 +64,102 @@
             </div>
         </div>
     </div>
+</div>*@
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="row">
+    @*<div class="col-3">
+
+    </div>*@
+    <div class="col">
+        <div class="row">
+            <h5 class="col-2 card-header corner-left border-left-0">
+                @Html.DisplayNameFor(model => model.Namn)
+            </h5>
+            <h5 class="col-2 card-header">
+                @Html.DisplayNameFor(model => model.StartDatum)
+            </h5>
+            <h5 class="col-2 card-header">
+                @Html.DisplayNameFor(model => model.SlutDatum)
+            </h5>
+            <h5 class="col-4 text-right card-header">
+                @Html.DisplayNameFor(model => model.Beskrivning)
+            </h5>
+            @*<div class="col">
+                @Html.DisplayNameFor(model => model.Moduler)
+            </div>*@
+            <h5 class="col-1 card-header">
+                @Html.DisplayNameFor(model => model.KursStatus)
+            </h5>
+            <h5 class="col-1 card-header corner-right border-right-0">
+                
+            </h5>
+        </div>
+
+        <div>
+            @foreach (var item in Model)
+            {
+                <div class="row">
+                    @*<div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                                Collapsible Group Item #1
+                            </button>
+                        </h5>
+                    </div>*@
+
+
+                    <div class="col-2 border-left border-right border-bottom" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                        @Html.DisplayFor(modelItem => item.Namn)
+                    </div>
+                    <div class="col-2 border-right border-bottom">
+                        @Html.DisplayFor(modelItem => item.StartDatum)
+                    </div>
+                    <div class="col-2 border-right border-bottom">
+                        @Html.DisplayFor(modelItem => item.SlutDatum)
+                    </div>
+                    <div class="col-4 text-right border-right border-bottom btn-link" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                        Visa Beskrivning
+                    </div>
+
+                    <div class="col-1 border-right border-bottom">
+                        @Html.DisplayFor(modelItem => item.KursStatus)
+                    </div>
+                    <div class="col-1 border-bottom border-right">
+                        <a asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a asp-controller="kurser" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </div>
+                </div>
+                <div>
+                    <div id="@("collapse" + item.Id)" class="row collapse">
+                        <div class="col-10 pad-0">
+                            <h5 class="card-header">
+                                Beskrivning:
+                            </h5>
+                            <div class="card card-body">
+                                @Html.DisplayFor(modelItem => item.Beskrivning)
+                            </div>
+                        </div>
+                        <div class="col-2 pad-0">
+                            <h5 class="card-header">
+                                Moduler
+                            </h5>
+                            <div class="card card-body">
+                                @foreach (var modul in item.Moduler)
+                                {
+                                    <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
+                                        @modul.Namn<br />
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
+

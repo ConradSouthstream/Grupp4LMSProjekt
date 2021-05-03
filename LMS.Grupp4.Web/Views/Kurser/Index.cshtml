@@ -23,14 +23,14 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Beskrivning)
-            </th> <th>
+            </th> 
+            <th>
                 @Html.DisplayNameFor(model => model.Moduler)
-            </th>
-            <th></th>
-               <th>
-                      @Html.DisplayNameFor(model => model.KursStatus)
+            </th>            
+            <th>
+                @Html.DisplayNameFor(model => model.KursStatus)
 
-               </th>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -47,9 +47,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Beskrivning)
-            </td>
-            <td>
-            </td>
+            </td>            
             <td>
                 @foreach (var modul in item.Moduler)
                 {
@@ -62,8 +60,8 @@
                 @Html.DisplayFor(modelItem => item.KursStatus)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>|
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>|
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
