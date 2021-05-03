@@ -9,7 +9,7 @@ namespace LMS.Grupp4.Core.Entities
     public enum Status
     {
         Avslutad,
-        Pågår,
+        Aktuell,
         Kommande
     }
 }

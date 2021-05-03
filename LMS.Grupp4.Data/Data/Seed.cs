@@ -66,7 +66,7 @@ namespace LMS.Grupp4.Data.Data
                 for (int i = 0; i < 10; i++)
                 {
                     //första kursen skapas 10 veckor tidigare från dagens datum
-                    DateTime startdatum = DateTime.Now.AddDays(((i + 1) * 35)-105).Date;
+                    DateTime startdatum = DateTime.Now.AddDays(((i + 1) * 35)-105);
                     var kurs = new Kurs
                     {
                         Namn = fake.Company.CatchPhrase(),
@@ -80,7 +80,7 @@ namespace LMS.Grupp4.Data.Data
                     }
                     if (kurs.StartDatum <= DateTime.Now && kurs.SlutDatum.AddHours(23) >= DateTime.Now)
                     {
-                        kurs.KursStatus = Status.Pågår;
+                        kurs.KursStatus = Status.Aktuell;
                     }
                     if (kurs.StartDatum > DateTime.Now.AddDays(1)&&kurs.SlutDatum> DateTime.Now)
                     {

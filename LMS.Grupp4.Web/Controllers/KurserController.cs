@@ -61,6 +61,18 @@ namespace LMS.Grupp4.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (kurs.SlutDatum < DateTime.Now && kurs.StartDatum < DateTime.Now)
+                {
+                    kurs.KursStatus = Status.Avslutad;
+                }
+                if (kurs.StartDatum <= DateTime.Now && kurs.SlutDatum.AddHours(23) >= DateTime.Now)
+                {
+                    kurs.KursStatus = Status.Aktuell;
+                }
+                if (kurs.StartDatum > DateTime.Now.AddDays(1) && kurs.SlutDatum > DateTime.Now)
+                {
+                    kurs.KursStatus = Status.Kommande;
+                }
                 _context.Add(kurs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

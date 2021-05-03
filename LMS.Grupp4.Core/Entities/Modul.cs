@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.Grupp4.Core.Entities
 {
@@ -32,15 +33,25 @@ namespace LMS.Grupp4.Core.Entities
         /// <summary>
         /// Tid när modul slutar
         /// </summary>
+       // [DataType(DataType.Date)]
+        // [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+       // [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+
         [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
+        [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId")]
         public DateTime SlutDatum { get; set; }
 
         /// <summary>
         /// Tid när modul starta
         /// </summary>
+        //[DataType(DataType.Date)]
+       // [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
+      //  [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
+
+        [Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]
         public DateTime StartDatum { get; set; }
-        public int? KursId { get; set; }
+        public int KursId { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem> GetKursNamn { get; set; }
 

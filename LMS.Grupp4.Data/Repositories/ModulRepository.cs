@@ -1,6 +1,7 @@
 ﻿using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +23,17 @@ namespace LMS.Grupp4.Data.Repositories
             m_DbContext = dbContext;
         }
 
+        public void AddModul(Modul modul)
+        {
+            m_DbContext.Moduler.Add(modul);
+
+        }
+
+        public async Task<IEnumerable<Modul>> GetKursModulerAsync(int ikursId)
+        {
+            return await m_DbContext.Moduler.Where(m => m.KursId == ikursId).ToListAsync();
+        }
+
         /// <summary>
         /// Async metod som returnerar sökt Modul eller null
         /// </summary>
@@ -31,6 +43,10 @@ namespace LMS.Grupp4.Data.Repositories
         {
             return await m_DbContext.Moduler.Where(m => m.Id == iModulId).FirstOrDefaultAsync();
         }
+        public async Task<Modul> GetModulByKurs(int kursId, int iModulId)
+        {
+            return await m_DbContext.Moduler.Where(m => m.KursId == kursId && m.Id == iModulId).FirstOrDefaultAsync();
+        }
 
         /// <summary>
         /// Async metod som sparar ändringar
@@ -39,6 +55,11 @@ namespace LMS.Grupp4.Data.Repositories
         public async Task<bool> SaveAsync()
         {
             return (await m_DbContext.SaveChangesAsync()) >= 0;
+        }
+
+        public void UpdateModul(Modul modul)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
