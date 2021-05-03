@@ -25,16 +25,13 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="StartDatum">Aktivitetens StartDatum</param>
         /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
         /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
-        /// <param name="AktivitetId">Aktivitetens id</param>
+        /// <param name="Id">Aktivitetens id. Om anropet kommer från create view kommer värdet inte vara satt dvs. får det defaulta värdet. Default värde är -1</param>
         /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
-        public async Task<JsonResult> IfValidDatesEditStartDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int AktivitetId)
+        public async Task<JsonResult> IfValidDatesEditStartDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int Id = -1)
         {
             bool bValid = false;
 
-            // TODO Temp inför merging
-            return Json(true);
-
-            var modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
+            Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
             if (modul != null)
             {
                 DateTime dtStartDatumDate = StartDatum.Date;
@@ -52,26 +49,27 @@ namespace LMS.Grupp4.Web.Controllers
                         DateTime endDate;
 
                         List<Aktivitet> lsAktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId);
-                        foreach (var aktivitet in lsAktiviteter)
+
+                        foreach (Aktivitet ak in lsAktiviteter)
                         {
-                            if (aktivitet.Id != AktivitetId)
+                            startDate = ak.StartDatum.Date;
+                            endDate = ak.SlutDatum.Date;
+
+                            // Om AktivitetId > 0 innebär det att anropar från Edit view. Är AktivitetId == -1 är det från Create view
+                            if (Id > 0)
+                            {// Vi gör validering från en Edit view och vi skall inte kolla samma aktivitet som vi vill ändra
+
+                                if (ak.Id != Id)// Om tidigare aktivitet är samma som vi har i view kontrollerar jag inte
+                                    bValid = Validate(dtStartDatumDate, dtSlutDatumDate, startDate, endDate);
+                            }
+                            else if (Id < 0)
+                            {// Vi gör validering från en Create view
+                                bValid = Validate(dtStartDatumDate, dtSlutDatumDate, startDate, endDate);
+                            }
+
+                            if (bValid == false)
                             {
-                                startDate = aktivitet.StartDatum.Date;
-                                endDate = aktivitet.SlutDatum.Date;
-
-                                if (startDate >= dtStartDatumDate && endDate >= dtStartDatumDate)
-                                {// Aktivitetens StartDatum finns inom en tidigare aktivitet
-                                    bValid = false;
-                                }
-                                else if (startDate >= dtSlutDatumDate && endDate >= dtSlutDatumDate)
-                                {// Aktivitetens SlutDatum finns inom en tidigare aktivitet
-                                    bValid = false;
-                                }
-
-                                if (bValid == false)
-                                {
-                                    return Json("Modulen har redan aktivitet under valt tidsintervall");
-                                }
+                                return Json("Modulen har redan aktivitet under valt tidsintervall");
                             }
                         }
                     }
@@ -98,14 +96,11 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="StartDatum">Aktivitetens StartDatum</param>
         /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
         /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
-        /// <param name="AktivitetId">Aktivitetens id</param>
+        /// <param name="Id">Aktivitetens id. Om anropet kommer från create view kommer värdet inte vara satt dvs. får det defaulta värdet. Default värde är -1</param>
         /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
-        public async Task<JsonResult> IfValidDatesEditSlutDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int AktivitetId)
+        public async Task<JsonResult> IfValidDatesEditSlutDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int Id = -1)
         {
             bool bValid = false;
-
-            // TODO Temp inför merging
-            return Json(true);
 
             Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
             if (modul != null)
@@ -125,26 +120,27 @@ namespace LMS.Grupp4.Web.Controllers
                         DateTime endDate;
 
                         List<Aktivitet> lsAktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId);
-                        foreach (var aktivitet in lsAktiviteter)
+
+                        foreach (Aktivitet ak in lsAktiviteter)
                         {
-                            if (aktivitet.Id != AktivitetId)
+                            startDate = ak.StartDatum.Date;
+                            endDate = ak.SlutDatum.Date;
+
+                            // Om AktivitetId > 0 innebär det att anropar från Edit view. Är AktivitetId == -1 är det från Create view
+                            if (Id > 0)
+                            {// Vi gör validering från en Edit view och vi skall inte kolla samma aktivitet som vi vill ändra
+
+                                if(ak.Id != Id)// Om tidigare aktivitet är samma som vi har i view kontrollerar jag inte
+                                    bValid = Validate(dtStartDatumDate, dtSlutDatumDate, startDate, endDate);
+                            }
+                            else if(Id < 0)
+                            {// Vi gör validering från en Create view
+                                bValid = Validate(dtStartDatumDate, dtSlutDatumDate, startDate, endDate);
+                            }
+
+                            if (bValid == false)
                             {
-                                startDate = aktivitet.StartDatum.Date;
-                                endDate = aktivitet.SlutDatum.Date;
-
-                                if (startDate >= dtStartDatumDate && endDate >= dtStartDatumDate)
-                                {// Aktivitetens StartDatum finns inom en tidigare aktivitet
-                                    bValid = false;
-                                }
-                                else if (startDate >= dtSlutDatumDate && endDate >= dtSlutDatumDate)
-                                {// Aktivitetens SlutDatum finns inom en tidigare aktivitet
-                                    bValid = false;
-                                }
-
-                                if (bValid == false)
-                                {
-                                    return Json("Modulen har redan aktivitet under valt tidsintervall");
-                                }
+                                return Json("Modulen har redan aktivitet under valt tidsintervall");
                             }
                         }
                     }
@@ -160,6 +156,43 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             return Json(bValid);
+        }
+
+
+        /// <summary>
+        /// Metoden validera att Datum för Start och Slut av en aktivitet inte kolliderar med en tidigare vald aktivitet
+        /// </summary>
+        /// <param name="dtStartDatumDate">Startdatum för Aktivitet i view</param>
+        /// <param name="dtSlutDatumDate">Slutdatum för Aktivitet i view</param>
+        /// <param name="startDate">Startdatum för tidigare aktivitet</param>
+        /// <param name="endDate">Slutdatum för tidigare aktivitet</param>
+        /// <returns>true om det inte finns några problem med valda datum. Annars returneras false</returns>
+        private bool Validate(DateTime dtStartDatumDate, DateTime dtSlutDatumDate, DateTime startDate, DateTime endDate)
+        {
+            bool bValid = true;
+
+            if (startDate <= dtStartDatumDate && endDate >= dtSlutDatumDate)
+            {// Aktivitetens StartDatum och SlutDatum finns inom en tidigare aktivitet
+                bValid = false;
+                //Console.WriteLine($"Aktivitet {ak.Id}. StartDatum och SlutDatum finns inom en tidigare aktivitet");
+            }
+            else if (startDate <= dtStartDatumDate && endDate >= dtStartDatumDate)
+            {// Aktivitetens StartDatum finns inom en tidigare aktivitet
+                bValid = false;
+                //Console.WriteLine($"Aktivitet {ak.Id}. StartDatum finns inom en tidigare aktivitet");
+            }
+            else if (startDate <= dtSlutDatumDate && endDate >= dtSlutDatumDate)
+            {// Aktivitetens Slut finns inom en tidigare aktivitet
+                bValid = false;
+                //Console.WriteLine($"Aktivitet {ak.Id}. SlutDatum finns inom en tidigare aktivitet");
+            }
+            else if (startDate >= dtStartDatumDate && endDate <= dtSlutDatumDate)
+            {// Det finns en tidigare aktivitet inom den nya aktiviteten
+                bValid = false;
+                //Console.WriteLine($"Aktivitet {ak.Id}. Det finns en tidigare aktivitet inom aktiviteten");
+            }
+
+            return bValid;
         }
     }
 }

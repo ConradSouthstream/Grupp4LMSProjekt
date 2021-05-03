@@ -86,7 +86,7 @@ namespace LMS.Grupp4.Web.Controllers
                 return View(viewModel);
             }
 
-            ViewBag.Message = "Det gick inte gå till sidan för att skapa aktivitet";
+            ViewBag.Message = "Det gick inte gå till sidan för att skapa aktiviteten";
             ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
 
             return RedirectToAction(nameof(Index));
@@ -95,13 +95,14 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(AktivitetCreateViewModel viewModel)
+        public async Task<ActionResult> Create([Bind("Namn, StartDatum, SlutDatum, Beskrivning, AktivitetTypId, ModulId")]AktivitetCreateViewModel viewModel)
         {            
             if (ModelState.IsValid)
             {
                 try
                 {
                     Aktivitet aktivitet = m_Mapper.Map<Aktivitet>(viewModel);
+                    //aktivitet.Id = 0;
 
                     // Post
                     // https://www.c-sharpcorner.com/article/http-get-put-post-and-delete-verbs-in-asp-net-web-api/
@@ -120,7 +121,7 @@ namespace LMS.Grupp4.Web.Controllers
                         return RedirectToAction(nameof(Index));
                     }                    
                 }
-                catch (Exception) 
+                catch (Exception exc) 
                 { }
             }
 
@@ -243,13 +244,13 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/DeleteAktivitet/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAktivitet(int? AktivitetId, string AktivitetNamn)
+        public async Task<ActionResult> DeleteAktivitet(int? Id, string AktivitetNamn)
         {
-            if (AktivitetId.HasValue)
+            if (Id.HasValue)
             {
                 try
                 {
-                    await m_UnitOfWork.AktivitetRepository.DeleteAktivitetAsync(AktivitetId.Value);
+                    await m_UnitOfWork.AktivitetRepository.DeleteAktivitetAsync(Id.Value);
 
                     if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
                     {// Aktiviteten är raderad
@@ -262,7 +263,7 @@ namespace LMS.Grupp4.Web.Controllers
                     else
                     {// Det gick inte radera aktiviteten
 
-                        Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(AktivitetId.Value);
+                        Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(Id.Value);
                         if (aktivitet != null)
                         {
                             AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);

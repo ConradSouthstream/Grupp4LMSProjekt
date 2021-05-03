@@ -171,9 +171,9 @@ namespace LMS.Grupp4.Web.Controllers
         private IEnumerable<SelectListItem> GetKursNamn()
 
         {
-            var KurserNamn = _context.Kurser;
+            var TypeName = _context.Kurser;
             var GetKursNamn = new List<SelectListItem>();
-            foreach (var type in KurserNamn)
+            foreach (var type in TypeName)
             {
                 var newNamn = (new SelectListItem
                 {
