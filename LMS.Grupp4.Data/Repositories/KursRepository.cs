@@ -30,7 +30,7 @@ namespace LMS.Grupp4.Data.Repositories
             return await m_DbContext.Kurser.FirstOrDefaultAsync(k=>k.Id==iKursId);
         }
 
-        public async Task<IEnumerable<Kurs>> GetAllKurserAsync()
+        public async Task<List<Kurs>> GetAllKurserAsync()
         {
             return await m_DbContext.Kurser.ToListAsync();
 

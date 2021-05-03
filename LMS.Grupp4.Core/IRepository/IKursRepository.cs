@@ -13,7 +13,7 @@ namespace LMS.Grupp4.Core.IRepository
         /// Asyn metod som returnerar alla Kurser
         /// </summary>
         /// <returns>Task med alla Kurser</returns>
-        Task<IEnumerable<Kurs>> GetAllKurserAsync();
+        Task<List<Kurs>> GetAllKurserAsync();
         /// <summary>
         /// Async metod som returnerar sökt Kurs
         /// </summary>

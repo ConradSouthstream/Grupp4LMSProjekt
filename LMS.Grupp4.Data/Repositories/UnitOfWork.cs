@@ -23,6 +23,8 @@ namespace LMS.Grupp4.Data.Repositories
         /// </summary>
         public IModulRepository ModulRepository { get; private set; }
 
+        public IKursRepository KursRepository { get; private set; }
+
         /// <summary>
         /// Konstruktor
         /// </summary>
@@ -33,6 +35,7 @@ namespace LMS.Grupp4.Data.Repositories
 
             AktivitetRepository = new AktivitetRepository(m_dbContext);
             ModulRepository = new ModulRepository(m_dbContext);
+            KursRepository = new KursRepository(m_dbContext);
         }
 
         /// <summary>
@@ -43,6 +46,7 @@ namespace LMS.Grupp4.Data.Repositories
         {
             await ModulRepository.SaveAsync();
             await AktivitetRepository.SaveAsync();
+            await KursRepository.SaveAsync();
         }
     }
 }

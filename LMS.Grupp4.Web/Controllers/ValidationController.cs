@@ -1,49 +1,39 @@
 ﻿using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
-using LMS.Grupp4.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Web.Controllers
 {
-    public class AktivitetAsyncController : Controller
+    public class ValidationController : Controller
     {
         private readonly IUnitOfWork m_UnitOfWork;
 
-        public AktivitetAsyncController(IUnitOfWork uow)
+        public ValidationController(IUnitOfWork uow)
         {
             m_UnitOfWork = uow;
         }
-
-        /// <summary>
-        /// Metoden kontrollera att startdatum och slutdatum är ok valda
-        /// Ok innebär att startdatum är innan slutdatum.
-        /// Aktiviteten startar och slutar inom modulen
-        /// </summary>
-        /// <param name="StartDatum">Aktivitetens StartDatum</param>
-        /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
-        /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
-        /// <param name="AktivitetId">Aktivitetens id</param>
-        /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
-        public async Task<JsonResult> IfValidDatesEditStartDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int AktivitetId)
+        public async Task<JsonResult> CheckModuleStartDate(DateTime startDatum, DateTime slutDatum, int kursId, int modulId)
         {
             bool bValid = false;
 
             // TODO Temp inför merging
-            return Json(true);
+           // return Json(true);
 
-            var modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
-            if (modul != null)
+            var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(kursId);
+            if (kurs != null)
             {
-                DateTime dtStartDatumDate = StartDatum.Date;
-                DateTime dtSlutDatumDate = SlutDatum.Date;
+                DateTime dtStartDatumDate = startDatum.Date;
+                DateTime dtSlutDatumDate = slutDatum.Date;
 
                 if (dtStartDatumDate <= dtSlutDatumDate)
-                {// Starttid och sluttid är ok. Kontrollera att tiderna är inom modulen
+                {// Starttid och sluttid är ok. Kontrollera att tiderna är inom kursen
+                    //if (modul.StartDatum >= kurs.StartDatum && modul.SlutDatum <= kurs.SlutDatum)
 
-                    if (modul.StartDatum.Date <= dtStartDatumDate && modul.SlutDatum.Date >= dtSlutDatumDate)
+                       if (kurs.StartDatum.Date <= dtStartDatumDate && kurs.SlutDatum.Date >= dtSlutDatumDate)
                     {// Nya tiderna är inom modulens tidsram
                      // Kontrollera att nya tiderna inte överlappar med andra aktiviteter
 
@@ -51,13 +41,13 @@ namespace LMS.Grupp4.Web.Controllers
                         DateTime startDate;
                         DateTime endDate;
 
-                        List<Aktivitet> lsAktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId);
-                        foreach (var aktivitet in lsAktiviteter)
+                        IEnumerable<Modul> moduler = await m_UnitOfWork.ModulRepository.GetKursModulerAsync(kursId);
+                        foreach (var modul in moduler)
                         {
-                            if (aktivitet.Id != AktivitetId)
+                            if (modul.Id != modulId)
                             {
-                                startDate = aktivitet.StartDatum.Date;
-                                endDate = aktivitet.SlutDatum.Date;
+                                startDate = modul.StartDatum.Date;
+                                endDate = modul.SlutDatum.Date;
 
                                 if (startDate >= dtStartDatumDate && endDate >= dtStartDatumDate)
                                 {// Aktivitetens StartDatum finns inom en tidigare aktivitet
@@ -70,14 +60,14 @@ namespace LMS.Grupp4.Web.Controllers
 
                                 if (bValid == false)
                                 {
-                                    return Json("Modulen har redan aktivitet under valt tidsintervall");
+                                    return Json("Kursen har redan Moduler under valt tidsintervall");
                                 }
                             }
                         }
                     }
                     else
                     {
-                        return Json("Valda datum är utanför modulens tidsram");
+                        return Json("Valda datum är utanför kursen tidsram");
                     }
                 }
                 else
@@ -88,27 +78,15 @@ namespace LMS.Grupp4.Web.Controllers
 
             return Json(bValid);
         }
-
-
-        /// <summary>
-        /// Metoden kontrollera att startdatum och slutdatum är ok valda
-        /// Ok innebär att startdatum är innan slutdatum.
-        /// Aktiviteten startar och slutar inom modulen
-        /// </summary>
-        /// <param name="StartDatum">Aktivitetens StartDatum</param>
-        /// <param name="SlutDatum">Aktivitetens SlutDatum</param>
-        /// <param name="ModulId">Id för den modul som aktiviteten tillhör</param>
-        /// <param name="AktivitetId">Aktivitetens id</param>
-        /// <returns>Task med Json true om startdatum och slutdatum är ok annars returneras false</returns>
-        public async Task<JsonResult> IfValidDatesEditSlutDatum(DateTime StartDatum, DateTime SlutDatum, int ModulId, int AktivitetId)
+        public async Task<JsonResult> CheckModuleSlutDate(DateTime StartDatum, DateTime SlutDatum, int KursId, int modulId)
         {
             bool bValid = false;
 
             // TODO Temp inför merging
-            return Json(true);
+           // return Json(true);
 
-            Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(ModulId);
-            if (modul != null)
+            var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
+            if (kurs != null)
             {
                 DateTime dtStartDatumDate = StartDatum.Date;
                 DateTime dtSlutDatumDate = SlutDatum.Date;
@@ -116,7 +94,7 @@ namespace LMS.Grupp4.Web.Controllers
                 if (dtStartDatumDate <= dtSlutDatumDate)
                 {// Starttid och sluttid är ok. Kontrollera att tiderna är inom modulen
 
-                    if (modul.StartDatum.Date <= dtStartDatumDate && modul.SlutDatum.Date >= dtSlutDatumDate)
+                    if (kurs.StartDatum.Date <= dtStartDatumDate && kurs.SlutDatum.Date >= dtSlutDatumDate)
                     {// Nya tiderna är inom modulens tidsram
                      // Kontrollera att nya tiderna inte överlappar med andra aktiviteter
 
@@ -124,13 +102,13 @@ namespace LMS.Grupp4.Web.Controllers
                         DateTime startDate;
                         DateTime endDate;
 
-                        List<Aktivitet> lsAktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId);
-                        foreach (var aktivitet in lsAktiviteter)
+                        IEnumerable<Modul> moduler = await m_UnitOfWork.ModulRepository.GetKursModulerAsync(KursId);
+                        foreach (var modul in moduler)
                         {
-                            if (aktivitet.Id != AktivitetId)
+                            if (modul.Id != modulId)
                             {
-                                startDate = aktivitet.StartDatum.Date;
-                                endDate = aktivitet.SlutDatum.Date;
+                                startDate = modul.StartDatum.Date;
+                                endDate = modul.SlutDatum.Date;
 
                                 if (startDate >= dtStartDatumDate && endDate >= dtStartDatumDate)
                                 {// Aktivitetens StartDatum finns inom en tidigare aktivitet
@@ -143,14 +121,14 @@ namespace LMS.Grupp4.Web.Controllers
 
                                 if (bValid == false)
                                 {
-                                    return Json("Modulen har redan aktivitet under valt tidsintervall");
+                                    return Json("kursen har redan moduler under valt tidsintervall");
                                 }
                             }
                         }
                     }
                     else
                     {
-                        return Json("Valda datum är utanför modulens tidsram");
+                        return Json("Valda datum är utanför kursen tidsram");
                     }
                 }
                 else
@@ -161,5 +139,9 @@ namespace LMS.Grupp4.Web.Controllers
 
             return Json(bValid);
         }
+
+
     }
+
 }
+
