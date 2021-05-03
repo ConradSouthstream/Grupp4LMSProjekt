@@ -43,7 +43,7 @@ namespace LMS.Grupp4.Data.Data
 
                 await db.AddRangeAsync(aktivitetTyper);
 
-                var roleNames = new[] { "Elev", "Larare" };
+                var roleNames = new[] { "Elev", "Lärare" };
 
                 foreach (var roleName in roleNames)
                 {
@@ -94,7 +94,7 @@ namespace LMS.Grupp4.Data.Data
 
                         var user = new Anvandare
                         {
-                            ForeNamn = fName,
+                            ForNamn = fName,
                             EfterNamn = lName,
                             Email = fake.Internet.Email($"{fName}{lName}"),
                             Avatar = fake.Internet.Avatar(),
@@ -167,7 +167,7 @@ namespace LMS.Grupp4.Data.Data
                 };
                 var elev = new Anvandare
                 {
-                    ForeNamn="Elev",
+                    ForNamn="Elev",
                     EfterNamn="en",
                     Avatar = fake.Internet.Avatar(),
                     UserName = elevEmail,
@@ -179,9 +179,9 @@ namespace LMS.Grupp4.Data.Data
                 if (!addelevResult.Succeeded) throw new Exception(string.Join("\n", addelevResult.Errors));
                 var larareUser = await userManager.FindByEmailAsync(larareEmail);
                 var elevUser = await userManager.FindByEmailAsync(elevEmail);
-                if (await userManager.IsInRoleAsync(larareUser, "Larare")) return;
+                if (await userManager.IsInRoleAsync(larareUser, "Lärare")) return;
                 if (await userManager.IsInRoleAsync(elevUser, "Elev")) return;
-                await userManager.AddToRoleAsync(larareUser, "Larare");
+                await userManager.AddToRoleAsync(larareUser, "Lärare");
                 await userManager.AddToRoleAsync(elevUser, "Elev");
                 var statiskElevEnrollment = new AnvandareKurs
                 {

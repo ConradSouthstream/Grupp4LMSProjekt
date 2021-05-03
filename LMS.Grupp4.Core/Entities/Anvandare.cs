@@ -17,9 +17,9 @@ namespace LMS.Grupp4.Core.Entities
 
         //Ärver från IdentityUserProperties
         public string EfterNamn { get; set; }
-        public string ForeNamn { get; set; }
+        public string ForNamn { get; set; }
         public string Avatar { get; set; }
-        public string FullNamn => $"{ForeNamn} {EfterNamn}";
+        public string FullNamn => $"{ForNamn} {EfterNamn}";
 
         public ICollection<AnvandareKurs> KurserAnvandare { get; set; }
         public ICollection<Dokument> Dokument { get; set; }

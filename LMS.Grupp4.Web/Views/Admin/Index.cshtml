@@ -2,16 +2,25 @@
 @{
     ViewData["Title"] = "Admin";
 }
-<h1 class="bg-info text-white">Användare</h1>
+<h1 class="">Användare</h1>
 <a asp-action="Create" class="btn btn-secondary">Skapa ny användare</a>
 
 <table class="table table-sm table-bordered">
-    <tr><th>Name</th><th>Email</th><th>Uppdatera</th><th>Ta bort</th></tr>
+    <tr>
+        <th>User Name</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Avatar</th>
+        <th>Uppdatera</th>
+        <th>Ta bort</th>
+    </tr>
     @foreach (Anvandare user in Model)
     {
         <tr>
             <td>@user.UserName</td>
+            <td>@user.FullNamn</td>
             <td>@user.Email</td>
+            <td><img src='@user.Avatar' /></td>
             <td>
                 <a class="btn btn-sm btn-primary" asp-action="Update" asp-route-id="@user.Id">
                     Uppdatera

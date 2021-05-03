@@ -19,7 +19,7 @@ namespace LMS.Grupp4.Core.Dtos
         public string Email { get; set; }
 
         [Required]
-        public string Role { get; set; }
+        public string RoleId { get; set; }
 
         [Required]
         public string Password { get; set; }
