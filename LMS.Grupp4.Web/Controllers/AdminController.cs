@@ -34,8 +34,8 @@ namespace LMS.Grupp4.Web.Controllers
         public async Task<IActionResult> Create()
         {
             ViewBag.allRoles = new SelectList(await roleManager.Roles.ToListAsync(), "Id", "Name");
-            var model = new AnvandareDto();
-            return View(model);
+           
+            return View();
         }
 
         [HttpPost]
@@ -50,7 +50,8 @@ namespace LMS.Grupp4.Web.Controllers
                     EfterNamn = user.EfterNamn,
                     ForNamn = user.ForNamn,
                     UserName = user.Email,
-                    Email = user.Email
+                    Email = user.Email,
+                    Avatar = user.Avatar
                 };
 
                 var result = await userManager.CreateAsync(anvandare, user.Password);
@@ -62,10 +63,12 @@ namespace LMS.Grupp4.Web.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in result.Errors) 
                         ModelState.AddModelError("", error.Description);
+                    
                 }
             }
+            ViewBag.allRoles = new SelectList(await roleManager.Roles.ToListAsync(), "Id", "Name");
             return View(user);
         }
 
