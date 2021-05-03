@@ -66,10 +66,10 @@ namespace LMS.Grupp4.Data.Data
                 for (int i = 0; i < 10; i++)
                 {
                     //första kursen skapas 10 veckor tidigare från dagens datum
-                    DateTime startdatum = DateTime.Now.AddDays((((i + 1) * 35)-105)+0.01);
+                    DateTime startdatum = DateTime.Now.Date.AddDays(((i + 1) * 35)-105);
                     var kurs = new Kurs
                     {
-                        Namn = fake.Company.CatchPhrase(),
+                        Namn = $"Kurs {i + 1}",
                         Beskrivning = fake.Lorem.Paragraph(),
                         StartDatum = startdatum,
                         SlutDatum = startdatum.AddDays(34),
@@ -118,7 +118,7 @@ namespace LMS.Grupp4.Data.Data
                     {
                         var modul = new Modul
                         {
-                            Namn = fake.Lorem.Word(),
+                            Namn = $"Modul {i + 1}.{moduli + 1}",
                             Beskrivning = fake.Lorem.Paragraph(),
                             Kurs = kurs,
                             StartDatum = startdatum.AddDays(((moduli + 1) * 7) - 7),
@@ -129,7 +129,7 @@ namespace LMS.Grupp4.Data.Data
                         {
                             var aktivitet = new Aktivitet
                             {
-                                Namn = fake.Company.CatchPhrase(),
+                                Namn = $"Aktivitet {i+1}.{moduli+1}.{aktiviteti+1}",
                                 Beskrivning = fake.Lorem.Paragraph(),
                                 AktivitetTyp = fake.Random.ListItem<AktivitetTyp>(aktivitetTyper),
                                 Modul = modul,
