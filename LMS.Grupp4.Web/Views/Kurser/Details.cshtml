@@ -40,11 +40,9 @@
         <dd class="col-sm-10">
             @foreach (var enrollment in Model.AnvandareKurser)
             {
-                @*<a asp-controller="Anvandare" asp-action="Details" asp-route-id="@enrollment.AnvandareId">
+                <a asp-controller="Anvandare" asp-action="Details" asp-route-id="@enrollment.AnvandareId">
                 @enrollment.Anvandare.FullNamn
-            </a><br />*@
-
-                    @enrollment.Anvandare.FullNamn <br />
+            </a><br />
             }
         </dd>
     </dl>

@@ -16,6 +16,10 @@ namespace LMS.Grupp4.Core.IRepository
         /// Repository för Modul
         /// </summary>
         IModulRepository ModulRepository { get; }
+        /// <summary>
+        /// Repository för Kurs
+        /// </summary>
+        IKursRepository KursRepository { get; }
 
         /// <summary>
         /// Metod som skall spara uppdaterad data i repositories

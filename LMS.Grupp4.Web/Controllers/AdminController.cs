@@ -3,6 +3,8 @@ using LMS.Grupp4.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Web.Controllers
 {
-    [Authorize(Roles = "Larare")]
+    [Authorize(Roles = "Lärare")]
     public class AdminController : Controller
     {
         private readonly UserManager<Anvandare> userManager;
@@ -29,8 +31,10 @@ namespace LMS.Grupp4.Web.Controllers
             return View(userManager.Users);
         }
 
-        public ViewResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.allRoles = new SelectList(await roleManager.Roles.ToListAsync(), "Id", "Name");
+           
             return View();
         }
 
@@ -39,16 +43,15 @@ namespace LMS.Grupp4.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var role = await roleManager.FindByNameAsync(user.Role);
-                if (role == null)
-                    throw new ArgumentNullException("No such role");
+                var role = await roleManager.FindByIdAsync(user.RoleId);
 
                 var anvandare = new Anvandare
                 {
                     EfterNamn = user.EfterNamn,
-                    ForeNamn = user.ForNamn,
+                    ForNamn = user.ForNamn,
                     UserName = user.Email,
-                    Email = user.Email
+                    Email = user.Email,
+                    Avatar = user.Avatar
                 };
 
                 var result = await userManager.CreateAsync(anvandare, user.Password);
@@ -60,10 +63,12 @@ namespace LMS.Grupp4.Web.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in result.Errors) 
                         ModelState.AddModelError("", error.Description);
+                    
                 }
             }
+            ViewBag.allRoles = new SelectList(await roleManager.Roles.ToListAsync(), "Id", "Name");
             return View(user);
         }
 

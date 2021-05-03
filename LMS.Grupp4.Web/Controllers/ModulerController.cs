@@ -7,23 +7,32 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Data;
+using LMS.Grupp4.Core.IRepository;
+using AutoMapper;
+using LMS.Grupp4.Core.ViewModels.Modul;
+using LMS.Grupp4.Web.Utils;
+using LMS.Grupp4.Core.Enum;
 
 namespace LMS.Grupp4.Web.Controllers
 {
     public class ModulerController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork uow;
+        private readonly IMapper mapper;
 
-        public ModulerController(ApplicationDbContext context)
+        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper)
         {
             _context = context;
+            this.uow = uow;
+            this.mapper = mapper;
         }
 
         // GET: Moduler
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Moduler.Include(m => m.Kurs);
-            return View(await applicationDbContext.ToListAsync());
+            var moduler = _context.Moduler.Include(m => m.Kurs);
+            return View(await moduler.ToListAsync());
         }
 
         // GET: Moduler/Details/5
@@ -45,20 +54,20 @@ namespace LMS.Grupp4.Web.Controllers
             return View(modul);
         }
 
-        // GET: Moduler/Create
+       // GET: Moduler/Create
         public IActionResult Create()
         {
             var model = new Modul
             {
                 GetKursNamn = GetKursNamn(),
-             
-            };       
+
+            };
             return View(model);
         }
 
-        // POST: Moduler/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //// POST: Moduler/Create
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Namn,StartDatum,SlutDatum,Beskrivning,KursId")] Modul modul)
@@ -71,21 +80,109 @@ namespace LMS.Grupp4.Web.Controllers
             }
             return View(modul);
         }
+        //public async Task<ActionResult> Create(int? id)
+        //{
+        //    if (id.HasValue)
+        //    {
+        //        ModulCreateViewModel viewModel = new ModulCreateViewModel();
+
+        //        // Hämta information om Kurs
+        //        Kurs kurs = await uow.KursRepository.GetKursAsync(id.Value);
+        //        if (kurs != null)
+        //        {
+        //            viewModel.KursId = kurs.Id;
+
+        //        }
+
+        //        // Sätt upp startvärden för kalendrar
+        //        DateTime dtNow = DateTime.Now;
+        //        viewModel.StartDatum = dtNow;
+        //        viewModel.SlutDatum = dtNow.AddDays(1);
+
+        //        // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
+        //        List<Kurs> kurser = await uow.KursRepository.GetAllKurserAsync();
+        //        List<SelectListItem> kursNamnDropDown = ModulHelper.CreateKursNamnDropDown(kurser, viewModel.KursId.ToString());
+        //        viewModel.KursId = kursNamnDropDown;
+
+        //        return View(viewModel);
+        //    }
+
+        //    ViewBag.Message = "Det gick inte gå till sidan för att skapa Modul";
+        //    ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
+
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //// POST: AktivitetController/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Create(ModulCreateViewModel viewModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            Modul modul= mapper.Map<Modul>(viewModel);
+
+        //            // Post
+        //            // https://www.c-sharpcorner.com/article/http-get-put-post-and-delete-verbs-in-asp-net-web-api/
+        //            // Read = Get
+        //            // Update = Put
+        //            // Create = Post
+        //            // Delete = Delete
+
+        //            await uow.ModulRepository.AddModul(modul);
+        //            if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
+        //            {// Vi har sparat en ny aktivitet. Redirect till listning
+
+        //                TempData["message"] = $"Har skapat aktivitet {viewModel.Namn}";
+        //                TempData["typeOfMessage"] = TypeOfMessage.Info;
+
+        //                return RedirectToAction(nameof(Index));
+        //            }
+        //        }
+        //        catch (Exception)
+        //        { }
+        //    }
+
+        //    // Kommer vi hit har något gått fel
+        //    ViewBag.Message = "Det gick inte skapa aktiviteten";
+        //    ViewBag.TypeOfMessage = TypeOfMessage.Error;
+
+        //    // Vi måste uppdatera viss data om modulen som inte view bindar till modellen
+        //    Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
+        //    if (modul != null)
+        //    {
+        //        viewModel.ModulId = modul.Id;
+        //        viewModel.ModulNamn = modul.Namn;
+        //        viewModel.ModulSlutDatum = modul.SlutDatum;
+        //        viewModel.ModulStartDatum = modul.StartDatum;
+        //    }
+
+        //    // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
+        //    List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
+        //    List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, viewModel.AktivitetTypId.ToString());
+        //    viewModel.AktivitetTyper = lsAktivitetTyperDropDown;
+
+        //    return View(viewModel);
+        //}
+
+
         private IEnumerable<SelectListItem> GetKursNamn()
 
         {
-            var TypeName = _context.Kurser;
-            var GetTypeOfVehicle = new List<SelectListItem>();
-            foreach (var type in TypeName)
+            var KurserNamn = _context.Kurser;
+            var GetKursNamn = new List<SelectListItem>();
+            foreach (var type in KurserNamn)
             {
-                var newType = (new SelectListItem
+                var newNamn = (new SelectListItem
                 {
                     Text = type.Namn,
                     Value = type.Id.ToString(),
                 });
-                GetTypeOfVehicle.Add(newType);
+                GetKursNamn.Add(newNamn);
             }
-            return (GetTypeOfVehicle);
+            return (GetKursNamn);
         }
 
         // GET: Moduler/Edit/5
@@ -175,5 +272,6 @@ namespace LMS.Grupp4.Web.Controllers
         {
             return _context.Moduler.Any(e => e.Id == id);
         }
+
     }
 }

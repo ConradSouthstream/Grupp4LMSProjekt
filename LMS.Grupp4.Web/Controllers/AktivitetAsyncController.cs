@@ -1,5 +1,6 @@
 ﻿using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
+using LMS.Grupp4.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

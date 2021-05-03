@@ -11,7 +11,7 @@ namespace LMS.Grupp4.Web.Extensions
     public static class Roles
     {
         public const string ElevRole = "Elev";
-        public const string LarareRole = "Larare";
+        public const string LarareRole = "Lärare";
     }
     static class RoleExtensions
     {

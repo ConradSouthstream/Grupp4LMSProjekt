@@ -19,7 +19,7 @@
 </div>
 @if (User.Identity.IsAuthenticated)
 {
-    if (User.IsInRole("Larare") )
+    if (User.IsInRole("Lärare") )
     {
         <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Administrera användare</a>
     }

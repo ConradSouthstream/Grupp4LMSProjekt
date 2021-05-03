@@ -69,7 +69,7 @@ namespace LMS.Grupp4.Web
             {
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
-                //app.UseBrowserLink();
+                app.UseBrowserLink();
             }
             else
             {

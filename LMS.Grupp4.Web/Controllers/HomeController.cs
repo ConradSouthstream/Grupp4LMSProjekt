@@ -1,6 +1,7 @@
 ﻿using LMS.Grupp4.Data;
 using LMS.Grupp4.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,12 @@ namespace LMS.Grupp4.Web.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+        public async Task<IActionResult> LarareAsync()
+        {
+            var kurs = await db.Kurser.Include(k => k.Moduler).ToListAsync();
+            
+            return View(kurs);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

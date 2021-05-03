@@ -22,10 +22,10 @@ namespace LMS.Grupp4.Data.Data
                 fake = new Faker("sv");
                 var userManager = services.GetRequiredService<UserManager<Anvandare>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                if (db.Anvandare.Any())
-                {
-                    return;
-                }
+                //if (db.Anvandare.Any())
+                //{
+                //    return;
+                //}
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
 
@@ -43,7 +43,7 @@ namespace LMS.Grupp4.Data.Data
 
                 await db.AddRangeAsync(aktivitetTyper);
 
-                var roleNames = new[] { "Elev", "Larare" };
+                var roleNames = new[] { "Elev", "Lärare" };
 
                 foreach (var roleName in roleNames)
                 {
@@ -66,13 +66,13 @@ namespace LMS.Grupp4.Data.Data
                 for (int i = 0; i < 10; i++)
                 {
                     //första kursen skapas 10 veckor tidigare från dagens datum
-                    DateTime startdatum = DateTime.Now.AddDays(((i + 1) * 35)-105).Date;
+                    DateTime startdatum = DateTime.Now.AddDays((((i + 1) * 35)-105)+0.01);
                     var kurs = new Kurs
                     {
                         Namn = fake.Company.CatchPhrase(),
                         Beskrivning = fake.Lorem.Paragraph(),
                         StartDatum = startdatum,
-                        SlutDatum = startdatum.AddDays(35),
+                        SlutDatum = startdatum.AddDays(34),
                     };
                     if (kurs.SlutDatum < DateTime.Now && kurs.StartDatum< DateTime.Now)
                     {
@@ -80,7 +80,7 @@ namespace LMS.Grupp4.Data.Data
                     }
                     if (kurs.StartDatum <= DateTime.Now && kurs.SlutDatum.AddHours(23) >= DateTime.Now)
                     {
-                        kurs.KursStatus = Status.Pågår;
+                        kurs.KursStatus = Status.Aktuell;
                     }
                     if (kurs.StartDatum > DateTime.Now.AddDays(1)&&kurs.SlutDatum> DateTime.Now)
                     {
@@ -94,7 +94,7 @@ namespace LMS.Grupp4.Data.Data
 
                         var user = new Anvandare
                         {
-                            ForeNamn = fName,
+                            ForNamn = fName,
                             EfterNamn = lName,
                             Email = fake.Internet.Email($"{fName}{lName}"),
                             Avatar = fake.Internet.Avatar(),
@@ -122,7 +122,7 @@ namespace LMS.Grupp4.Data.Data
                             Beskrivning = fake.Lorem.Paragraph(),
                             Kurs = kurs,
                             StartDatum = startdatum.AddDays(((moduli + 1) * 7) - 7),
-                            SlutDatum = startdatum.AddDays((moduli + 1) * 7)
+                            SlutDatum = startdatum.AddDays(((moduli + 1) * 7) -1)
                         };
                         //varje modul tillsätter 2 aktiviteter
                         for (int aktiviteti = 0; aktiviteti < 2; aktiviteti++)
@@ -133,8 +133,8 @@ namespace LMS.Grupp4.Data.Data
                                 Beskrivning = fake.Lorem.Paragraph(),
                                 AktivitetTyp = fake.Random.ListItem<AktivitetTyp>(aktivitetTyper),
                                 Modul = modul,
-                                StartDatum = startdatum.AddDays(((moduli + 1) * 3) - 3),
-                                SlutDatum = startdatum.AddDays((moduli + 1) * 3)
+                                StartDatum = startdatum.AddDays(((aktiviteti + 1) * 3) - 3),
+                                SlutDatum = startdatum.AddDays(((aktiviteti + 1) * 3) -1)
                             };
                             aktiviteter.Add(aktivitet);
                         }
@@ -167,7 +167,7 @@ namespace LMS.Grupp4.Data.Data
                 };
                 var elev = new Anvandare
                 {
-                    ForeNamn="Elev",
+                    ForNamn="Elev",
                     EfterNamn="en",
                     Avatar = fake.Internet.Avatar(),
                     UserName = elevEmail,
@@ -179,9 +179,9 @@ namespace LMS.Grupp4.Data.Data
                 if (!addelevResult.Succeeded) throw new Exception(string.Join("\n", addelevResult.Errors));
                 var larareUser = await userManager.FindByEmailAsync(larareEmail);
                 var elevUser = await userManager.FindByEmailAsync(elevEmail);
-                if (await userManager.IsInRoleAsync(larareUser, "Larare")) return;
+                if (await userManager.IsInRoleAsync(larareUser, "Lärare")) return;
                 if (await userManager.IsInRoleAsync(elevUser, "Elev")) return;
-                await userManager.AddToRoleAsync(larareUser, "Larare");
+                await userManager.AddToRoleAsync(larareUser, "Lärare");
                 await userManager.AddToRoleAsync(elevUser, "Elev");
                 var statiskElevEnrollment = new AnvandareKurs
                 {
