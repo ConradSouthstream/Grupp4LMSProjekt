@@ -24,7 +24,7 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         [Required(ErrorMessage = "Ni måste ange en startdatum för aktiviteten")]
         [DataType(DataType.Date)]
         [DisplayName("Startdatum")]
-        [Remote(action: "IfValidDatesEditStartDatum", controller: "AktivitetAsync", AdditionalFields = "SlutDatum, ModulId, AktivitetId")]
+        [Remote(action: "IfValidDatesEditStartDatum", controller: "AktivitetAsync", AdditionalFields = "SlutDatum, ModulId, Id")]
         public DateTime StartDatum { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         [Required(ErrorMessage = "Ni måste ange en slutdatum för aktiviteten")]
         [DataType(DataType.Date)]
         [DisplayName("Slutdatum")]
-        [Remote(action: "IfValidDatesEditSlutDatum", controller: "AktivitetAsync", AdditionalFields = "StartDatum, ModulId, AktivitetId")]
+        [Remote(action: "IfValidDatesEditSlutDatum", controller: "AktivitetAsync", AdditionalFields = "StartDatum, ModulId, Id")]
         public DateTime SlutDatum { get; set; }
 
         /// <summary>

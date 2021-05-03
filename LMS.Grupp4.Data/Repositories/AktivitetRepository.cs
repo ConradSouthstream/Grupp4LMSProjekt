@@ -36,8 +36,8 @@ namespace LMS.Grupp4.Data.Repositories
         public async Task<List<Aktivitet>> GetAktiviteterAsync()
         {
             return await m_DbContext.Aktiviteter
-                .Include("Modul")
-                .Include("AktivitetTyp")
+                .Include(m => m.Modul)
+                .Include(a => a.AktivitetTyp)
                 .ToListAsync();
         }
 
@@ -48,10 +48,11 @@ namespace LMS.Grupp4.Data.Repositories
         /// <returns>Task med sökt aktivitet eller null</returns>
         public async Task<Aktivitet> GetAktivitetAsync(int iAktivitetId)
         {
-            return await m_DbContext.Aktiviteter                
-                .Include("Modul")
-                .Include("AktivitetTyp")
-                .Where(a => a.Id == iAktivitetId).FirstOrDefaultAsync();
+            return await m_DbContext.Aktiviteter
+                .Include(m => m.Modul)
+                .Include(a => a.AktivitetTyp)
+                .Where(a => a.Id == iAktivitetId)
+                .FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -71,8 +72,8 @@ namespace LMS.Grupp4.Data.Repositories
         public async Task<List<Aktivitet>> GetModulesAktivitetAsync(int iModuleId)
         {
             return await m_DbContext.Aktiviteter
-                .Include("Modul")
-                .Include("AktivitetTyp")
+                .Include(m => m.Modul)
+                .Include(a => a.AktivitetTyp)
                 .Where(m => m.ModulId == iModuleId)
                 .ToListAsync();
         }
@@ -107,7 +108,7 @@ namespace LMS.Grupp4.Data.Repositories
         /// Async metod som raderar en Aktivitet
         /// </summary>
         /// <param name="iAktivitetId">Id för Aktivitet som skall raderas</param>
-        /// <returns>Task med antal raderade rader i databasen</returns>
+        /// <returns>Task med antal raderade som raderades i databasen</returns>
         public async Task<int> DeleteAktivitetAsync(int iAktivitetId)
         {
             // Lite effektivare än att hämta objektet och sedan radera det

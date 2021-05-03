@@ -15,6 +15,7 @@
         <form asp-action="Create">
             <div>
                 <input type="hidden" asp-for="ModulId" />
+                <input type="hidden" asp-for="Id" />
             </div>
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -24,12 +25,6 @@
                 @Html.DropDownList("AktivitetTypId", Model.AktivitetTyper, new { @class = "form-control" })
                 <span asp-validation-for="AktivitetTypId" class="text-danger"></span>
             </div>
-
-            <!--<div class="form-group">
-                <label asp-for="AktivitetId" class="control-label"></label>
-                <input asp-for="AktivitetId" class="form-control" />
-                <span asp-validation-for="AktivitetId" class="text-danger"></span>
-            </div>-->
 
             <div class="form-group">
                 <label asp-for="Namn" class="control-label"></label>
@@ -51,31 +46,6 @@
                 <input asp-for="Beskrivning" class="form-control" />
                 <span asp-validation-for="Beskrivning" class="text-danger"></span>
             </div>
-            <!--<div class="form-group">
-                <label asp-for="AktivitetTypId" class="control-label"></label>
-                <input asp-for="AktivitetTypId" class="form-control" />
-                <span asp-validation-for="AktivitetTypId" class="text-danger"></span>
-            </div>-->
-            <!--<div class="form-group">
-                <label asp-for="ModulId" class="control-label"></label>
-                <input asp-for="ModulId" class="form-control" />
-                <span asp-validation-for="ModulId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModulNamn" class="control-label"></label>
-                <input asp-for="ModulNamn" class="form-control" />
-                <span asp-validation-for="ModulNamn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModulStartTid" class="control-label"></label>
-                <input asp-for="ModulStartTid" class="form-control" />
-                <span asp-validation-for="ModulStartTid" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModulSlutTid" class="control-label"></label>
-                <input asp-for="ModulSlutTid" class="form-control" />
-                <span asp-validation-for="ModulSlutTid" class="text-danger"></span>
-            </div>-->
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

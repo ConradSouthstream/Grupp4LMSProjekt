@@ -73,6 +73,7 @@ namespace LMS.Grupp4.Web.Controllers
                     viewModel.ModulSlutDatum = modul.SlutDatum;
                 }
 
+                viewModel.Id = -1;
                 // Sätt upp startvärden för kalendrar
                 DateTime dtNow = DateTime.Now;
                 viewModel.StartDatum = dtNow;
@@ -243,13 +244,13 @@ namespace LMS.Grupp4.Web.Controllers
         // POST: AktivitetController/DeleteAktivitet/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAktivitet(int? AktivitetId, string AktivitetNamn)
+        public async Task<ActionResult> DeleteAktivitet(int? Id, string AktivitetNamn)
         {
-            if (AktivitetId.HasValue)
+            if (Id.HasValue)
             {
                 try
                 {
-                    await m_UnitOfWork.AktivitetRepository.DeleteAktivitetAsync(AktivitetId.Value);
+                    await m_UnitOfWork.AktivitetRepository.DeleteAktivitetAsync(Id.Value);
 
                     if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
                     {// Aktiviteten är raderad
@@ -262,7 +263,7 @@ namespace LMS.Grupp4.Web.Controllers
                     else
                     {// Det gick inte radera aktiviteten
 
-                        Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(AktivitetId.Value);
+                        Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(Id.Value);
                         if (aktivitet != null)
                         {
                             AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
