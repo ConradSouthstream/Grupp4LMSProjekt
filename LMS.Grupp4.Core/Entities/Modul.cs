@@ -59,7 +59,5 @@ namespace LMS.Grupp4.Core.Entities
         public Kurs Kurs { get; set; }
         public ICollection<Aktivitet> Aktiviteter { get; set; }
         public ICollection<Dokument> Dokument { get; set; }
-
-
     }
 }
