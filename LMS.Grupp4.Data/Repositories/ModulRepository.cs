@@ -59,7 +59,7 @@ namespace LMS.Grupp4.Data.Repositories
 
         public void UpdateModul(Modul modul)
         {
-            throw new System.NotImplementedException();
+            m_DbContext.Moduler.Update(modul);
         }
     }
 }

@@ -38,22 +38,6 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Moduler/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var modul = await _context.Moduler
-            //    .Include(m => m.Kurs)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
-            //if (modul == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(modul);
-            //  var modulAktivitet = await uow.AktivitetRepository.GetModulesAktivitetAsync(id.Value);
-
             var modul = await mapper
                 .ProjectTo<ModulDetaljerViewModel>(_context.Moduler)
                 .FirstOrDefaultAsync(s => s.Id == id);
@@ -65,6 +49,8 @@ namespace LMS.Grupp4.Web.Controllers
         {
             var model = new Modul
             {
+                StartDatum = DateTime.Now,
+                SlutDatum = DateTime.Now.AddDays(5),
                 GetKursNamn = GetKursNamn(),
 
             };
@@ -76,102 +62,17 @@ namespace LMS.Grupp4.Web.Controllers
         //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Namn,StartDatum,SlutDatum,Beskrivning,KursId")] Modul modul)
+        public async Task<IActionResult> Create(ModulCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+            var modul   = mapper.Map<Modul>(viewModel);
                 _context.Add(modul);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(modul);
+            return View(viewModel);
         }
-        //public async Task<ActionResult> Create(int? id)
-        //{
-        //    if (id.HasValue)
-        //    {
-        //        ModulCreateViewModel viewModel = new ModulCreateViewModel();
-
-        //        // Hämta information om Kurs
-        //        Kurs kurs = await uow.KursRepository.GetKursAsync(id.Value);
-        //        if (kurs != null)
-        //        {
-        //            viewModel.KursId = kurs.Id;
-
-        //        }
-
-        //        // Sätt upp startvärden för kalendrar
-        //        DateTime dtNow = DateTime.Now;
-        //        viewModel.StartDatum = dtNow;
-        //        viewModel.SlutDatum = dtNow.AddDays(1);
-
-        //        // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
-        //        List<Kurs> kurser = await uow.KursRepository.GetAllKurserAsync();
-        //        List<SelectListItem> kursNamnDropDown = ModulHelper.CreateKursNamnDropDown(kurser, viewModel.KursId.ToString());
-        //        viewModel.KursId = kursNamnDropDown;
-
-        //        return View(viewModel);
-        //    }
-
-        //    ViewBag.Message = "Det gick inte gå till sidan för att skapa Modul";
-        //    ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
-
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //// POST: AktivitetController/Create
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Create(ModulCreateViewModel viewModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            Modul modul= mapper.Map<Modul>(viewModel);
-
-        //            // Post
-        //            // https://www.c-sharpcorner.com/article/http-get-put-post-and-delete-verbs-in-asp-net-web-api/
-        //            // Read = Get
-        //            // Update = Put
-        //            // Create = Post
-        //            // Delete = Delete
-
-        //            await uow.ModulRepository.AddModul(modul);
-        //            if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
-        //            {// Vi har sparat en ny aktivitet. Redirect till listning
-
-        //                TempData["message"] = $"Har skapat aktivitet {viewModel.Namn}";
-        //                TempData["typeOfMessage"] = TypeOfMessage.Info;
-
-        //                return RedirectToAction(nameof(Index));
-        //            }
-        //        }
-        //        catch (Exception)
-        //        { }
-        //    }
-
-        //    // Kommer vi hit har något gått fel
-        //    ViewBag.Message = "Det gick inte skapa aktiviteten";
-        //    ViewBag.TypeOfMessage = TypeOfMessage.Error;
-
-        //    // Vi måste uppdatera viss data om modulen som inte view bindar till modellen
-        //    Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(viewModel.ModulId);
-        //    if (modul != null)
-        //    {
-        //        viewModel.ModulId = modul.Id;
-        //        viewModel.ModulNamn = modul.Namn;
-        //        viewModel.ModulSlutDatum = modul.SlutDatum;
-        //        viewModel.ModulStartDatum = modul.StartDatum;
-        //    }
-
-        //    // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
-        //    List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
-        //    List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, viewModel.AktivitetTypId.ToString());
-        //    viewModel.AktivitetTyper = lsAktivitetTyperDropDown;
-
-        //    return View(viewModel);
-        //}
 
 
         private IEnumerable<SelectListItem> GetKursNamn()
@@ -200,11 +101,12 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             var modul = await _context.Moduler.FindAsync(id);
+
             if (modul == null)
             {
                 return NotFound();
             }
-            ViewData["KursId"] = new SelectList(_context.Kurser, "Id", "Id", modul.KursId);
+            modul.GetKursNamn = GetKursNamn();
             return View(modul);
         }
 

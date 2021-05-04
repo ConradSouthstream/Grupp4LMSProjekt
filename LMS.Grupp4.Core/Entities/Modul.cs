@@ -33,17 +33,17 @@ namespace LMS.Grupp4.Core.Entities
         /// <summary>
         /// Tid när modul starta
         /// </summary>
-        [Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]
+        [Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId,Id")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
         public DateTime StartDatum { get; set; }
         /// <summary>
         /// Tid när modul slutar
         /// </summary>
-        [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId,StartDatum")]
+        [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId,StartDatum,Id")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
         public DateTime SlutDatum { get; set; }
 
