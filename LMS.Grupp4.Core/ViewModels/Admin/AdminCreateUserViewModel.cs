@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LMS.Grupp4.Core.Dtos
+namespace LMS.Grupp4.Core.ViewModels.Admin
 {
-    public class AnvandareDto
+    public class AdminCreateUserViewModel
     {
-       
         [Required]
         public string EfterNamn { get; set; }
         [Required]
@@ -21,7 +22,11 @@ namespace LMS.Grupp4.Core.Dtos
 
         [Required]
         public string RoleId { get; set; }
+        public SelectList Roles { get; set; }
 
+        [Required]
+        public int KursId { get; set; }
+        public SelectList Kurser { get; set; }
         [Required]
         public string Password { get; set; }
     }

@@ -32,7 +32,7 @@ namespace LMS.Grupp4.Data.Repositories
 
         public async Task<List<Kurs>> GetAllKurserAsync()
         {
-            return await m_DbContext.Kurser.ToListAsync();
+            return await m_DbContext.Kurser.Include(k => k.Anvandare).ToListAsync();
 
         }
 

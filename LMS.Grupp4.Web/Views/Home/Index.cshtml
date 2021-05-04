@@ -4,17 +4,8 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <table class="table table-sm">
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Email</td>
-                <td>@user.UserName</td>
-            </tr>
-        }
-    </table>
+    <h1 class="display-4">LMS Grupp 4</h1>
+    
 
 </div>
 @if (User.Identity.IsAuthenticated)
@@ -23,7 +14,8 @@
     {
         <a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Administrera användare</a>
     }
-    <table class="table table-sm">
+   
+    @*<table class="table table-sm">
     @foreach (var claim in User.Claims)
     {
         <tr>
@@ -31,5 +23,5 @@
             <td>@claim.Value</td>
         </tr>
     }
-    </table>
+    </table>*@
 }
