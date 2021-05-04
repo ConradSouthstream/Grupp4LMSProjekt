@@ -20,11 +20,10 @@ namespace LMS.Grupp4.Web.Controllers
         {
             bool bValid = false;
             var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(kursId);
-
             DateTime dtStartDatumDate = StartDatum.Date;
             DateTime dtSlutDatumDate = SlutDatum.Date;
-           
-            if (StartDatum >= kurs.StartDatum && dtSlutDatumDate <= kurs.SlutDatum)
+
+            if (dtStartDatumDate >= kurs.StartDatum && dtSlutDatumDate <= kurs.SlutDatum)
             {// Starttid och sluttid är ok. Kontrollera att tiderna är inom kursen   
                 bValid = true;
                 IEnumerable<Modul> moduler = await m_UnitOfWork.ModulRepository.GetKursModulerAsync(kursId);
@@ -32,19 +31,25 @@ namespace LMS.Grupp4.Web.Controllers
                 {
                     var LastModul = moduler.Last();
                     if (dtStartDatumDate > LastModul.SlutDatum)
+                    {
                         bValid = true;
+                        return Json(bValid);
+                    }
+
+                    return Json("Modul får inte överlappa andra modulers tidsramen");
+
                 }
                 return Json(bValid);
             }
             else
                 return Json("Modul kan inte överlappa kursen tidsramen");
         }
-    
 
 
 
-    public async Task<JsonResult> CheckModuleSlutDate(DateTime StartDatum, DateTime SlutDatum, int kursId)
-    {
+
+        public async Task<JsonResult> CheckModuleSlutDate(DateTime StartDatum, DateTime SlutDatum, int kursId)
+        {
             bool bValid = false;
             var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(kursId);
             DateTime dtStartDatumDate = StartDatum.Date;
@@ -57,69 +62,16 @@ namespace LMS.Grupp4.Web.Controllers
                 }
                 else
                     bValid = true;
+                return Json(bValid);
 
             }
-            return Json(bValid);
-            
-                   
+            return Json("Modul kan inte överlappa kursen tidsramen");
+
+
+        }
+
+
     }
-    //    var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
-    //    if (kurs != null)
-    //    {
-    //        DateTime dtStartDatumDate = StartDatum.Date;
-    //        DateTime dtSlutDatumDate = SlutDatum.Date;
-
-    //        if (dtStartDatumDate <= dtSlutDatumDate)
-    //        {// Starttid och sluttid är ok. Kontrollera att tiderna är inom modulen
-
-    //            if (kurs.StartDatum.Date <= dtStartDatumDate && kurs.SlutDatum.Date >= dtSlutDatumDate)
-    //            {// Nya tiderna är inom modulens tidsram
-    //             // Kontrollera att nya tiderna inte överlappar med andra aktiviteter
-
-    //                bValid = true;
-    //                DateTime startDate;
-    //                DateTime endDate;
-
-    //                IEnumerable<Modul> moduler = await m_UnitOfWork.ModulRepository.GetKursModulerAsync(KursId);
-    //                foreach (var modul in moduler)
-    //                {
-    //                    if (modul.Id != modulId)
-    //                    {
-    //                        startDate = modul.StartDatum.Date;
-    //                        endDate = modul.SlutDatum.Date;
-
-    //                        if (startDate >= dtStartDatumDate && endDate >= dtStartDatumDate)
-    //                        {// Aktivitetens StartDatum finns inom en tidigare aktivitet
-    //                            bValid = false;
-    //                        }
-    //                        else if (startDate >= dtSlutDatumDate && endDate >= dtSlutDatumDate)
-    //                        {// Aktivitetens SlutDatum finns inom en tidigare aktivitet
-    //                            bValid = false;
-    //                        }
-
-    //                        if (bValid == false)
-    //                        {
-    //                            return Json("kursen har redan moduler under valt tidsintervall");
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //            else
-    //            {
-    //                return Json("Valda datum är utanför kursen tidsram");
-    //            }
-    //        }
-    //        else
-    //        {
-    //            return Json("Startdatum måste vara innan slutdatum");
-    //        }
-    //    }
-
-    //    return Json(bValid);
-    //}
-
-
-}
 
 }
 
