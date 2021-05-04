@@ -31,26 +31,22 @@ namespace LMS.Grupp4.Core.Entities
         public string Beskrivning{ get; set; }
 
         /// <summary>
-        /// Tid när modul slutar
-        /// </summary>
-       [DataType(DataType.Date)]
-         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-       // [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-
-        [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
-       // [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId")]
-        public DateTime SlutDatum { get; set; }
-
-        /// <summary>
         /// Tid när modul starta
         /// </summary>
+        [Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]
         [DataType(DataType.Date)]
-       [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
-      //  [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-
-        //[Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]
         public DateTime StartDatum { get; set; }
+        /// <summary>
+        /// Tid när modul slutar
+        /// </summary>
+        [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId,StartDatum")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
+        public DateTime SlutDatum { get; set; }
+
         public int KursId { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem> GetKursNamn { get; set; }

@@ -22,10 +22,10 @@ namespace LMS.Grupp4.Data.Data
                 fake = new Faker("sv");
                 var userManager = services.GetRequiredService<UserManager<Anvandare>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                //if (db.Anvandare.Any())
-                //{
-                //    return;
-                //}
+                if (db.Anvandare.Any())
+                {
+                    return;
+                }
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
 
@@ -66,7 +66,7 @@ namespace LMS.Grupp4.Data.Data
                 for (int i = 0; i < 10; i++)
                 {
                     //första kursen skapas 10 veckor tidigare från dagens datum
-                    DateTime startdatum = DateTime.Now.AddDays((((i + 1) * 35)-105)+0.01);
+                    DateTime startdatum = DateTime.Now.Date.AddDays(((i + 1) * 35)-105);
                     var kurs = new Kurs
                     {
                         Namn = fake.Company.CatchPhrase(),

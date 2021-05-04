@@ -38,19 +38,25 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Moduler/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
 
-            var modul = await _context.Moduler
-                .Include(m => m.Kurs)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (modul == null)
-            {
-                return NotFound();
-            }
+            //var modul = await _context.Moduler
+            //    .Include(m => m.Kurs)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            //if (modul == null)
+            //{
+            //    return NotFound();
+            //}
 
+            //return View(modul);
+            //  var modulAktivitet = await uow.AktivitetRepository.GetModulesAktivitetAsync(id.Value);
+
+            var modul = await mapper
+                .ProjectTo<ModulDetaljerViewModel>(_context.Moduler)
+                .FirstOrDefaultAsync(s => s.Id == id);
             return View(modul);
         }
 
