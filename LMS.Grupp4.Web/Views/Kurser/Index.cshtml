@@ -6,47 +6,38 @@
 <head>
     <link rel="stylesheet" href="~/css/GeneralView.css" />
 </head>
-<h1>Index</h1>
+<h1>Lista över Kurser</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div>
+    <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Create">Skapa ny Kurs</a>
+</div>
 <div class="col" id="accordion">
     <div class="row">
-        <h5 class="col-2 topbar topbar border-right-0 corner-left">
+        <h5 class="col-3 topbar center border-right-0 corner-left">
             @Html.DisplayNameFor(model => model.Namn)
         </h5>
-        <h5 class="col-2 topbar border-right-0">
+        <h5 class="col-2 topbar center border-right-0">
             @Html.DisplayNameFor(model => model.StartDatum)
         </h5>
-        <h5 class="col-2 topbar border-right-0">
+        <h5 class="col-2 topbar center border-right-0">
             @Html.DisplayNameFor(model => model.SlutDatum)
         </h5>
-        <h5 class="col-4 topbar border-right-0 text-right">
-            @Html.DisplayNameFor(model => model.Beskrivning)
+        <h5 class="col-3 topbar center border-right-0">
+            Alternativ:
         </h5>
         @*<div class="col">
                 @Html.DisplayNameFor(model => model.Moduler)
             </div>*@
-        <h5 class="col-2 topbar corner-right">
+        <h5 class="col-2 topbar center corner-right">
             @Html.DisplayNameFor(model => model.KursStatus)
         </h5>
     </div>
 
     <div>
-        @foreach (var item in Model)
+        @foreach (var item in Model.OrderBy(kurs => kurs.StartDatum))
         {
             <div class="row">
-                @*<div class="card-header">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
-                                Collapsible Group Item #1
-                            </button>
-                        </h5>
-                    </div>*@
-
-
-                <div class="col-2 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
                     <h6 class="center">
                         @Html.DisplayFor(modelItem => item.Namn)
                     </h6>
@@ -61,10 +52,11 @@
                         @Html.DisplayFor(modelItem => item.SlutDatum)
                     </h6>
                 </div>
-                <div class="col-4 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                <div class="col-3 border border-right-0">
                     <div class="center">
-                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
+                        <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
                     </div>
                 </div>
                 <div class="col-2 border">
@@ -75,7 +67,7 @@
             </div>
             <div>
                 <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
-                    <div class="col-md-6 pad-0">
+                    <div class="col-md-8 pad-0">
                         <h5 class="topbar corner-rounded">
                             Beskrivning:
                         </h5>
@@ -83,21 +75,32 @@
                             @Html.DisplayFor(modelItem => item.Beskrivning)
                         </div>
                     </div>
-                    <div class="col-md-6 pad-0">
+                    <div class="col-md-4 pad-0">
                         <h5 class="topbar corner-rounded">
                             Moduler
                         </h5>
                         <div class="card card-body">
-                            @foreach (var modul in item.Moduler)
+                            <div class="row">
+                                <div class="col-4">
+
+                                </div>
+                                <div class="col-4">
+                                    Från
+                                </div>
+                                <div class="col-4">
+                                    Till
+                                </div>
+                            </div>
+                            @foreach (var modul in item.Moduler.OrderBy(modul => modul.StartDatum))
                             {
                                 <div class="row">
                                     <a class="col-4" asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
                                         @Html.DisplayFor(a => modul.Namn)<br />
                                     </a>
-                                    <div class="col">
+                                    <div class="col-4">
                                         @Html.DisplayFor(a => modul.StartDatum)
                                     </div>
-                                    <div class="col">
+                                    <div class="col-4">
                                         @Html.DisplayFor(a => modul.SlutDatum)
                                     </div>
                                 </div>
@@ -109,63 +112,4 @@
         }
     </div>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Namn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDatum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SlutDatum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Beskrivning)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Moduler)
-            </th> 
-            <th>
-                @Html.DisplayNameFor(model => model.KursStatus)
 
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Namn)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDatum)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SlutDatum)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Beskrivning)
-                </td>
-                <td>
-                    @foreach (var modul in item.Moduler)
-                    {
-                        <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
-                            @modul.Namn<br />
-                        </a>
-                    }
-                </td>
-                <td>
-                    <status kurs-status="@(item.KursStatus)"></status>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>

@@ -7,6 +7,8 @@ namespace LMS.Grupp4.Core.Entities
     public class Kurs
     {
         public int Id { get; set; }
+
+        [DisplayName("Kurs")]
         public string Namn { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
