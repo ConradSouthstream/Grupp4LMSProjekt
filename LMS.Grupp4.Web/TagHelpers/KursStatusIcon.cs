@@ -18,17 +18,18 @@ namespace LMS.Grupp4.Web.TagHelpers
             var aktuell = "/images/green.png";
             var avslutade = "/images/red.png";
             var Kommande = "/images/yellow.png";
+
             if (KursStatus == Status.Avslutad)
             {
-                ResultStatus = $"<img src='{avslutade}'/>";
+                ResultStatus = $"<img src='{avslutade}' alt='Avslutad' title='Avslutad' />";
             }
             if (KursStatus == Status.Aktuell)
             {
-                ResultStatus = $"<img src='{aktuell}'/>";
+                ResultStatus = $"<img src='{aktuell}' alt='Aktuell' title='Aktuell'/>";
             }
             if (KursStatus == Status.Kommande)
             {
-                ResultStatus = $"<img src='{Kommande}'/>";
+                ResultStatus = $"<img src='{Kommande}' alt='Kommande' title='Kommande'/>";
             }
             output.Content.SetHtmlContent(ResultStatus);
         }

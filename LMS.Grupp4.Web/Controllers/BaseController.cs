@@ -1,4 +1,8 @@
-﻿using LMS.Grupp4.Core.Enum;
+﻿using AutoMapper;
+using LMS.Grupp4.Core.Entities;
+using LMS.Grupp4.Core.Enum;
+using LMS.Grupp4.Core.IRepository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.Grupp4.Web.Controllers
@@ -8,6 +12,17 @@ namespace LMS.Grupp4.Web.Controllers
     /// </summary>
     public class BaseController : Controller
     {
+        protected readonly UserManager<Anvandare> m_UserManager;
+        protected readonly IUnitOfWork m_UnitOfWork;
+        protected readonly IMapper m_Mapper;
+
+        public BaseController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager)
+        {
+            m_UserManager = userManager;
+            m_UnitOfWork = uow;
+            m_Mapper = mapper;
+        }
+
         protected void GetMessageFromTempData()
         {
             var messageObject = TempData["message"];

@@ -182,7 +182,7 @@ namespace LMS.Grupp4.Web.Controllers
                 //Console.WriteLine($"Aktivitet {ak.Id}. StartDatum finns inom en tidigare aktivitet");
             }
             else if (startDate <= dtSlutDatumDate && endDate >= dtSlutDatumDate)
-            {// Aktivitetens Slut finns inom en tidigare aktivitet
+            {// Aktivitetens SlutDatum finns inom en tidigare aktivitet
                 bValid = false;
                 //Console.WriteLine($"Aktivitet {ak.Id}. SlutDatum finns inom en tidigare aktivitet");
             }
