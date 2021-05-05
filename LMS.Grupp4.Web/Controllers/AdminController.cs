@@ -22,17 +22,25 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IPasswordHasher<Anvandare> passwordHasher;
         private readonly IUnitOfWork uow;
+        private readonly SignInManager<Anvandare> signInManager;
 
         public AdminController(ApplicationDbContext context, IUnitOfWork unitOfWork,
+                               SignInManager<Anvandare> signInManager,
                                UserManager<Anvandare> userManager,
                                RoleManager<IdentityRole> roleManager,
                                IPasswordHasher<Anvandare> passwordHasher)
         {
             this.uow = unitOfWork;
+            this.signInManager = signInManager;
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.passwordHasher = passwordHasher;
             db = context;
+        }
+
+        public IActionResult Login()
+        {
+            return View();
         }
 
         public IActionResult Index()
@@ -97,13 +105,17 @@ namespace LMS.Grupp4.Web.Controllers
         public async Task<IActionResult> Update(string id)
         {
             var user = await userManager.FindByIdAsync(id);
+            //var kurs = db.AnvandareKurser.Where(k => k.AnvandareId == user.Id).FirstOrDefault();
             var userRoles = await userManager.GetRolesAsync(user);
             var roleName = userRoles.FirstOrDefault();
             if (user != null && roleName != null)
-            {  
+            {
                 var role = await roleManager.FindByNameAsync(roleName);
-                var allRoles = new SelectList(await roleManager.Roles.ToListAsync(), "Id", "Name");
-                var kurser = new SelectList(await uow.KursRepository.GetAllKurserAsync(), "Id", "Namn");
+                var allRoles = await roleManager.Roles.ToListAsync();
+                var roles = new SelectList(allRoles, "Id", "Name");
+                //var allaKurser = await uow.KursRepository.GetAllKurserAsync();
+                //var kurser = new SelectList(allaKurser, "Id", "Namn");
+
                 var model = new AdminCreateUserViewModel
                 {
                     ForNamn = user.ForNamn,
@@ -111,8 +123,9 @@ namespace LMS.Grupp4.Web.Controllers
                     Email = user.Email,
                     Avatar = user.Avatar,
                     RoleId = role.Id,
-                    Roles = allRoles,
-                    Kurser = kurser
+                    Roles = roles,
+                    //KursId = kurs.KursId,
+                    //Kurser = kurser
                 };
 
                 return View(model);
@@ -143,7 +156,7 @@ namespace LMS.Grupp4.Web.Controllers
                     user.EfterNamn = model.EfterNamn;
                     user.Email = model.Email;
                     user.Avatar = model.Avatar;
-                    
+                 
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)
                         return RedirectToAction("Index");
