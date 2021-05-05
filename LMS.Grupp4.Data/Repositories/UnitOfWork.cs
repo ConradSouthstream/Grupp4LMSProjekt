@@ -1,4 +1,5 @@
 ﻿using LMS.Grupp4.Core.IRepository;
+using Microsoft.AspNetCore.Hosting;
 using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Data.Repositories
@@ -12,6 +13,8 @@ namespace LMS.Grupp4.Data.Repositories
         /// Databas context
         /// </summary>
         private readonly ApplicationDbContext m_dbContext;
+        private IHostingEnvironment _hostingEnvironment;
+
 
         /// <summary>
         /// Repository för Aktivitet
@@ -25,6 +28,8 @@ namespace LMS.Grupp4.Data.Repositories
 
         public IKursRepository KursRepository { get; private set; }
 
+        public IDokumentRepository DokumentRepository { get; private set; }
+
         /// <summary>
         /// Konstruktor
         /// </summary>
@@ -36,6 +41,7 @@ namespace LMS.Grupp4.Data.Repositories
             AktivitetRepository = new AktivitetRepository(m_dbContext);
             ModulRepository = new ModulRepository(m_dbContext);
             KursRepository = new KursRepository(m_dbContext);
+            DokumentRepository = new DokumentRepository(m_dbContext, _hostingEnvironment);
         }
 
         /// <summary>
@@ -47,6 +53,7 @@ namespace LMS.Grupp4.Data.Repositories
             await ModulRepository.SaveAsync();
             await AktivitetRepository.SaveAsync();
             await KursRepository.SaveAsync();
+            //await DokumentRepository.SaveAsync();
         }
     }
 }
