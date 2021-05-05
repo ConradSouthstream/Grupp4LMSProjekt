@@ -25,7 +25,7 @@ namespace LMS.Grupp4.Core.Entities
         public int? DokumentTypId { get; set; }
         public int? AnvandareId { get; set; }
         [NotMapped] //Tell Entity Framework to ignore property
-        public IFormFile File { get; set; }
+        public IFormFile Fil { get; set; }
 
 
 

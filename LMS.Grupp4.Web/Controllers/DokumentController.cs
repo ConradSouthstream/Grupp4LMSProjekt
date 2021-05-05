@@ -42,7 +42,7 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             await uow.DokumentRepository.Create(upload);
-            TempData["msg"] = "File Uploaded successfully";
+            TempData["msg"] = "Filen har laddats upp";
 
             await uow.CompleteAsync();
 

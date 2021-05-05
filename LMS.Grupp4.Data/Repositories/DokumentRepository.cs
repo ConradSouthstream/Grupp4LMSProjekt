@@ -29,7 +29,7 @@ namespace LMS.Grupp4.Data.Repositories
 
             //if (ModelState.IsValid)
             //{
-            IFormFile file = item.File;
+            IFormFile file = item.Fil;
             //Check file extension 
             string extension =
                    Path.GetExtension(file.FileName);

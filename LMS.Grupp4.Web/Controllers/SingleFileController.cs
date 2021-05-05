@@ -58,7 +58,7 @@ namespace FileUploadExample.Controllers
 
             if (ModelState.IsValid)
             {
-                IFormFile file = item.File;
+                IFormFile file = item.Fil;
                 //Check file extension is a photo or text
                 string extension =
                        Path.GetExtension(file.FileName);
