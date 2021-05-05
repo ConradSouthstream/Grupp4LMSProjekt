@@ -33,12 +33,10 @@ namespace LMS.Grupp4.Core.Entities
         /// <summary>
         /// Tid när modul slutar
         /// </summary>
-       [DataType(DataType.Date)]
-       [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
-        // [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
+        // [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId")]        
         public DateTime SlutDatum { get; set; }
 
         /// <summary>
@@ -47,9 +45,7 @@ namespace LMS.Grupp4.Core.Entities
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
-        //[Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        //[Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]        
         public DateTime StartDatum { get; set; }
 
         public int KursId { get; set; }
