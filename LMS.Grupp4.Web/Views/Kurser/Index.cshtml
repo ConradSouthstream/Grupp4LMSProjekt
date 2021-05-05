@@ -3,12 +3,112 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<head>
+    <link rel="stylesheet" href="~/css/GeneralView.css" />
+</head>
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<div class="col" id="accordion">
+    <div class="row">
+        <h5 class="col-2 topbar topbar border-right-0 corner-left">
+            @Html.DisplayNameFor(model => model.Namn)
+        </h5>
+        <h5 class="col-2 topbar border-right-0">
+            @Html.DisplayNameFor(model => model.StartDatum)
+        </h5>
+        <h5 class="col-2 topbar border-right-0">
+            @Html.DisplayNameFor(model => model.SlutDatum)
+        </h5>
+        <h5 class="col-4 topbar border-right-0 text-right">
+            @Html.DisplayNameFor(model => model.Beskrivning)
+        </h5>
+        @*<div class="col">
+                @Html.DisplayNameFor(model => model.Moduler)
+            </div>*@
+        <h5 class="col-2 topbar corner-right">
+            @Html.DisplayNameFor(model => model.KursStatus)
+        </h5>
+    </div>
+
+    <div>
+        @foreach (var item in Model)
+        {
+            <div class="row">
+                @*<div class="card-header">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                                Collapsible Group Item #1
+                            </button>
+                        </h5>
+                    </div>*@
+
+
+                <div class="col-2 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                    <h6 class="center">
+                        @Html.DisplayFor(modelItem => item.Namn)
+                    </h6>
+                </div>
+                <div class="col-2 border border-right-0">
+                    <h6 class="center">
+                        @Html.DisplayFor(modelItem => item.StartDatum)
+                    </h6>
+                </div>
+                <div class="col-2 border border-right-0">
+                    <h6 class="center">
+                        @Html.DisplayFor(modelItem => item.SlutDatum)
+                    </h6>
+                </div>
+                <div class="col-4 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                    <div class="center">
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </div>
+                </div>
+                <div class="col-2 border">
+                    <div class="center">
+                        <status kurs-status="@(item.KursStatus)"></status>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
+                    <div class="col-md-6 pad-0">
+                        <h5 class="topbar corner-rounded">
+                            Beskrivning:
+                        </h5>
+                        <div class="card card-body">
+                            @Html.DisplayFor(modelItem => item.Beskrivning)
+                        </div>
+                    </div>
+                    <div class="col-md-6 pad-0">
+                        <h5 class="topbar corner-rounded">
+                            Moduler
+                        </h5>
+                        <div class="card card-body">
+                            @foreach (var modul in item.Moduler)
+                            {
+                                <div class="row">
+                                    <a class="col-4" asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
+                                        @Html.DisplayFor(a => modul.Namn)<br />
+                                    </a>
+                                    <div class="col">
+                                        @Html.DisplayFor(a => modul.StartDatum)
+                                    </div>
+                                    <div class="col">
+                                        @Html.DisplayFor(a => modul.SlutDatum)
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>
