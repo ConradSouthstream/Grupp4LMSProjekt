@@ -9,7 +9,7 @@ namespace LMS.Grupp4.Core.Entities
     {
         public int Id { get; set; }
 
-        [DisplayName("Aktivitetens namn")]
+        [DisplayName("Kurs")]
         public string Namn { get; set; }
 
         [DataType(DataType.Date)]
