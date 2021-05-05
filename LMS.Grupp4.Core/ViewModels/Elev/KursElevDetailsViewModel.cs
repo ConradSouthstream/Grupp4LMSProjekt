@@ -11,6 +11,9 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
 {
     public class KursElevDetailsViewModel
     {
+        [DisplayName("Kursens id")]
+        public int KursId { get; set; }
+
         [DisplayName("Aktivitetens namn")]
         public string Namn { get; set; }
 

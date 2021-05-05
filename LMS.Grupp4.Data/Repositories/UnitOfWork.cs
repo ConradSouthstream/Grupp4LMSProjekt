@@ -34,6 +34,11 @@ namespace LMS.Grupp4.Data.Repositories
         public IElevRepository ElevRepository { get; private set; }
 
         /// <summary>
+        /// Repository för anvandare
+        /// </summary>
+        public IAnvandareRepository AnvandareRepository { get; }
+
+        /// <summary>
         /// Konstruktor
         /// </summary>
         /// <param name="applicationDbContext">Referense till context</param>
@@ -45,6 +50,7 @@ namespace LMS.Grupp4.Data.Repositories
             ModulRepository = new ModulRepository(m_dbContext);
             KursRepository = new KursRepository(m_dbContext);
             ElevRepository = new ElevRepository(m_dbContext);
+            AnvandareRepository = new AnvandareRepository(m_dbContext);
         }
 
         /// <summary>

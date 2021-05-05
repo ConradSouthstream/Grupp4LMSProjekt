@@ -36,7 +36,7 @@ namespace LMS.Grupp4.Core.Entities
        [DataType(DataType.Date)]
        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
-       // [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId")]
+        // [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId")]
         public DateTime SlutDatum { get; set; }
 
         /// <summary>
