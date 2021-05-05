@@ -46,5 +46,32 @@ namespace LMS.Grupp4.Web.Utils
             }
             return lsItems;
         }
+
+
+        /// <summary>
+        /// Metoden beräknar vilken status modulen har
+        /// Status kan vara Avslutad, Aktuell, Kommande
+        /// </summary>
+        /// <param name="modul">Modul</param>
+        /// <returns>enum Status</returns>
+        public static Status CalculateStatus(Modul modul)
+        {
+            Status status = Status.Avslutad;
+
+            if (modul.SlutDatum < DateTime.Now && modul.StartDatum < DateTime.Now)
+            {
+                status = Status.Avslutad;
+            }
+            else if (modul.StartDatum <= DateTime.Now && modul.SlutDatum.AddHours(23) >= DateTime.Now)
+            {
+                status = Status.Aktuell;
+            }
+            else if (modul.StartDatum > DateTime.Now.AddDays(1) && modul.SlutDatum > DateTime.Now)
+            {
+                status = Status.Kommande;
+            }
+
+            return status;
+        }
     }
 }

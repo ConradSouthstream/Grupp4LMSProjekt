@@ -5,6 +5,7 @@ using LMS.Grupp4.Core.IRepository;
 using LMS.Grupp4.Core.ViewModels.Aktivitet;
 using LMS.Grupp4.Web.Utils;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -15,18 +16,16 @@ namespace LMS.Grupp4.Web.Controllers
 {
     public class AktivitetController : BaseController
     {
-        private readonly IUnitOfWork m_UnitOfWork;
-        private readonly IMapper m_Mapper;
 
         /// <summary>
         /// Konstruktor
         /// </summary>
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
-        public AktivitetController(IUnitOfWork uow, IMapper mapper)
+        /// <param name="userManager">UserManager</param>
+        public AktivitetController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager) :
+            base(uow, mapper, userManager)
         {
-            m_UnitOfWork = uow;
-            m_Mapper = mapper;
         }
 
         // GET: AktivitetController

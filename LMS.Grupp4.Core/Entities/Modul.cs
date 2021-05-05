@@ -34,9 +34,7 @@ namespace LMS.Grupp4.Core.Entities
         /// Tid när modul slutar
         /// </summary>
        [DataType(DataType.Date)]
-         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-       // [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-
+       [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]
        // [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId")]
         public DateTime SlutDatum { get; set; }
@@ -45,19 +43,21 @@ namespace LMS.Grupp4.Core.Entities
         /// Tid när modul starta
         /// </summary>
         [DataType(DataType.Date)]
-       [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
-      //  [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
-
         //[Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]
         public DateTime StartDatum { get; set; }
+
         public int KursId { get; set; }
+
         [NotMapped]
         public IEnumerable<SelectListItem> GetKursNamn { get; set; }
 
         //Navigation property
         public Kurs Kurs { get; set; }
+
         public ICollection<Aktivitet> Aktiviteter { get; set; }
+
         public ICollection<Dokument> Dokument { get; set; }
     }
 }
