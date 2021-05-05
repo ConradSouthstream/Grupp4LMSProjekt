@@ -1,44 +1,29 @@
-﻿@model LMS.Grupp4.Core.Entities.DocumentInput
+﻿@model IEnumerable<Dokument>
 @{
     ViewData["Title"] = "Index";
 }
-<div class="row">
-    <div class="col-md-12">
-        <h2>Upload Demo</h2>
-        <p>This application demonstrates one approach to uploading files using ASP.NET Core.</p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Index" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label for="file" class="btn btn-default btn-file">
-                    Select file:
-                    <input type="file" id="file" name="File" />
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            @*<div class="form-group">
-            <label asp-for="Beskrivning" class="control-label"></label>
-            <input asp-for="Beskrivning" class="form-control" />
-            <span asp-validation-for="Beskrivning" class="text-danger"></span>
-        </div>*@
-            @*<div class="form-group">
-            <label asp-for="File" class="control-label"></label>
-            <input type="file" name="file" />
-        </div>*@
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+
+<h1>Index</h1>
+
+<h4>Dokument</h4>
+<hr />
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <table class="table table-responsive table-bordered" >
+        <tr>
+         <th>Dokuments Namn</th>
+        </tr>
+        @foreach(Dokument file in Model)
+        {
+        <tr>
+            <td>@file.Namn</td>
+            <td><a href="/Dokument/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+        </tr>
+
+        }
+    </table>       
+    
+  </div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-

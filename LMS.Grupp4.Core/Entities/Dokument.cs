@@ -22,10 +22,10 @@ namespace LMS.Grupp4.Core.Entities
         public int? KursId { get; set; }
         public int? ModulId { get; set; }
         public int? AktivitetId { get; set; }
-        public int DokumentTypId { get; set; }
-        public int AnvandareId { get; set; }
-        //[NotMapped] //Tell Entity Framework to ignore property
-        //public IFormFile File { get; set; }
+        public int? DokumentTypId { get; set; }
+        public int? AnvandareId { get; set; }
+        [NotMapped] //Tell Entity Framework to ignore property
+        public IFormFile File { get; set; }
 
 
 

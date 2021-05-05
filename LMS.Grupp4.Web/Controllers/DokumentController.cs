@@ -19,19 +19,35 @@ namespace LMS.Grupp4.Web.Controllers
         }
         public IActionResult Index()
         {
+            var listdokument = uow.DokumentRepository.GetAllDokument();
+            return View(listdokument);
+        }
+        public IActionResult Upload()
+        {
             return View();
         }
+
+        public FileResult DownloadFile(string filename)
+        {
+            return uow.DokumentRepository.DownloadFile(filename);
+        }
+
+
         [HttpPost]
-        public async Task<IActionResult> Index(DocumentInput upload)
+        public async Task<IActionResult> Upload(Dokument upload)
         {
             if (!ModelState.IsValid)
             {
                 return NotFound();
             }
 
-            var result = await uow.DokumentRepository.Create(upload);
+            await uow.DokumentRepository.Create(upload);
+            TempData["msg"] = "File Uploaded successfully";
 
-            return View(result);
+            await uow.CompleteAsync();
+
+
+            return View();
         }
 
     }

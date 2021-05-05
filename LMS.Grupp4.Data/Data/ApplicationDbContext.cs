@@ -40,6 +40,8 @@ namespace LMS.Grupp4.Data
                     e => e.HasOne(e => e.Kurs).WithMany(c => c.AnvandareKurser),
                     e => e.HasOne(e => e.Anvandare).WithMany(s => s.KurserAnvandare));
             builder.Entity<Dokument>().Property(d => d.UppladdningsDatum).HasDefaultValueSql("getdate()");
+
+
         }
     }
 }

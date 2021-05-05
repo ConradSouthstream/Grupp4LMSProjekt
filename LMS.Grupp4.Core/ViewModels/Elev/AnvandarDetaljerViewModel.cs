@@ -12,7 +12,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         public string Id { get; set; }
         public int KursId { get; set; }
         public string EfterNamn { get; set; }
-        public string ForeNamn { get; set; }
+        public string ForNamn { get; set; }
         // public string Email { get; set; }
         public string Avatar { get; set; }
         public ICollection<Kurs> Kurser { get; set; }

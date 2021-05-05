@@ -1,59 +1,94 @@
 ﻿using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Net.Http.Headers;
-using System;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Data.Repositories
 {
-    public class DokumentRepository : IDokumentRepository
+    public class DokumentRepository : ControllerBase, IDokumentRepository
     {
-        private readonly ApplicationDbContext m_DbContext;
-        private IHostingEnvironment _hostingEnvironment;
-        public DokumentRepository(ApplicationDbContext dbContext, IHostingEnvironment hostingEnvironment)
+        private IHostingEnvironment _env;
+        private readonly ApplicationDbContext _dbContext;
+
+        public DokumentRepository(IHostingEnvironment env, ApplicationDbContext dbContext)
         {
-            m_DbContext = dbContext;
-            _hostingEnvironment = hostingEnvironment;
+            _env = env;
+            _dbContext = dbContext;
         }
 
-        public  async Task<Dokument> Create(DocumentInput input)
+        public async Task<Dokument> Create(Dokument item)
         {
-            var file = input.File;
-            //var parsedContentDisposition =
-            //    ContentDispositionHeaderValue.Parse(file.ContentDisposition);
+            //Either use a viewmodel or remove photoURL. URL will
+            //be generated programmatically
+            // ModelState.Remove(nameof(Dokument.Path));
+            item.Id = 0; //SQL Server will generate a new ID
+
+            //if (ModelState.IsValid)
+            //{
+            IFormFile file = item.File;
+            //Check file extension 
             string extension =
-                       Path.GetExtension(input.File.FileName);
-
-            // var parsedFilename = HeaderUtilities.RemoveQuotes(parsedContentDisposition.FileName);
-            var filename = Guid.NewGuid().ToString();// Path.GetExtension(parsedFilename);
-
-
-            var fileDestination = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads", filename+extension);
-
-
-            var upload = new Dokument()
+                   Path.GetExtension(file.FileName);
+            if (extension == ".png" || extension == ".jpg" || extension == ".txt")
             {
-               
-                Namn = input.Name,               
-                Path = fileDestination
-                
-            };
+                //TODO: Use ImageSharp to resize uploaded photo
+                //https://www.hanselman.com/blog/HowDoYouUseSystemDrawingInNETCore.aspx
 
-            using (var fileStream = new FileStream(fileDestination, FileMode.Create))
-            {
-                var inputStream = file.OpenReadStream();
-                await inputStream.CopyToAsync(fileStream);
+                //generate unique name to retrieve later
+                //string newFileName = Guid.NewGuid().ToString();
+                string newFileName = item.Namn;
+                //store photo on file system and reference in DB
+                if (file.Length > 0) //ensure the file is not empty
+                {
+                    string filePath = Path.Combine(_env.WebRootPath, "Uploads"
+                                                , newFileName + extension);
+                    //save location to database (in URL format)
+                    item.Path = "Uploads/" + newFileName + extension;
+
+                    //write file to file system
+                    using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fs);
+
+                    }
+                    _dbContext.Dokument.Add(item);
+                    //_dbContext.SaveChanges();
+                    // return RedirectToAction("Index", "Home");
+                }
+
             }
+            return item;
+        }
 
-            m_DbContext.Dokument.Add(upload);
-            await m_DbContext.SaveChangesAsync();
+        public async Task<bool> SaveAsync()
+        {
+            return (await _dbContext.SaveChangesAsync()) >= 0;
+        }
 
-            return upload;
+        public FileResult DownloadFile(string filename)
+        {
+            string path = Path.Combine(this._env.WebRootPath, "Uploads/") + filename;
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+            return  File(bytes, "application/octet-stream", filename);
+        }
+
+        public List<Dokument> GetAllDokument()
+        {
+            string[] filespaths = Directory.GetFiles(Path.Combine(this._env.WebRootPath, "Uploads/"));
+            List<Dokument> list = new List<Dokument>();
+            foreach (string filepath in filespaths)
+            {
+                list.Add(new Dokument { Namn = Path.GetFileName(filepath) });
+
+
+            }
+            return list;
         }
     }
 }
+
+
