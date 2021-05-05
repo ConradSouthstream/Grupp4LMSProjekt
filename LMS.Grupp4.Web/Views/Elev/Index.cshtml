@@ -1,0 +1,165 @@
+﻿@model LMS.Grupp4.Core.ViewModels.Elev.ElevDetailsViewModel
+
+@{
+    ViewData["Title"] = "Aktuell kurs";
+}
+
+<div>
+    @if (Model != null)
+    {
+        <h4>Elev</h4>
+        <hr />
+        <dl class="row">
+            <div class="col-6">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ElevId)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ElevId)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.FullNamn)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.FullNamn)
+                </dd>
+            </div>
+
+            <div class="col-6">
+                <dd class="col-sm-12">
+                    <img src="@Model.Avatar" alt="Image avatar" />
+                </dd>
+            </div>
+        </dl>
+        <hr />
+        <h4>Aktuell kurs @Model.Kurs?.Namn</h4>
+        <hr />
+        @if (Model.Kurs != null)
+        {
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Kurs.Namn)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Kurs.Namn)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Kurs.StartDatum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Kurs.StartDatum)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Kurs.SlutDatum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Kurs.SlutDatum)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Kurs.Beskrivning)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Kurs.Beskrivning)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Kurs.KursStatus)
+                </dt>
+                <dd class="col-sm-10">
+                    <status kurs-status="@(Model.Kurs.KursStatus)"></status>
+                </dd>
+            </dl>
+        }
+        else
+        {
+            <div>Det finns ingen kurs</div>
+        }
+
+        <hr />
+        <h4>Kursens moduler</h4>
+        <hr />
+        @if (Model.Moduler != null && Model.Moduler.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Moduler.First().ModulId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Moduler.First().Namn)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Moduler.First().StartDatum)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Moduler.First().SlutDatum)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Moduler.First().Beskrivning)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Moduler.First().ModulStatus)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Moduler)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ModulId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Namn)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDatum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SlutDatum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Beskrivning)
+                            </td>
+                            <td>
+                                <status kurs-status="@(item.ModulStatus)"></status>
+                            </td>
+                            <td>
+                                @Html.ActionLink("Detaljer", "ModulDetails", new { ModulId = item.ModulId })
+                            </td>
+                        </tr>
+                        @if (item.Aktiviteter?.Count > 0)
+                        {
+                            foreach (var ak in item.Aktiviteter)
+                            {
+                                string strAktivitet = $"{ak.StartDatum.ToShortDateString()} - {ak.SlutDatum.ToShortDateString()}";
+                                <tr>
+                                    <td colspan="7" align="right">
+                                        @Html.ActionLink(ak.Namn, "AktivitetDetails", new { AktivietetId = ak.AktivitetId })
+                                        @strAktivitet
+                                        <status kurs-status="@(ak.AktivitetStatus)"></status>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="7">Inga aktiviteter</td></tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div>Det finns ingen moduler</div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-success" role="alert">
+            Hittar inte sökt kurs
+        </div>
+    }
+</div>

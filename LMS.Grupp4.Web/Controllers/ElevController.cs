@@ -1,0 +1,236 @@
+﻿using AutoMapper;
+using LMS.Grupp4.Core.Entities;
+using LMS.Grupp4.Core.IRepository;
+using LMS.Grupp4.Core.ViewModels.Elev;
+using LMS.Grupp4.Web.Utils;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace LMS.Grupp4.Web.Controllers
+{
+    public class ElevController : BaseController
+    {
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
+        /// <param name="mapper">Automapper</param>
+        /// <param name="userManager">UserManager</param>
+        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager) : 
+            base(uow, mapper,userManager)
+        {
+        }
+
+        /// <summary>
+        /// Action som hämtar information om en kurs som inloggad användare läser och returnerar en View
+        /// </summary>
+        /// <returns>View</returns>
+        // GET: ElevController
+        public async Task<ActionResult> Index()
+        {
+            var userId = m_UserManager.GetUserId(User);
+
+            // Hämta all data från repository
+            var anvandare = await m_UnitOfWork.ElevRepository.GetAnvandareAsync(userId);
+            var kurs = await m_UnitOfWork.ElevRepository.GetKursAsync(userId);
+            var moduler = await m_UnitOfWork.ModulRepository.GetKursModulerIncludeAktivitetAsync(kurs.Id);
+
+            // Skapa viewmodel som skall skickas till view
+            ElevDetailsViewModel viewModel = new ElevDetailsViewModel();
+
+            // Har vi en användare. Mappa info och lägg till i viewmodel
+            if (anvandare != null)
+                viewModel = m_Mapper.Map<ElevDetailsViewModel>(anvandare);
+
+            // Har vi en kurs. Mappa info och lägg till i viewmodel
+            if (kurs != null)
+            {
+                kurs.KursStatus = KursHelper.CalculateStatus(kurs);
+                viewModel.Kurs = m_Mapper.Map<KursElevDetailsViewModel>(kurs);
+            }
+
+            // Har vi moduler. Mappa info och lägg till i viewmodel
+            if (moduler?.Count() > 0)
+            {
+                AktivitetElevDetailsViewModel aktivitetElevDetailsViewModel = null;
+                List<AktivitetElevDetailsViewModel> lsAktivitetElevDetailsViewModel = null;                
+                ModulElevDetailsViewModel modulElevDetailsViewModel = null;
+
+                List<ModulElevDetailsViewModel> lsViewModelModul = new List<ModulElevDetailsViewModel>(moduler.Count());
+                foreach (Modul modul in moduler)
+                {
+                    modulElevDetailsViewModel = m_Mapper.Map<ModulElevDetailsViewModel>(modul);
+                    modulElevDetailsViewModel.ModulStatus = ModulHelper.CalculateStatus(modul);
+                    modulElevDetailsViewModel.KursNamn = (kurs != null) ? kurs.Namn : String.Empty;
+                    modulElevDetailsViewModel.Aktiviteter = null;
+
+                    // Har vi aktiviteter. Mappa info och lägg till i viewmodel
+                    if (modul.Aktiviteter?.Count > 0)
+                    {
+                        lsAktivitetElevDetailsViewModel = new List<AktivitetElevDetailsViewModel>(modul.Aktiviteter.Count);
+                        foreach (Aktivitet akt in modul.Aktiviteter)
+                        {
+                            aktivitetElevDetailsViewModel = m_Mapper.Map<AktivitetElevDetailsViewModel>(akt);
+                            aktivitetElevDetailsViewModel.AktivitetStatus = AktivitetHelper.CalculateStatus(akt);
+                            lsAktivitetElevDetailsViewModel.Add(aktivitetElevDetailsViewModel);
+                        }
+
+                        modulElevDetailsViewModel.Aktiviteter = lsAktivitetElevDetailsViewModel;
+                    }
+
+                    lsViewModelModul.Add(modulElevDetailsViewModel);
+                }
+
+                viewModel.Moduler = lsViewModelModul;
+            }
+
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Action som hämtar information om en modul och returnerar en View
+        /// </summary>
+        /// <param name="ModulId">Modul id</param>
+        /// <returns>View</returns>
+        public async Task<IActionResult> ModulDetails(int? ModulId)
+        {
+            ModulElevDetailsViewModel viewModel = null;
+
+            if (ModulId.HasValue)
+            {
+                // Hämta modul inklusive kursen från repository
+                var modul = await m_UnitOfWork.ModulRepository.GetModulWithKursAsync(ModulId.Value);
+                if(modul != null)
+                {
+                    // Mappa Modul till ViewModel
+                    viewModel = m_Mapper.Map<ModulElevDetailsViewModel>(modul);
+                    var kurs = modul.Kurs;
+                    viewModel.ModulStatus = ModulHelper.CalculateStatus(modul);
+                    viewModel.KursNamn = (kurs != null) ? kurs.Namn : String.Empty;
+
+                    // Hämta modulens aktiviteter
+                    var aktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(ModulId.Value);
+                    List<AktivitetElevDetailsViewModel> lsAktivitetElevDetailsViewModel = null;
+                    AktivitetElevDetailsViewModel aktivitetElevDetailsViewModel = null;
+
+                    // Har vi aktiviteter. Mappa info och lägg till i viewmodel
+                    if (aktiviteter?.Count > 0)
+                    {
+                        lsAktivitetElevDetailsViewModel = new List<AktivitetElevDetailsViewModel>(aktiviteter.Count);
+
+                        // Mappa aktivitet till ViewModel
+                        foreach (Aktivitet akt in aktiviteter)
+                        {
+                            aktivitetElevDetailsViewModel = m_Mapper.Map<AktivitetElevDetailsViewModel>(akt);
+                            aktivitetElevDetailsViewModel.AktivitetStatus = AktivitetHelper.CalculateStatus(akt);
+                            aktivitetElevDetailsViewModel.KursNamn = viewModel.KursNamn;
+                            lsAktivitetElevDetailsViewModel.Add(aktivitetElevDetailsViewModel);
+                        }
+                    }
+
+                    viewModel.Aktiviteter = lsAktivitetElevDetailsViewModel;
+                }
+            }
+
+            return View(viewModel);
+        }
+
+
+        /// <summary>
+        /// Action som hämtar information om en aktivitet och returnerar en View
+        /// </summary>
+        /// <param name="AktivietetId">Aktivitetens id</param>
+        /// <returns></returns>
+        public async Task<IActionResult> AktivitetDetails(int? AktivietetId)
+        {
+            AktivitetElevDetailsViewModel viewModel = null;
+
+            if (AktivietetId.HasValue)
+            {
+                Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetIncludeKursAsync(AktivietetId.Value);
+
+                // Har vi aktiviteter. Mappa info och lägg till i viewmodel
+                if (aktivitet != null)
+                {
+                    viewModel = m_Mapper.Map<AktivitetElevDetailsViewModel>(aktivitet);
+                    viewModel.AktivitetStatus = AktivitetHelper.CalculateStatus(aktivitet);
+                }
+            }
+
+            return View(viewModel);
+        }
+
+        //// GET: ElevController/Details/5
+        //public ActionResult Details(int id)
+        //{
+        //    return View();
+        //}
+
+        //// GET: ElevController/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        //// POST: ElevController/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: ElevController/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: ElevController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: ElevController/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: ElevController/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+    }
+}
