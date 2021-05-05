@@ -1,34 +1,32 @@
-﻿using System;
+﻿using LMS.Grupp4.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace LMS.Grupp4.Core.Entities
+namespace LMS.Grupp4.Core.ViewModels.Elev
 {
-    public class Kurs
+    public class KursElevDetailsViewModel
     {
-        public int Id { get; set; }
-
-        [DisplayName("Kurs")]
+        [DisplayName("Aktivitetens namn")]
         public string Namn { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DisplayName("Startdatum")]
         public DateTime StartDatum { get; set; }
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DisplayName("Slutdatum")]
         public DateTime SlutDatum { get; set; }
+
+        [DisplayName("Beskrivning")]
         public string Beskrivning { get; set; }
-        //Navigation prope
-        public ICollection<Dokument> Dokument { get; set; }
-        public ICollection<Modul> Moduler { get; set; }
-        [Display(Name = "Inskrivna Elever")]
-        public ICollection<AnvandareKurs> AnvandareKurser { get; set; }
 
-        //Många till många
-        public ICollection<Anvandare> Anvandare { get; set; }
-
-        [Required]
         public int KursStatusId { get; set; }
 
         [EnumDataType(typeof(Status))]

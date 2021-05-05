@@ -21,6 +21,13 @@ namespace LMS.Grupp4.Core.IRepository
         Task<Aktivitet> GetAktivitetAsync(int iAktivitetId);
 
         /// <summary>
+        /// Async metod som returnerar sökt Aktivitet. Inkluderar Kurs som finns i Model
+        /// </summary>
+        /// <param name="iAktivitetId">Id för sökt aktivitet</param>
+        /// <returns>Task med sökt aktivitet eller null</returns>
+        Task<Aktivitet> GetAktivitetIncludeKursAsync(int iAktivitetId);
+
+        /// <summary>
         /// Async metod som returnerar alla AktivitetTyper
         /// </summary>
         /// <returns>Task med List med alla AktivitetTyper</returns>

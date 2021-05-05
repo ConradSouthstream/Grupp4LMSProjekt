@@ -42,17 +42,22 @@ namespace LMS.Grupp4.Core.Entities
         /// <summary>
         /// Tid när modul starta
         /// </summary>
-        
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
         //[Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId")]        
         public DateTime StartDatum { get; set; }
+
         public int KursId { get; set; }
+
         [NotMapped]
         public IEnumerable<SelectListItem> GetKursNamn { get; set; }
 
         //Navigation property
         public Kurs Kurs { get; set; }
+
         public ICollection<Aktivitet> Aktiviteter { get; set; }
+
         public ICollection<Dokument> Dokument { get; set; }
     }
 }

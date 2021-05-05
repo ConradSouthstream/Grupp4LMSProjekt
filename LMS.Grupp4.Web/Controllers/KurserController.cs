@@ -73,6 +73,7 @@ namespace LMS.Grupp4.Web.Controllers
                 {
                     kurs.KursStatus = Status.Kommande;
                 }
+
                 _context.Add(kurs);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
