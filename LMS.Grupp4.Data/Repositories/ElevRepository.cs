@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Data.Repositories
 {
+    /// <summary>
+    /// ElevRepository med metoder för att hantera Elever
+    /// </summary>
     public class ElevRepository : IElevRepository
     {
         /// <summary>

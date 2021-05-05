@@ -28,6 +28,11 @@ namespace LMS.Grupp4.Core.IRepository
         IElevRepository ElevRepository { get; }
 
         /// <summary>
+        /// Repository för anvandare
+        /// </summary>
+        IAnvandareRepository AnvandareRepository { get; }
+
+        /// <summary>
         /// Metod som skall spara uppdaterad data i repositories
         /// </summary>
         /// <returns>Task</returns>

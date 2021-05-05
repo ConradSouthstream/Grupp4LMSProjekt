@@ -26,7 +26,7 @@ namespace LMS.Grupp4.Core.Entities
         //Många till Många
         public ICollection<Kurs> Kurser { get; set; }
 
-
-
+        [NotMapped]
+        public bool IsLarare { get; set; } = false;
     }
 }

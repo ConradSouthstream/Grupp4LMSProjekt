@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace LMS.Grupp4.Data.Repositories
 {
     /// <summary>
-    /// AktivitetRepository med metoder för att hantera Aktivietet
+    /// AktivitetRepository med metoder för att hantera Aktivitet
     /// </summary>
     public class AktivitetRepository : IAktivitetRepository
     {
@@ -30,7 +30,7 @@ namespace LMS.Grupp4.Data.Repositories
         }
 
         /// <summary>
-        /// Asyn metod som returnerar alla aktivitetet
+        /// Async metod som returnerar alla aktivitetet
         /// </summary>
         /// <returns>Task med alla aktiviteter</returns>
         public async Task<List<Aktivitet>> GetAktiviteterAsync()
