@@ -1,14 +1,6 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
-
-
-
-.card-header {
-    background-color: #2699FB;
-    border: 1px solid black;
-    border-left: 0px;    
-}
 .pad-0 {
     padding: 2px;
 }
@@ -18,5 +10,28 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 .corner-right {
     border-radius: 0px;
-    border-start-end-radius: 10px;
+    border-start-end-radius: 10px;    
+}
+.topbar {
+    padding: .75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #2699FB;
+    border: 1px solid black;    
+}
+.btn-mhm {
+    color: #fff;
+    background-color: #2699FB;
+    border-color: #0366d6;
+}
+.centerimg {
+    text-align: center;
+}
+.corner-rounded{
+    border-radius: 4px;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }

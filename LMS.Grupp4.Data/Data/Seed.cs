@@ -22,10 +22,10 @@ namespace LMS.Grupp4.Data.Data
                 fake = new Faker("sv");
                 var userManager = services.GetRequiredService<UserManager<Anvandare>>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                //if (db.Anvandare.Any())
-                //{
-                //    return;
-                //}
+                if (db.Anvandare.Any())
+                {
+                    return;
+                }
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
 
