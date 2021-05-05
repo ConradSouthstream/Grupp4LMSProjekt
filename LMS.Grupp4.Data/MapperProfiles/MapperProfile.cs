@@ -21,7 +21,8 @@ namespace LMS.Grupp4.Data.MapperProfiles
             CreateMap<Anvandare, ElevDetailsViewModel>()
                 .ForMember(dest => dest.ElevId, from => from.MapFrom(a => a.Id));
 
-            CreateMap<Kurs, KursElevDetailsViewModel>();
+            CreateMap<Kurs, KursElevDetailsViewModel>()
+                .ForMember(dest => dest.KursId, from => from.MapFrom(k => k.Id));
 
             CreateMap<Modul, ModulElevDetailsViewModel>()
                 .ForMember(dest => dest.ModulId, from => from.MapFrom(m => m.Id));
@@ -31,6 +32,8 @@ namespace LMS.Grupp4.Data.MapperProfiles
                 .ForMember(dest => dest.ModulNamn, from => from.MapFrom(m => m.Modul.Namn))
                 .ForMember(dest => dest.KursNamn, from => from.MapFrom(k => k.Modul.Kurs.Namn))
                 .ForMember(dest => dest.AktivitetTypNamn, from => from.MapFrom(a => a.AktivitetTyp.Namn));
+
+            CreateMap<Anvandare, AnvandarDetaljerViewModel>();
         }
 
 

@@ -120,7 +120,7 @@ namespace LMS.Grupp4.Web.Controllers
                         return RedirectToAction(nameof(Index));
                     }                    
                 }
-                catch (Exception exc) 
+                catch (Exception) 
                 { }
             }
 

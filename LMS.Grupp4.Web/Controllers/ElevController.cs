@@ -25,6 +25,67 @@ namespace LMS.Grupp4.Web.Controllers
         {
         }
 
+        public async Task<ActionResult> GetAnvandarna(int? KursId)
+        {
+            AnvandarElevDetaljerViewModel viewModel = null;
+            List<AnvandarDetaljerViewModel> lsAnvandare = null;
+
+            if (KursId.HasValue)
+            {
+                viewModel = new AnvandarElevDetaljerViewModel();
+                var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
+                viewModel.KursNamn = (kurs != null) ? kurs.Namn : String.Empty;                
+
+                var kursAnvandare = await m_UnitOfWork.AnvandareRepository.GetAnvandarePaKursAsync(KursId.Value);
+                if (kursAnvandare?.Count > 0)
+                {// Nu ska jag hämta information om vilken roll användarna har och ange om användaren är lärare eller inte   
+                    // Roller som finns i filen Seed.cs är Elev och Lärare
+                    IList<string> lsRoles = null;
+                    foreach (Anvandare anv in kursAnvandare)
+                    {
+                        // Vi borde bara få en roll tillbaka, men är role lärare kommer jag att break foreach
+                        lsRoles = await m_UserManager.GetRolesAsync(anv);
+                        if(lsRoles?.Count > 0)
+                        {
+                            foreach(string strRole in lsRoles)
+                            {
+                                if (strRole == "Lärare")
+                                {
+                                    anv.IsLarare = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    anv.IsLarare = false;
+                                }
+                            }
+                        }
+                    }
+
+                    lsAnvandare = new List<AnvandarDetaljerViewModel>(kursAnvandare.Count);
+
+                    AnvandarDetaljerViewModel model = null;
+                    // Nu har jag en lista med användar där vi även vet om användaren är lärare eller ej
+                    foreach (Anvandare anv in kursAnvandare)
+                    {
+                        model = m_Mapper.Map<AnvandarDetaljerViewModel>(anv);
+                        if (model != null)
+                        {
+                            // Hack
+                            model.KursId = (kurs != null) ? kurs.Id : 0;
+                            lsAnvandare.Add(model);
+                        }
+                    }
+
+                    viewModel.Larare = lsAnvandare.Where(i => i.IsLarare == true).ToList();
+                    viewModel.Elever = lsAnvandare.Where(i => i.IsLarare == false).ToList();
+                }
+            }
+
+            return View(viewModel);
+        }
+
+
         /// <summary>
         /// Action som hämtar information om en kurs som inloggad användare läser och returnerar en View
         /// </summary>
