@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace LMS.Grupp4.Core.Entities
@@ -7,12 +8,15 @@ namespace LMS.Grupp4.Core.Entities
     public class Kurs
     {
         public int Id { get; set; }
+
+        [DisplayName("Kurs")]
         public string Namn { get; set; }
+
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime StartDatum { get; set; }
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime SlutDatum { get; set; }
         public string Beskrivning { get; set; }
         //Navigation prope
@@ -26,6 +30,7 @@ namespace LMS.Grupp4.Core.Entities
 
         [Required]
         public int KursStatusId { get; set; }
+
         [EnumDataType(typeof(Status))]
         [Display(Name = "Status")]
         public Status KursStatus

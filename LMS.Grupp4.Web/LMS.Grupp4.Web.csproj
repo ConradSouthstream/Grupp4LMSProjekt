@@ -27,4 +27,8 @@
     <ProjectReference Include="..\LMS.Grupp4.Data\LMS.Grupp4.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploads\" />
+  </ItemGroup>
+
 </Project>

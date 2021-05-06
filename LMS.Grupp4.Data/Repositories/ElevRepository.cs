@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Data.Repositories
 {
+    /// <summary>
+    /// ElevRepository med metoder för att hantera Elever
+    /// </summary>
     public class ElevRepository : IElevRepository
     {
         /// <summary>
@@ -27,7 +30,7 @@ namespace LMS.Grupp4.Data.Repositories
         /// </summary>
         /// <param name="strElevId">Elevens id</param>
         /// <returns>Information om användaren eller null</returns>
-        public async Task<Anvandare>GetAnvandareAsync(string strElevId)
+        public async Task<Anvandare> GetAnvandareAsync(string strElevId)
         {
             return await m_DbContext.Anvandare.Where(id => id.Id == strElevId).FirstOrDefaultAsync();
         }
@@ -47,8 +50,8 @@ namespace LMS.Grupp4.Data.Repositories
                 .Where(e => e.AnvandareId == strElevId)
                 .FirstOrDefaultAsync();
 
-            if(anvandareKurs != null)
-                kurs = anvandareKurs.Kurs;            
+            if (anvandareKurs != null)
+                kurs = anvandareKurs.Kurs;
 
             return kurs;
         }

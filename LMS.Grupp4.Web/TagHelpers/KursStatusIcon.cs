@@ -9,6 +9,7 @@ namespace LMS.Grupp4.Web.TagHelpers
     [HtmlTargetElement("Status")]
     public class KursStatusIcon : TagHelper
     {
+        public bool Scale { get; set; } = false;
         public Status KursStatus { get; set; }
         public string ResultStatus { get; set; }
         public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -18,18 +19,29 @@ namespace LMS.Grupp4.Web.TagHelpers
             var aktuell = "/images/green.png";
             var avslutade = "/images/red.png";
             var Kommande = "/images/yellow.png";
+
             if (KursStatus == Status.Avslutad)
             {
-                ResultStatus = $"<img src='{avslutade}'/>";
+                if(Scale)
+                    ResultStatus = $"<img src='{avslutade}' alt='Avslutad' title='Avslutad' style='width: 35%' />";
+                else
+                    ResultStatus = $"<img src='{avslutade}' alt='Avslutad' title='Avslutad' />";
             }
             if (KursStatus == Status.Aktuell)
             {
-                ResultStatus = $"<img src='{aktuell}'/>";
+                if(Scale)
+                    ResultStatus = $"<img src='{aktuell}' alt='Aktuell' title='Aktuell' style='width: 35%'/>";
+                else
+                    ResultStatus = $"<img src='{aktuell}' alt='Aktuell' title='Aktuell' />";
             }
             if (KursStatus == Status.Kommande)
             {
-                ResultStatus = $"<img src='{Kommande}'/>";
+                if(Scale)
+                    ResultStatus = $"<img src='{Kommande}' alt='Kommande' title='Kommande' style='width: 35%' />";
+                else
+                    ResultStatus = $"<img src='{Kommande}' alt='Kommande' title='Kommande' />";
             }
+
             output.Content.SetHtmlContent(ResultStatus);
         }
 

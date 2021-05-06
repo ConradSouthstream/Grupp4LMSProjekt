@@ -44,6 +44,16 @@
                 @enrollment.Anvandare.FullNamn
             </a><br />
             }
+        </dd>  <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Moduler)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var modul in Model.Moduler)
+            {
+                <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
+                    @modul.Namn
+            </a><br />
+            }
         </dd>
     </dl>
 </div>

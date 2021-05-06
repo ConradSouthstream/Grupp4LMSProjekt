@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +20,8 @@ namespace LMS.Grupp4.Web
     {
         public static async Task Main(string[] args)
         {
-            var WebHost = CreateHostBuilder(args).Build();
+            var WebHost = CreateHostBuilder(args)
+                .Build();
             using (var scope = WebHost.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
@@ -47,6 +49,8 @@ namespace LMS.Grupp4.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    //webBuilder.UseKestrel();
+                    //webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
                     webBuilder.UseStartup<Startup>();
                 });
      

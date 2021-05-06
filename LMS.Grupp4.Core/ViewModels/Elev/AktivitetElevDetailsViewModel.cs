@@ -16,7 +16,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         /// <summary>
         /// Aktivitetens namn
         /// </summary>
-        [DisplayName("Namn")]
+        [DisplayName("Aktivitetnamn")]
         public string Namn { get; set; }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         /// <summary>
         /// Namn på aktiviteten
         /// </summary>
-        [DisplayName("Aktivitet")]
+        [DisplayName("Aktivitettyp")]
         public string AktivitetTypNamn { get; set; }
 
         private int AktivitetStatusId { get; set; }
@@ -72,13 +72,13 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
 
         public int ModulId { get; set; }
 
-        [DisplayName("Modulensnamn")]
+        [DisplayName("Modulnamn")]
         public string ModulNamn { get; set; }
 
         /// <summary>
         /// Kursensnamn
         /// </summary>
-        [DisplayName("Kursensnamn")]
+        [DisplayName("Kursnamn")]
         public string KursNamn { get; set; }
     }
 }

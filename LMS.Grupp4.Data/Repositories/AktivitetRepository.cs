@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace LMS.Grupp4.Data.Repositories
 {
     /// <summary>
-    /// AktivitetRepository med metoder för att hantera Aktivietet
+    /// AktivitetRepository med metoder för att hantera Aktivitet
     /// </summary>
     public class AktivitetRepository : IAktivitetRepository
     {
@@ -30,7 +30,7 @@ namespace LMS.Grupp4.Data.Repositories
         }
 
         /// <summary>
-        /// Asyn metod som returnerar alla aktivitetet
+        /// Async metod som returnerar alla aktivitetet
         /// </summary>
         /// <returns>Task med alla aktiviteter</returns>
         public async Task<List<Aktivitet>> GetAktiviteterAsync()
@@ -49,8 +49,23 @@ namespace LMS.Grupp4.Data.Repositories
         public async Task<Aktivitet> GetAktivitetAsync(int iAktivitetId)
         {
             return await m_DbContext.Aktiviteter
-                .Include(m => m.Modul)
                 .Include(a => a.AktivitetTyp)
+                .Include(m => m.Modul)                
+                .Where(a => a.Id == iAktivitetId)
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Async metod som returnerar sökt Aktivitet. Inkluderar Kurs som finns i Model
+        /// </summary>
+        /// <param name="iAktivitetId">Id för sökt aktivitet</param>
+        /// <returns>Task med sökt aktivitet eller null</returns>
+        public async Task<Aktivitet> GetAktivitetIncludeKursAsync(int iAktivitetId)
+        {
+            return await m_DbContext.Aktiviteter
+                .Include(a => a.AktivitetTyp)
+                .Include(m => m.Modul)
+                .ThenInclude(k => k.Kurs)                
                 .Where(a => a.Id == iAktivitetId)
                 .FirstOrDefaultAsync();
         }

@@ -45,5 +45,31 @@ namespace LMS.Grupp4.Web.Utils
             }
             return lsItems;
         }
+
+        /// <summary>
+        /// Metoden beräknar vilken status Aktiviteten har
+        /// Status kan vara Avslutad, Aktuell, Kommande
+        /// </summary>
+        /// <param name="modul">Aktivitet</param>
+        /// <returns>enum Status</returns>
+        public static Status CalculateStatus(Aktivitet aktivitet)
+        {
+            Status status = Status.Avslutad;
+
+            if (aktivitet.SlutDatum < DateTime.Now && aktivitet.StartDatum < DateTime.Now)
+            {
+                status = Status.Avslutad;
+            }
+            else if (aktivitet.StartDatum <= DateTime.Now && aktivitet.SlutDatum.AddHours(23) >= DateTime.Now)
+            {
+                status = Status.Aktuell;
+            }
+            else if (aktivitet.StartDatum > DateTime.Now.AddDays(1) && aktivitet.SlutDatum > DateTime.Now)
+            {
+                status = Status.Kommande;
+            }
+
+            return status;
+        }
     }
 }

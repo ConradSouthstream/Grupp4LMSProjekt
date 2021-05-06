@@ -1,4 +1,4 @@
-﻿@model LMS.Grupp4.Core.Entities.Modul
+﻿@model ModulDetaljerViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -35,11 +35,22 @@
             @Html.DisplayFor(model => model.Beskrivning)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Kurs)
+            @Html.DisplayNameFor(model => model.KursNamn)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Kurs.Namn)
-        </dd>
+            @Html.DisplayFor(model => model.KursNamn)
+        </dd> <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Aktiviteter)
+        </dt>
+              <dd class="col-sm-10">
+                  @foreach (var aktivitet in Model.Aktiviteter)
+                  {
+                      <a asp-controller="Aktivitet" asp-action="Details" asp-route-id="@aktivitet.Id">
+                          @aktivitet.Namn
+                      </a><br />
+
+                  }
+              </dd>
     </dl>
 </div>
 <div>
