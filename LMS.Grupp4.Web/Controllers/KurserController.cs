@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LMS.Grupp4.Web.Controllers
 {
+    [Authorize(Roles = "Lärare")]
     public class KurserController : Controller
     {
         private readonly ApplicationDbContext _context;

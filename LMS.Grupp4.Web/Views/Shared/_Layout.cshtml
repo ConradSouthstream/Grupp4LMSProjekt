@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<Anvandare> signinManager;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,9 +23,13 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Kurser" asp-action="Index">Kurser</a>
-                        </li>
+                        @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Kurser" asp-action="Index">Kurser</a>
+                            </li>
+                        }
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Moduler" asp-action="Index">Moduler</a>
                         </li>
@@ -34,12 +39,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Aktivitet" asp-action="Index">Aktivitet</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Larare">Lärar Vyn</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Elev" asp-action="Index">Elev Vyn</a>
-                        </li>
+                        @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Larare">Lärar Vyn</a>
+                            </li>
+                        }
+                        @if (signinManager.IsSignedIn(User) && User.IsInRole("Elev"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Elev" asp-action="Index">Elev Vyn</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
