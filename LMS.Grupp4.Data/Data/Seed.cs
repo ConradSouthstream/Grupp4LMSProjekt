@@ -96,7 +96,7 @@ namespace LMS.Grupp4.Data.Data
                         {
                             ForNamn = fName,
                             EfterNamn = lName,
-                            Email = fake.Internet.Email($"{fName}{lName}"),
+                            Email = fake.Internet.Email(fName,lName),
                             Avatar = fake.Internet.Avatar(),
 
                         };
