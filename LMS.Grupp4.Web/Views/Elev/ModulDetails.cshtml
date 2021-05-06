@@ -51,73 +51,96 @@
         <hr />
         <h4>Aktiviteter</h4>
         <hr />
-        @if (Model.Aktiviteter != null && Model.Aktiviteter.Count > 0)
+        @if (Model.Aktiviteter?.Count > 0)
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().Namn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().StartDatum)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().SlutDatum)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().Beskrivning)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().AktivitetTypNamn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().ModulNamn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().KursNamn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Aktiviteter.First().AktivitetStatus)
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Aktiviteter)
+            <div class="col" id="accordion">
+                <div class="row">
+                    <h5 class="col-2 topbar center border-right-0 corner-left">
+                        @Html.DisplayNameFor(model => model.Aktiviteter.First().Namn)
+                    </h5>
+                    <h5 class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.Aktiviteter.First().StartDatum)
+                    </h5>
+                    <h5 class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.Aktiviteter.First().SlutDatum)
+                    </h5>
+                    <h5 class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.Aktiviteter.First().AktivitetTypNamn)
+                    </h5>
+                    <h5 class="col-2 topbar center border-right-0">
+                        &nbsp;
+                    </h5>
+                    <h5 class="col-2 topbar center corner-right">
+                        @Html.DisplayNameFor(model => model.Aktiviteter.First().AktivitetStatus)
+                    </h5>
+                </div>
+                <div>
+                    @foreach (var item in Model.Aktiviteter) 
                     {
-                        <tr>
-                            <td>
+                    <listdivision class="row">
+                        <div class="col-2 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.AktivitetId)">
+                            <h6 class="center">
                                 @Html.DisplayFor(modelItem => item.Namn)
-                            </td>
-                            <td>
+                            </h6>
+                        </div>
+                        <div class="col-2 border border-right-0">
+                            <h6 class="center">
                                 @Html.DisplayFor(modelItem => item.StartDatum)
-                            </td>
-                            <td>
+                            </h6>
+                        </div>
+                        <div class="col-2 border border-right-0">
+                            <h6 class="center">
                                 @Html.DisplayFor(modelItem => item.SlutDatum)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Beskrivning)
-                            </td>
-                            <td>
+                            </h6>
+                        </div>
+                        <div class="col-2 border border-right-0">
+                            <h6 class="center">
                                 @Html.DisplayFor(modelItem => item.AktivitetTypNamn)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ModulNamn)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.KursNamn)
-                            </td>
-                            <td>
+                            </h6>
+                        </div>
+                        <div class="col-2 border border-right-0">
+                            <div class="center">
+                                <a class="btn btn-mhm btn-sm" asp-controller="Elev" asp-action="AktivitetDetails" asp-route-AktivietetId="@item.AktivitetId">Detaljer</a>
+                                <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.AktivitetId)">Mera</button>
+                            </div>
+                        </div>
+                        <div class="col-2 border">
+                            <h6 class="center">
                                 <status kurs-status="@(item.AktivitetStatus)"></status>
-                            </td>
-                            <td>
-                                @Html.ActionLink("Detaljer", "AktivitetDetails", new { AktivietetId = item.AktivitetId })
-                            </td>
-                        </tr>
+                            </h6>
+                        </div>
+                    </listdivision>
+                    <div>
+                        <div id="@("collapse" + item.AktivitetId)" class="row collapse" data-parent="#accordion">
+                            <div class="col-md-8 pad-0">
+                                <h5 class="topbar corner-rounded">
+                                    @Html.DisplayNameFor(model => model.Aktiviteter.First().Beskrivning)
+                                </h5>
+                                <div class="card card-body">
+                                    @Html.DisplayFor(modelItem => item.Beskrivning)
+                                </div>
+                            </div>
+                            <div class="col-md-2 pad-0">
+                                <h5 class="topbar corner-rounded">
+                                    @Html.DisplayNameFor(model => model.Aktiviteter.First().KursNamn)
+                                </h5>
+                                <div class="card card-body">
+                                    @Html.DisplayFor(modelItem => item.KursNamn)
+                                </div>
+                            </div>
+                            <div class="col-md-2 pad-0">
+                                <h5 class="topbar corner-rounded">
+                                    @Html.DisplayNameFor(model => model.Aktiviteter.First().ModulNamn)
+                                </h5>
+                                <div class="card card-body">
+                                    @Html.DisplayFor(modelItem => item.ModulNamn)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     }
-                </tbody>
-            </table>
+                </div>
+            </div>
         }
         else
         {

@@ -11,7 +11,7 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         /// <summary>
         /// Aktivitetens namn
         /// </summary>
-        [DisplayName("Aktivitetens namn")]
+        [DisplayName("Aktivitetnamn")]
         public string Namn { get; set; }
 
         /// <summary>
@@ -68,6 +68,7 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         public DateTime ModulSlutDatum { get; set; }
         public int KursId { get; set; }
 
+        [DisplayName("Kursnamn")]
         public string KursNamn { get; set; }
     }
 }

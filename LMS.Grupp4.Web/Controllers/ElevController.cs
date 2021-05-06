@@ -3,6 +3,7 @@ using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
 using LMS.Grupp4.Core.ViewModels.Elev;
 using LMS.Grupp4.Web.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Web.Controllers
 {
+    [Authorize(Roles = "Elev")]
     public class ElevController : BaseController
     {
         /// <summary>

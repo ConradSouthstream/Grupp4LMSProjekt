@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Core.ViewModels.Elev
 {
@@ -17,7 +14,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         /// <summary>
         /// Modulens namn
         /// </summary>
-        [DisplayName("Namn")]
+        [DisplayName("Modulnamn")]
         public string Namn { get; set; }
 
         /// <summary>
@@ -45,7 +42,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         /// <summary>
         /// Kursensnamn
         /// </summary>
-        [DisplayName("Kursensnamn")]
+        [DisplayName("Kursnamn")]
         public string KursNamn { get; set; }
 
         private int ModulStatusId { get; set; }

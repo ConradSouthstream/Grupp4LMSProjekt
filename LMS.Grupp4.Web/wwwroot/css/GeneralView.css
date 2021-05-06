@@ -36,9 +36,11 @@ for details on configuring this project to bundle and minify static web assets. 
     align-items: center;
     height: 100%;
 }
+
 listdivision:nth-of-type(2n+1) {
     background-color: #daf1ff /*#bbe6ff*/;
 }
+
 listdivision:nth-of-type(2n+2) {
     background-color: #b7ddff /*#89c8ff*/;
 }
