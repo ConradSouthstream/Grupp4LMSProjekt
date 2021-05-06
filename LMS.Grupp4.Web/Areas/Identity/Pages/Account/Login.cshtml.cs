@@ -74,6 +74,7 @@ namespace LMS.Grupp4.Web.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, isPersistent: false, lockoutOnFailure: false);
                 var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
                 var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                // the user should have only one role "Elev" or "Lärare"
                 var role = roles.FirstOrDefault();
                 if (result.Succeeded)
                 {
