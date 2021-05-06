@@ -66,5 +66,8 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [DisplayName("Modulens slutdatum")]
         public DateTime ModulSlutDatum { get; set; }
+        public int KursId { get; set; }
+
+        public string KursNamn { get; set; }
     }
 }

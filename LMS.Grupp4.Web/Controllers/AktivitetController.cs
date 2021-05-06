@@ -47,7 +47,7 @@ namespace LMS.Grupp4.Web.Controllers
         {
             if (id.HasValue)
             {
-                Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(id.Value);
+                Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetIncludeKursAsync(id.Value);
                 AktivitetDetailsViewModel viewModel = m_Mapper.Map<AktivitetDetailsViewModel>(aktivitet);
                 return View(viewModel);
             }

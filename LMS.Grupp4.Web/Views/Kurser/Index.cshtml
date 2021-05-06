@@ -36,7 +36,7 @@
     <div>
         @foreach (var item in Model.OrderBy(kurs => kurs.StartDatum))
         {
-            <div class="row">
+            <listdivision class="row">
                 <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
                     <h6 class="center">
                         @Html.DisplayFor(modelItem => item.Namn)
@@ -64,7 +64,7 @@
                         <status kurs-status="@(item.KursStatus)"></status>
                     </div>
                 </div>
-            </div>
+            </listdivision>
             <div>
                 <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
                     <div class="col-md-8 pad-0">
