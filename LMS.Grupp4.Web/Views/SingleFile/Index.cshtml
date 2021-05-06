@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Dokument>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<h4>Dokument</h4>
+<hr />
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <table class="table table-responsive table-bordered" >
+        <tr>
+         <th>File Name</th>
+        </tr>
+        @foreach(Dokument file in Model)
+        {
+        <tr>
+            <td>@file.Namn</td>
+            <td><a href="/SingleFile/DownloadFile?filename=@file.Namn">Download</a></td>
+        </tr>
+
+        }
+    </table>       
+    
+  </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
