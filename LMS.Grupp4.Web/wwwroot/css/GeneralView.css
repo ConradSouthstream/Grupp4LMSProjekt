@@ -36,7 +36,23 @@ for details on configuring this project to bundle and minify static web assets. 
     align-items: center;
     height: 100%;
 }
-
+.horizontalcenter {
+    margin: 0px auto 0px auto;
+}
+Ctop{
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+@media only screen and (max-width: 1092px) {
+    Ctop {
+        font-size: 1rem;        
+    }
+}
+@media only screen and (max-width: 844px) {
+    Ctop {
+        font-size: 0.75rem;
+    }
+}
 listdivision:nth-of-type(2n+1) {
     background-color: #daf1ff /*#bbe6ff*/;
 }

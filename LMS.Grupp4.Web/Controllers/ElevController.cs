@@ -22,8 +22,8 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager) : 
-            base(uow, mapper,userManager)
+        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager) :
+            base(uow, mapper, userManager)
         {
         }
 
@@ -36,7 +36,7 @@ namespace LMS.Grupp4.Web.Controllers
             {
                 viewModel = new AnvandarElevDetaljerViewModel();
                 var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
-                viewModel.KursNamn = (kurs != null) ? kurs.Namn : String.Empty;                
+                viewModel.KursNamn = (kurs != null) ? kurs.Namn : String.Empty;
 
                 var kursAnvandare = await m_UnitOfWork.AnvandareRepository.GetAnvandarePaKursAsync(KursId.Value);
                 if (kursAnvandare?.Count > 0)
@@ -47,9 +47,9 @@ namespace LMS.Grupp4.Web.Controllers
                     {
                         // Vi borde bara få en roll tillbaka, men är role lärare kommer jag att break foreach
                         lsRoles = await m_UserManager.GetRolesAsync(anv);
-                        if(lsRoles?.Count > 0)
+                        if (lsRoles?.Count > 0)
                         {
-                            foreach(string strRole in lsRoles)
+                            foreach (string strRole in lsRoles)
                             {
                                 if (strRole == "Lärare")
                                 {
@@ -120,7 +120,7 @@ namespace LMS.Grupp4.Web.Controllers
             if (moduler?.Count() > 0)
             {
                 AktivitetElevDetailsViewModel aktivitetElevDetailsViewModel = null;
-                List<AktivitetElevDetailsViewModel> lsAktivitetElevDetailsViewModel = null;                
+                List<AktivitetElevDetailsViewModel> lsAktivitetElevDetailsViewModel = null;
                 ModulElevDetailsViewModel modulElevDetailsViewModel = null;
 
                 List<ModulElevDetailsViewModel> lsViewModelModul = new List<ModulElevDetailsViewModel>(moduler.Count());
@@ -167,7 +167,7 @@ namespace LMS.Grupp4.Web.Controllers
             {
                 // Hämta modul inklusive kursen från repository
                 var modul = await m_UnitOfWork.ModulRepository.GetModulWithKursAsync(ModulId.Value);
-                if(modul != null)
+                if (modul != null)
                 {
                     // Mappa Modul till ViewModel
                     viewModel = m_Mapper.Map<ModulElevDetailsViewModel>(modul);
