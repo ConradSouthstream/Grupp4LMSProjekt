@@ -14,7 +14,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         [DisplayName("Kursens id")]
         public int KursId { get; set; }
 
-        [DisplayName("Aktivitetens namn")]
+        [DisplayName("Aktivitetnamn")]
         public string Namn { get; set; }
 
         [DataType(DataType.Date)]

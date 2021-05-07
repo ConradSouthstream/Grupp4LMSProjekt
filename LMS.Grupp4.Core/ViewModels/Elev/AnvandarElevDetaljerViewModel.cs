@@ -12,7 +12,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         /// <summary>
         /// Kursens namn
         /// </summary>
-        [DisplayName("Kursensnamn")]
+        [DisplayName("Kursnamn")]
         public string KursNamn { get; set; }
 
         /// <summary>

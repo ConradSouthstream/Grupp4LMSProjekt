@@ -13,24 +13,24 @@
 </div>
 <div class="col" id="accordion">
     <div class="row">
-        <h5 class="col-3 topbar center border-right-0 corner-left">
+        <Ctop class="col-3 topbar center border-right-0 corner-left">
             @Html.DisplayNameFor(model => model.Namn)
-        </h5>
-        <h5 class="col-2 topbar center border-right-0">
+        </Ctop>
+        <Ctop class="col-2 topbar center border-right-0">
             @Html.DisplayNameFor(model => model.StartDatum)
-        </h5>
-        <h5 class="col-2 topbar center border-right-0">
+        </Ctop>
+        <Ctop class="col-2 topbar center border-right-0">
             @Html.DisplayNameFor(model => model.SlutDatum)
-        </h5>
-        <h5 class="col-3 topbar center border-right-0">
+        </Ctop>
+        <Ctop class="col-3 topbar center border-right-0">
             Alternativ:
-        </h5>
+        </Ctop>
         @*<div class="col">
                 @Html.DisplayNameFor(model => model.Moduler)
             </div>*@
-        <h5 class="col-2 topbar center corner-right">
+        <Ctop class="col-2 topbar center corner-right">
             @Html.DisplayNameFor(model => model.KursStatus)
-        </h5>
+        </Ctop>
     </div>
 
     <div>
@@ -53,7 +53,7 @@
                     </h6>
                 </div>
                 <div class="col-3 border border-right-0">
-                    <div class="center">
+                    <div class="row center">
                         <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
                         <a type="button" class="btn btn-outline-primary" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
                         @*<a asp-action="Details" asp-route-id="@item.Id" type="button" class="btn btn-outline-primary btn btn-mhm  btn-sm">Material</a>*@
@@ -63,7 +63,7 @@
                 </div>
                 <div class="col-2 border">
                     <div class="center">
-                        <status kurs-status="@(item.KursStatus)"></status>
+                        <status start-datum="@(item.StartDatum)" slut-datum="@(item.SlutDatum)"></status>
                     </div>
                 </div>
             </listdivision>

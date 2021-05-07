@@ -13,9 +13,11 @@ using Microsoft.AspNetCore.Identity;
 using LMS.Grupp4.Core.IRepository;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LMS.Grupp4.Web.Controllers
 {
+    [Authorize(Roles = "Lärare")]
     public class KurserController : Controller
     {
         private readonly IMapper _mapper;
@@ -49,9 +51,10 @@ namespace LMS.Grupp4.Web.Controllers
                 return NotFound();
             }
 
-            var kurs = await _context.Kurser.Include(k => k.Moduler)
-                 .Include(c => c.AnvandareKurser)
+            var kurs = await _context.Kurser
+                .Include(c => c.AnvandareKurser)
                 .ThenInclude(e => e.Anvandare)
+                .Include(c => c.Moduler)
                 .FirstOrDefaultAsync(m => m.Id == id);
             var dokument = await _context.Dokument
                 .Where(d => d.KursId == kurs.Id).ToListAsync();

@@ -65,10 +65,10 @@
                     @Html.DisplayFor(model => model.Kurs.Beskrivning)
                 </dd>
                 <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Kurs.KursStatus)
+                    Status
                 </dt>
                 <dd class="col-sm-10">
-                    <status kurs-status="@(Model.Kurs.KursStatus)"></status>
+                    <status start-datum="@(Model.Kurs.StartDatum)" slut-datum="@(Model.Kurs.SlutDatum)"></status>
                 </dd>
             </dl>
         }
@@ -82,71 +82,115 @@
         <hr />
         @if (Model.Moduler?.Count > 0)
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Moduler.First().Namn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Moduler.First().StartDatum)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Moduler.First().SlutDatum)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Moduler.First().Beskrivning)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Moduler.First().ModulStatus)
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="col" id="accordion">
+                <div class="row">
+                    <h5 class="col-3 topbar center border-right-0 corner-left">
+                        @Html.DisplayNameFor(model => model.Moduler.First().Namn)
+                    </h5>
+                    <h5 class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.Moduler.First().StartDatum)
+                    </h5>
+                    <h5 class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.Moduler.First().SlutDatum)
+                    </h5>
+                    <h5 class="col-3 topbar center border-right-0">
+                        &nbsp;
+                    </h5>
+                    <h5 class="col-2 topbar center corner-right">
+                        @Html.DisplayNameFor(model => model.Moduler.First().ModulStatus)
+                    </h5>
+                </div>
+                <div>
                     @foreach (var item in Model.Moduler)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Namn)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StartDatum)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SlutDatum)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Beskrivning)
-                            </td>
-                            <td>
-                                <status kurs-status="@(item.ModulStatus)"></status>
-                            </td>
-                            <td>
-                                @Html.ActionLink("Detaljer", "ModulDetails", new { ModulId = item.ModulId })
-                            </td>
-                        </tr>
-                        @if (item.Aktiviteter?.Count > 0)
-                        {
-                            foreach (var ak in item.Aktiviteter)
-                            {
-                                string strAktivitet = $"{ak.StartDatum.ToShortDateString()} - {ak.SlutDatum.ToShortDateString()}";
-                                <tr>
-                                    <td colspan="7" align="right">
-                                        @Html.ActionLink(ak.Namn, "AktivitetDetails", new { AktivietetId = ak.AktivitetId })
-                                        @strAktivitet
-                                        <status kurs-status="@(ak.AktivitetStatus)"></status>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr><td colspan="7">Inga aktiviteter</td></tr>
-                        }
+                        <listdivision class="row">
+                            <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.ModulId)">
+                                <h6 class="center">
+                                    @Html.DisplayFor(modelItem => item.Namn)
+                                </h6>
+                            </div>
+                            <div class="col-2 border border-right-0">
+                                <h6 class="center">
+                                    @Html.DisplayFor(modelItem => item.StartDatum)
+                                </h6>
+                            </div>
+                            <div class="col-2 border border-right-0">
+                                <h6 class="center">
+                                    @Html.DisplayFor(modelItem => item.SlutDatum)
+                                </h6>
+                            </div>
+                            <div class="col-3 border border-right-0">
+                                <div class="center">
+                                    <a class="btn btn-mhm btn-sm" asp-controller="Elev" asp-action="ModulDetails" asp-route-ModulId="@item.ModulId">Detaljer</a>
+                                    <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.ModulId)">Mera</button>
+                                </div>
+                            </div>
+                            <div class="col-2 border">
+                                <h6 class="center">
+                                    <status kurs-status="@(item.ModulStatus)"></status>
+                                </h6>
+                            </div>
+                        </listdivision>
+                        <div>
+                            <div id="@("collapse" + item.ModulId)" class="row collapse" data-parent="#accordion">
+                                <div class="col-md-6 pad-0">
+                                    <h5 class="topbar corner-rounded">
+                                        @Html.DisplayNameFor(model => model.Moduler.First().Beskrivning)
+                                    </h5>
+                                    <div class="card card-body">
+                                        @Html.DisplayFor(modelItem => item.Beskrivning)
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pad-0">
+                                    <h5 class="topbar corner-rounded">
+                                        Aktiviteter
+                                    </h5>
+                                    <div class="card card-body">
+                                        @if (item.Aktiviteter?.Count > 0)
+                                        {
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    &nbsp;
+                                                </div>
+                                                <div class="col-3">
+                                                    @Html.DisplayNameFor(model => model.Moduler.First().Aktiviteter.First().StartDatum)
+                                                </div>
+                                                <div class="col-3">
+                                                    @Html.DisplayNameFor(model => model.Moduler.First().Aktiviteter.First().SlutDatum)
+                                                </div>
+                                                <div class="col-2">
+                                                    @Html.DisplayNameFor(model => model.Moduler.First().Aktiviteter.First().AktivitetStatus)
+                                                </div>
+                                            </div>
+                                            @foreach (var ak in item.Aktiviteter)
+                                            {
+                                                <div class="row">
+                                                    <a class="col-4" asp-controller="Elev" asp-action="AktivitetDetails" asp-route-AktivietetId="@ak.AktivitetId">@Html.DisplayFor(a => ak.Namn)</a>
+                                                    <div class="col-3">
+                                                        @Html.DisplayFor(a => ak.StartDatum)
+                                                    </div>
+                                                    <div class="col-3">
+                                                        @Html.DisplayFor(a => ak.SlutDatum)
+                                                    </div>
+                                                    <div class="col-2">
+                                                        <status scale="true" kurs-status="@(ak.AktivitetStatus)"></status>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {         
+                                            <div class="row">
+                                                <div class="col-12">Det finns inga aktiviteter</div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     }
-                </tbody>
-            </table>
+                </div>
+            </div>
         }
         else
         {

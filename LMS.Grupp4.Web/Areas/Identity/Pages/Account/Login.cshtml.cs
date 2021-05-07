@@ -22,7 +22,7 @@ namespace LMS.Grupp4.Web.Areas.Identity.Pages.Account
         private readonly SignInManager<Anvandare> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<Anvandare> signInManager, 
+        public LoginModel(SignInManager<Anvandare> signInManager,
                           ILogger<LoginModel> logger,
                           UserManager<Anvandare> userManager)
         {
@@ -72,12 +72,12 @@ namespace LMS.Grupp4.Web.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, isPersistent: false, lockoutOnFailure: false);
-                var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
-                var roles = await _signInManager.UserManager.GetRolesAsync(user);
-                // the user should have only one role "Elev" or "Lärare"
-                var role = roles.FirstOrDefault();
                 if (result.Succeeded)
                 {
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+                    // the user should have only one role "Elev" or "Lärare"
+                    var role = roles.FirstOrDefault();
                     if (role == "Elev")
                     {
                         return Redirect("~/Elev");
@@ -86,8 +86,8 @@ namespace LMS.Grupp4.Web.Areas.Identity.Pages.Account
                     {
                         return Redirect("~/Home/Larare");
                     }
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    _logger.LogInformation("User logged in but no role assigned.");
+                    ModelState.AddModelError(string.Empty, "No role assiged for this user.");
                 }
                 else
                 {
@@ -101,4 +101,4 @@ namespace LMS.Grupp4.Web.Areas.Identity.Pages.Account
         }
     }
 }
-   
+
