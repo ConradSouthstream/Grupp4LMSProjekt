@@ -3,116 +3,57 @@
     ViewData["Title"] = "Home Page";
 }
 <head>
-    <link rel="stylesheet" href="~/css/GeneralView.css" />
+    @*<link rel="stylesheet" href="~/css/GeneralView.css" />*@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
 </head>
 
 
-    </div>
-    <div class="col-8" id="accordion">
-        <div class="card">
-            <div class="card-header" id="h1">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#@Model.First().Id" aria-expanded="true" aria-controls="on1">
-                        Collapsible Group Item #1
-                    </button>
-                </h5>
-            </div>
-
-            <div id="on1" class="collapse show" aria-labelledby="h1" data-parent="#accordion">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="headingTwo">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                        Collapsible Group Item #2
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                <div class="card-body">
-                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header" id="headingThree">
-                <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Collapsible Group Item #3
-                    </button>
-                </h5>
-            </div>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                <div class="row">
-                    <div class="col-9">
-                        <div class="card card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="card card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
 <div>
     <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Create">Skapa ny Kurs</a>
 </div>
 
 <div class="row">
     <div class="col-3">
-        <button class="btn btn-mhm col-md-10">
+        <a class="btn btn-mhm col-md-10" asp-area="" asp-controller="Kurser" asp-action="Index">
             Kurser
-        </button>
-        <button class="btn btn-mhm col-md-10">
+        </a>
+        <a class="btn btn-mhm col-md-10" asp-area="" asp-controller="Admin" asp-action="Index">
             Administrera
             Användare
-        </button>
-        <button class="btn btn-mhm col-md-10">
+        </a>
+        <a class="btn btn-mhm col-md-10">
             Kurs litteratur
             Administrering
-        </button>
-        <button class="btn btn-mhm col-md-10">
+        </a>
+        <a class="btn btn-mhm col-md-10">
             Hantera
             Inlämningar
-        </button>        
+        </a>        
     </div>        
     <div class="col" id="accordion">
         <div class="row">
-            <h5 class="col-3 topbar center border-right-0 corner-left">
+            <Ctop class="col-3 topbar center border-right-0 corner-left">
                 @Html.DisplayNameFor(model => model.Namn)
-            </h5>
-            <h5 class="col-2 topbar center border-right-0">
+            </Ctop>
+            <Ctop class="col-2 topbar center border-right-0">
                 @Html.DisplayNameFor(model => model.StartDatum)
-            </h5>
-            <h5 class="col-2 topbar center border-right-0">
+            </Ctop>
+            <Ctop class="col-2 topbar center border-right-0">
                 @Html.DisplayNameFor(model => model.SlutDatum)
-            </h5>
-            <h5 class="col-3 topbar center border-right-0">
+            </Ctop>
+            <Ctop class="col-3 topbar center border-right-0">
                 Alternativ:
-            </h5>
-            @*<div class="col">
-                @Html.DisplayNameFor(model => model.Moduler)
-            </div>*@
-            <h5 class="col-2 topbar center corner-right">
+            </Ctop>            
+            <Ctop class="col-2 topbar center corner-right">
                 @Html.DisplayNameFor(model => model.KursStatus)
-            </h5>            
+            </Ctop>            
         </div>
 
         <div>
             @foreach (var item in Model.OrderBy(kurs => kurs.StartDatum))
             {
-                <div class="row">                    
+                <listdivision class="row">                    
                     <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
                         <h6 class="center">
                             @Html.DisplayFor(modelItem => item.Namn)
@@ -129,7 +70,7 @@
                         </h6>
                     </div>
                     <div class="col-3 border border-right-0">
-                        <div class="center">
+                        <div class="center row">
                             <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
                             <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
                             <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
@@ -140,7 +81,7 @@
                             <status kurs-status="@(item.KursStatus)"></status>
                         </div>
                     </div>                    
-                </div>
+                </listdivision>
                 <div>
                     <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
                         <div class="col-md-6 pad-0">
