@@ -116,13 +116,14 @@ namespace LMS.Grupp4.Data.Data
                     //varje kurs tillsätter 5 moduler
                     for (int moduli = 0; moduli < 5; moduli++)
                     {
+                        var modulstartdatum = startdatum.AddDays(((moduli + 1) * 7) - 7);
                         var modul = new Modul
                         {
                             Namn = $"Modul {i + 1}.{moduli + 1}",
                             Beskrivning = fake.Lorem.Paragraph(),
                             Kurs = kurs,
-                            StartDatum = startdatum.AddDays(((moduli + 1) * 7) - 7),
-                            SlutDatum = startdatum.AddDays(((moduli + 1) * 7) -1)
+                            StartDatum = modulstartdatum,
+                            SlutDatum = modulstartdatum.AddDays(((moduli + 1) * 7) -1)
                         };
                         //varje modul tillsätter 2 aktiviteter
                         for (int aktiviteti = 0; aktiviteti < 2; aktiviteti++)
@@ -133,8 +134,8 @@ namespace LMS.Grupp4.Data.Data
                                 Beskrivning = fake.Lorem.Paragraph(),
                                 AktivitetTyp = fake.Random.ListItem<AktivitetTyp>(aktivitetTyper),
                                 Modul = modul,
-                                StartDatum = startdatum.AddDays(((aktiviteti + 1) * 3) - 3),
-                                SlutDatum = startdatum.AddDays(((aktiviteti + 1) * 3) -1)
+                                StartDatum = modulstartdatum.AddDays(((aktiviteti + 1) * 3) - 3),
+                                SlutDatum = modulstartdatum.AddDays(((aktiviteti + 1) * 3) -1)
                             };
                             aktiviteter.Add(aktivitet);
                         }
