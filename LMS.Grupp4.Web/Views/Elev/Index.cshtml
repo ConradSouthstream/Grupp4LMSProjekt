@@ -28,7 +28,11 @@
         
         <br />
         @Html.ActionLink("Visa deltagare", "GetAnvandarna", new { KursId = Model.Kurs.KursId })
+        <br/> 
+        <br />
+        @Html.ActionLink("Visa kurs material", "Details", new { KursId = Model.Kurs.KursId })
         <br/>
+
 
         <hr />
         <h4>Aktuell kurs @Model.Kurs?.Namn</h4>

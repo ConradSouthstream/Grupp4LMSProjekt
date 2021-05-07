@@ -18,11 +18,11 @@ namespace LMS.Grupp4.Web.Controllers
 {
     public class KurserController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _uow;
         private readonly UserManager<Anvandare> _userManager;
         private readonly IWebHostEnvironment _env;
+        private readonly ApplicationDbContext _context;
 
 
 
@@ -38,47 +38,24 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Kurs
         public async Task<IActionResult> Index()
         {
-            var kurs =await _context.Kurser.Include(k => k.Moduler).ToListAsync();
+            var kurs = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
             return View(kurs);
         }
 
-        // GET: Kurs/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var kurs = await _context.Kurser.Include(k=>k.Moduler)
-        //         .Include(c => c.AnvandareKurser)
-        //        .ThenInclude(e => e.Anvandare).ThenInclude(k=>k.Dokument)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (kurs == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(kurs);
-        //} 
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            
-            var kurs = await _context.Kurser.Include(k=>k.Moduler)
+
+            var kurs = await _context.Kurser.Include(k => k.Moduler)
                  .Include(c => c.AnvandareKurser)
                 .ThenInclude(e => e.Anvandare)
                 .FirstOrDefaultAsync(m => m.Id == id);
             var dokument = await _context.Dokument
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
-            string[] filespaths = Directory.GetFiles(Path.Combine(this._env.WebRootPath, "Uploads/"));
-            foreach (string filepath in filespaths)
-            {
-                dokument.Add(new Dokument { Namn = Path.GetFileName(filepath) });
-            }
+
             kurs.Dokument = dokument;
             if (kurs == null)
             {
@@ -105,9 +82,12 @@ namespace LMS.Grupp4.Web.Controllers
             }
             return (GetTypNamn);
         }
+
         public FileResult DownloadFile(string filename)
         {
-            return _uow.DokumentRepository.DownloadFile(filename);
+            string path = Path.Combine(_env.WebRootPath, "Uploads/") + filename;
+            byte[] bytes = System.IO.File.ReadAllBytes(path);
+            return File(bytes, "application/octet-stream", filename);
         }
 
         public IActionResult Upload(int id)
@@ -121,25 +101,21 @@ namespace LMS.Grupp4.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upload(DokumentKursViewModel upload)
+        public async Task<IActionResult> Upload(Dokument upload)
         {
             if (!ModelState.IsValid)
             {
                 return NotFound();
             }
             upload.Anvandare = await _userManager.GetUserAsync(User);
-            //upload.Kurs=;
-            // upload.DokumentTyp = GetDokumentTypNamn();
-            var dokument = _mapper.Map<Dokument>(upload);
 
-            await _uow.DokumentRepository.Create(dokument);
+            await _uow.DokumentRepository.Create(upload);
 
             await _uow.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
-            return Redirect("/Kurser/Details/" + dokument.KursId);
+            return Redirect("/Kurser/Details/" + upload.KursId);
 
-           // return View(dokument);
         }
 
         // GET: Kurs/Create

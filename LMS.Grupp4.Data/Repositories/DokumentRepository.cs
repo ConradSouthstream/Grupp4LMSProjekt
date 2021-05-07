@@ -39,6 +39,7 @@ namespace LMS.Grupp4.Data.Repositories
                 //generate unique name to retrieve later
                 //string newFileName = Guid.NewGuid().ToString();
                 string newFileName = item.Namn;
+                ////
                 //item.Anvandare = await _usermanager.GetUserAsync(User);
 
                 //store photo on file system and reference in DB
@@ -49,6 +50,7 @@ namespace LMS.Grupp4.Data.Repositories
                     //save location to database (in URL format)
                     item.Path = "Uploads/" + newFileName + extension;
 
+                    item.Namn = newFileName + extension;
                     //write file to file system
                     using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {

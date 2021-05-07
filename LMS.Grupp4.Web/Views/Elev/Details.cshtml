@@ -1,0 +1,71 @@
+﻿@model LMS.Grupp4.Core.Entities.Kurs
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Kurs</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Namn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Namn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDatum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StartDatum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SlutDatum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SlutDatum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Beskrivning)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Beskrivning)
+        </dd>
+        
+    </dl>
+</div>
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <table class="table table-responsive table-bordered">
+        <tr>
+            <th>Dokuments Namn</th>
+            <th>Uppladdnings Datum</th>
+            <th>Anvandare</th>
+        </tr>
+        @foreach (Dokument file in Model.Dokument)
+        {
+            <tr>
+                <td>@file.Namn</td>
+                <td>@file.UppladdningsDatum</td>
+                @*<td>@file.Anvandare.FullNamn</td>*@
+                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+            </tr>
+       
+
+        }
+    </table>
+
+</div>
+
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
