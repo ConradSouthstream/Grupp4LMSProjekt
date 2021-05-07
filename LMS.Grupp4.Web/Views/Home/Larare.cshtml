@@ -8,11 +8,6 @@
           rel="stylesheet">
 </head>
 
-
-<div>
-    <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Create">Skapa ny Kurs</a>
-</div>
-
 <div class="row">
     <div class="col-3">
         <a class="btn btn-mhm col-md-10" asp-area="" asp-controller="Kurser" asp-action="Index">
@@ -52,7 +47,7 @@
 
         <div>
             @foreach (var item in Model.OrderBy(kurs => kurs.StartDatum))
-            {
+            {              
                 <listdivision class="row">                    
                     <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
                         <h6 class="center">
@@ -78,12 +73,14 @@
                     </div>
                     <div class="col-2 border">
                         <div class="center">
-                            <status kurs-status="@(item.KursStatus)"></status>
+                            <status start-datum="@(item.StartDatum)" slut-datum="@(item.SlutDatum)"></status>
                         </div>
                     </div>                    
                 </listdivision>
                 <div>
-                    <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
+                    <div id="@("collapse" + item.Id)" class="row collapse 
+                         @(item.StartDatum < DateTime.Now && DateTime.Now < item.SlutDatum ? "show" : "")"
+                         data-parent="#accordion">
                         <div class="col-md-6 pad-0">
                             <h5 class="topbar corner-rounded">
                                 Beskrivning:

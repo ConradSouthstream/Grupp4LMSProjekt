@@ -37,8 +37,9 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             var kurs = await _context.Kurser
-                 .Include(c => c.AnvandareKurser)
+                .Include(c => c.AnvandareKurser)
                 .ThenInclude(e => e.Anvandare)
+                .Include(c => c.Moduler)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (kurs == null)
             {

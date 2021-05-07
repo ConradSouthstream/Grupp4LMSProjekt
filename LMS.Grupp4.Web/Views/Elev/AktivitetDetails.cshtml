@@ -54,10 +54,10 @@
                 @Html.DisplayFor(model => model.KursNamn)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.AktivitetStatus)
+                Status
             </dt>
             <dd class="col-sm-10">
-                <status kurs-status="@(Model.AktivitetStatus)"></status>
+                <status start-datum="@(Model.StartDatum)" slut-datum="@(Model.SlutDatum)"></status>
             </dd>
         </dl>
     }

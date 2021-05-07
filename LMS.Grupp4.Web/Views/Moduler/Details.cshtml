@@ -1,5 +1,12 @@
 ﻿@model ModulDetaljerViewModel
 
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Larare">Hem</a></li>
+        <li class="breadcrumb-item"><a href="@("/kurser/Details/"+Model.KursId)">Kurs</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Modul</li>        
+    </ol>
+</nav>
 @{
     ViewData["Title"] = "Details";
 }
