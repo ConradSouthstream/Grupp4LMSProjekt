@@ -9,7 +9,7 @@ namespace LMS.Grupp4.Data.MapperProfiles
     {
         public MapperProfile()
         {
-            AktivtetMap();
+            AktivitetMap();
             ElevMap();
         }
 
@@ -40,7 +40,7 @@ namespace LMS.Grupp4.Data.MapperProfiles
         /// <summary>
         /// Automapper för Aktivitet och dess ViewModels
         /// </summary>
-        private void AktivtetMap()
+        private void AktivitetMap()
         {
             CreateMap<Aktivitet, AktivitetListViewModel>()
                 .ForMember(dest => dest.ModulNamn, from => from.MapFrom(m => m.Modul.Namn))
