@@ -24,13 +24,14 @@ namespace LMS.Grupp4.Web.Controllers
     {
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _context;
+
         /// <summary>
         /// Konstruktor
         /// </summary>
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager) :
+        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IWebHostEnvironment env ) :
             base(uow, mapper, userManager)
         {
             _context = context;
