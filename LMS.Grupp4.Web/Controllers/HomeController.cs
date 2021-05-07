@@ -1,5 +1,6 @@
 ﻿using LMS.Grupp4.Data;
 using LMS.Grupp4.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,7 @@ namespace LMS.Grupp4.Web.Controllers
         {
             return View();
         }
+        [Authorize(Roles = "Lärare")]
         public async Task<IActionResult> LarareAsync()
         {
             var kurs = await db.Kurser.Include(k => k.Moduler).ToListAsync();

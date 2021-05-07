@@ -162,6 +162,9 @@ namespace LMS.Grupp4.Data.Data
 
                 var admin = new Anvandare
                 {
+                    ForNamn = "Admin",
+                    EfterNamn = "Lärare",
+                    Avatar = fake.Internet.Avatar(),
                     UserName = larareEmail,
                     Email = larareEmail,
                 };
