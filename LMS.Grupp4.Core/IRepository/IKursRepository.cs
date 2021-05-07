@@ -26,8 +26,8 @@ namespace LMS.Grupp4.Core.IRepository
         /// <summary>
         /// Async metod som returnerar true om kursen existerar med det givna id annars false
         /// </summary>
-        /// <param name="ikursId">Id för den modul som vi vill ha Kursrna för</param>
-        /// <returns>Task med List med Kurs som tillhör en sökt modul</returns>
+        /// <param name="ikursId">Id för sökt kurs</param>
+        /// <returns>Task returnerar true eller false ></returns>
         bool KursExists(int? ikursId);
         /// <summary>
         /// Metoden uppdaterar data om en Kurs

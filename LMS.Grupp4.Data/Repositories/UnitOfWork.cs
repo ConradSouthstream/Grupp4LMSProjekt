@@ -1,5 +1,7 @@
-﻿using LMS.Grupp4.Core.IRepository;
+﻿using LMS.Grupp4.Core.Entities;
+using LMS.Grupp4.Core.IRepository;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Data.Repositories
@@ -14,6 +16,7 @@ namespace LMS.Grupp4.Data.Repositories
         /// </summary>
         private readonly ApplicationDbContext m_dbContext;
         private IHostingEnvironment _env;
+        private UserManager<Anvandare> _usermanger;
 
 
 
@@ -42,20 +45,24 @@ namespace LMS.Grupp4.Data.Repositories
         /// </summary>
         public IAnvandareRepository AnvandareRepository { get; }
 
+        public IDokumentTypRepository DokumentTypRepository { get; }
+
         /// <summary>
         /// Konstruktor
         /// </summary>
         /// <param name="applicationDbContext">Referense till context</param>
-        public UnitOfWork(ApplicationDbContext applicationDbContext,IHostingEnvironment env)
+        public UnitOfWork(ApplicationDbContext applicationDbContext,IHostingEnvironment env,UserManager<Anvandare>userManger)
         {
             m_dbContext = applicationDbContext;
             _env = env;
+            _usermanger = userManger;
             AktivitetRepository = new AktivitetRepository(m_dbContext);
             ModulRepository = new ModulRepository(m_dbContext);
             KursRepository = new KursRepository(m_dbContext);
             ElevRepository = new ElevRepository(m_dbContext);
             AnvandareRepository = new AnvandareRepository(m_dbContext);
-            DokumentRepository = new DokumentRepository(_env,m_dbContext);
+            DokumentRepository = new DokumentRepository(_env,m_dbContext,_usermanger);
+            DokumentTypRepository = new DokumentTypRepository(m_dbContext);
         }
 
         /// <summary>

@@ -10,7 +10,6 @@ namespace LMS.Grupp4.Core.Entities
     {
         public int Id { get; set; }
         public string Namn { get; set; }
-        public int DokumentId { get; set; }
 
         //Navigation property
         public ICollection<Dokument> Dokument { get; set; }

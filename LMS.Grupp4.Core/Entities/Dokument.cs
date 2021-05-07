@@ -1,11 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Http;
 
 namespace LMS.Grupp4.Core.Entities
 {
@@ -22,17 +19,19 @@ namespace LMS.Grupp4.Core.Entities
         public int? KursId { get; set; }
         public int? ModulId { get; set; }
         public int? AktivitetId { get; set; }
-        public int? DokumentTypId { get; set; }
+        public int DokumentTypId { get; set; }
         public int? AnvandareId { get; set; }
         [NotMapped] //Tell Entity Framework to ignore property
         public IFormFile File { get; set; }
 
+        [NotMapped]
+        public IEnumerable<SelectListItem> GetDokumentTypNamn { get; set; }
 
 
         //Navigation property
         public Anvandare Anvandare { get; set; }
-        public Kurs Kurs { get; set; }
         public DokumentTyp DokumentTyp { get; set; }
+        public Kurs Kurs { get; set; }
         public Modul Modul { get; set; }
         public Aktivitet Aktivitet { get; set; }
 

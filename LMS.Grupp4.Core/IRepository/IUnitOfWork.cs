@@ -23,6 +23,7 @@ namespace LMS.Grupp4.Core.IRepository
         IKursRepository KursRepository { get; }
 
         IDokumentRepository DokumentRepository { get; }
+        IDokumentTypRepository DokumentTypRepository { get; }
 
         /// <summary>
         /// Repository för Elev

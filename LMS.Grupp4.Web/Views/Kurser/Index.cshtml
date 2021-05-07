@@ -55,7 +55,9 @@
                 <div class="col-3 border border-right-0">
                     <div class="center">
                         <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
-                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
+                        <a type="button" class="btn btn-outline-primary" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
+                        @*<a asp-action="Details" asp-route-id="@item.Id" type="button" class="btn btn-outline-primary btn btn-mhm  btn-sm">Material</a>*@
+
                         <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
                     </div>
                 </div>

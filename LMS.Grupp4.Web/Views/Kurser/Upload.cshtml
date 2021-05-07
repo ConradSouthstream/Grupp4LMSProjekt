@@ -10,6 +10,8 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Upload" enctype="multipart/form-data">
+            <input hidden="hidden" asp-for="KursId" />
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="DokumentTypId" class="control-label"></label>

@@ -41,10 +41,11 @@
             @foreach (var enrollment in Model.AnvandareKurser)
             {
                 <a asp-controller="Anvandare" asp-action="Details" asp-route-id="@enrollment.AnvandareId">
-                @enrollment.Anvandare.FullNamn
-            </a><br />
+                    @enrollment.Anvandare.FullNamn
+                </a><br />
             }
-        </dd>  <dt class="col-sm-2">
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Moduler)
         </dt>
         <dd class="col-sm-10">
@@ -52,12 +53,35 @@
             {
                 <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
                     @modul.Namn
-            </a><br />
+                </a><br />
             }
         </dd>
     </dl>
 </div>
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <table class="table table-responsive table-bordered">
+        <tr>
+            <th>Dokuments Namn</th>
+        </tr>
+        @foreach (Dokument file in Model.Dokument)
+        {
+            <tr>
+                <td>@file.Namn</td>
+                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+            </tr>
+
+        }
+    </table>
+
+</div>
+
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
