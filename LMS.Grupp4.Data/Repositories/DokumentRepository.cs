@@ -28,7 +28,7 @@ namespace LMS.Grupp4.Data.Repositories
         {
             //Either use a viewmodel or remove photoURL. URL will
             //be generated programmatically
-            // ModelState.Remove(nameof(Dokument.Path));
+             ModelState.Remove(nameof(Dokument.Path));
             item.Id = 0; //SQL Server will generate a new ID
             IFormFile file = item.File;
             //Check file extension 
@@ -40,7 +40,6 @@ namespace LMS.Grupp4.Data.Repositories
                 //string newFileName = Guid.NewGuid().ToString();
                 string newFileName = item.Namn;
                 ////
-                //item.Anvandare = await _usermanager.GetUserAsync(User);
 
                 //store photo on file system and reference in DB
                 if (file.Length > 0) //ensure the file is not empty
@@ -49,7 +48,6 @@ namespace LMS.Grupp4.Data.Repositories
                                                 , newFileName + extension);
                     //save location to database (in URL format)
                     item.Path = "Uploads/" + newFileName + extension;
-                    item.Anvandare =  await _usermanager.GetUserAsync(User);
 
 
                     item.Namn = newFileName + extension;
@@ -57,6 +55,8 @@ namespace LMS.Grupp4.Data.Repositories
                     using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fs);
+                   // item.Anvandare = await _usermanager.GetUserAsync(User);
+              //  item.Anvandare = await _usermanager.GetUserAsync(User);
 
                     }
                     _dbContext.Dokument.Add(item);

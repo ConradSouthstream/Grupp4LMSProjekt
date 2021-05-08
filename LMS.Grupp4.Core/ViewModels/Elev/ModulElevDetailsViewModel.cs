@@ -60,6 +60,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
                 this.ModulStatusId = (int)value;
             }
         }
+        public ICollection<Dokument> Dokument { get; set; }
 
         /// <summary>
         /// Aktivitetet som ingår i modulen

@@ -92,12 +92,15 @@ namespace LMS.Grupp4.Web.Controllers
             return File(bytes, "application/octet-stream", filename);
         }
 
+           
         public IActionResult Upload(int id)
         {
+
             var Dokument = new Dokument
             {
                 GetDokumentTypNamn = GetDokumentTypNamn(),
-                KursId = id
+                KursId = id,
+                //Anvandare = user,
             };
             return View(Dokument);
         }
@@ -105,17 +108,18 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            if (!ModelState.IsValid)
-            {
-                return NotFound();
-            }
-
+            //if (!ModelState.IsValid)
+            //{
+            //    return NotFound();
+            //}
+            upload.Anvandare =await _userManager.GetUserAsync(User);
             await _uow.DokumentRepository.Create(upload);
 
             await _uow.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
-            return Redirect("/Kurser/Details/" + upload.KursId);
+            return View(upload);
+            //return Redirect("/Kurser/Details/" + upload.KursId);
 
         }
 

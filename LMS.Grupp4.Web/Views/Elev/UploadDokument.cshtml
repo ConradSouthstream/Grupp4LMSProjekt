@@ -1,0 +1,51 @@
+﻿@model LMS.Grupp4.Core.Entities.Dokument
+@{
+    ViewData["Title"] = "Upload";
+}
+
+<h1>Index</h1>
+
+<h4>Dokument</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Upload" enctype="multipart/form-data">
+            <input hidden="hidden" asp-for="KursId" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DokumentTypId" class="control-label"></label>
+                <select id="select" asp-for="DokumentTypId" asp-items="Model.GetDokumentTypNamn" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Namn" class="control-label"></label>
+                <input asp-for="Namn" class="form-control" />
+                <span asp-validation-for="Namn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Beskrivning" class="control-label"></label>
+                <input asp-for="Beskrivning" class="form-control" />
+                <span asp-validation-for="Beskrivning" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label"></label>
+                <input type="file" name="file" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Ladda upp" class="btn btn-primary" />
+            </div>
+            <div class="form-group">
+                <span>@TempData["msg"]</span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
