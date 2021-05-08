@@ -1,10 +1,10 @@
-﻿@model ModulDetaljerViewModel
+﻿@model Modul
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Larare">Hem</a></li>
         <li class="breadcrumb-item"><a href="@("/kurser/Details/"+Model.KursId)">Kurs</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Modul</li>        
+        <li class="breadcrumb-item active" aria-current="page">Modul</li>
     </ol>
 </nav>
 @{
@@ -17,48 +17,71 @@
     <h4>Modul</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Namn)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Namn)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartDatum)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.StartDatum)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.SlutDatum)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.SlutDatum)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Beskrivning)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Beskrivning)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.KursNamn)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Kurs.Namn)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.KursNamn)
-        </dd> <dt class = "col-sm-2">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Kurs.Namn)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Aktiviteter)
         </dt>
-              <dd class="col-sm-10">
-                  @foreach (var aktivitet in Model.Aktiviteter)
-                  {
-                      <a asp-controller="Aktivitet" asp-action="Details" asp-route-id="@aktivitet.Id">
-                          @aktivitet.Namn
-                      </a><br />
+        <dd class="col-sm-10">
+            @foreach (var aktivitet in Model.Aktiviteter)
+            {
+                <a asp-controller="Aktivitet" asp-action="Details" asp-route-id="@aktivitet.Id">
+                    @aktivitet.Namn
+                </a><br />
 
-                  }
-              </dd>
+            }
+        </dd>
     </dl>
+</div>
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <table class="table table-responsive table-bordered">
+        <tr>
+            <th>Dokuments Namn</th>
+            <th>Uppladdnings Datum</th>
+            <th>Anvandare</th>
+        </tr>
+        @foreach (Dokument file in Model.Dokument)
+        {
+            <tr>
+                <td>@file.Namn</td>
+                <td>@file.UppladdningsDatum</td>
+                <td>@file.Anvandare.FullNamn</td>
+                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+            </tr>
+
+
+        }
+    </table>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

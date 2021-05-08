@@ -12,6 +12,8 @@ using AutoMapper;
 using LMS.Grupp4.Core.ViewModels.Modul;
 using LMS.Grupp4.Web.Utils;
 using LMS.Grupp4.Core.Enum;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -20,31 +22,120 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
+        private readonly IWebHostEnvironment _env;
+        private readonly UserManager<Anvandare> _userManager;
 
-        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper)
+
+        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager)
         {
             _context = context;
             this.uow = uow;
             this.mapper = mapper;
+            _env = env;
+            _userManager = userManager;
+        }
+        public IActionResult Upload(int id)
+        {
+            var Dokument = new Dokument
+            {
+                GetDokumentTypNamn = GetDokumentTypNamn(),
+                ModulId = id
+               
+            };
+            return View(Dokument);
+        }
+        private IEnumerable<SelectListItem> GetDokumentTypNamn()
+
+        {
+            var TypeName = _context.DokumentTyper;
+
+            var GetTypNamn = new List<SelectListItem>();
+            foreach (var type in TypeName)
+            {
+                var newNamn = (new SelectListItem
+                {
+                    Text = type.Namn,
+                    Value = type.Id.ToString(),
+                });
+                GetTypNamn.Add(newNamn);
+            }
+            return (GetTypNamn);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(Dokument upload)
+        {
+            if (!ModelState.IsValid)
+            {
+                return NotFound();
+            }
+            upload.Anvandare = await _userManager.GetUserAsync(User);
+
+            // var dokument = m_Mapper.Map<Dokument>(upload);
+
+
+            await uow.DokumentRepository.Create(upload);
+
+            await uow.CompleteAsync();
+
+            TempData["msg"] = "Filen har laddats upp";
+            //return Redirect("/Elev/Details/"+ dokument.KursId);
+            return Redirect("/Moduler/Details/" + upload.ModulId);
+
+            // return View(dokument);
         }
 
         // GET: Moduler
         public async Task<IActionResult> Index()
         {
-            var moduler = _context.Moduler.Include(m => m.Kurs);
+            var moduler = _context.Moduler.Include(m => m.Kurs).Include(m=>m.Dokument);
             return View(await moduler.ToListAsync());
         }
 
         // GET: Moduler/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+
+        //    var modul = await _context.Moduler
+        //                    .Include(c => c.Aktiviteter)
+        //                    .FirstOrDefaultAsync(m => m.Id == id);
+        //    var dokument = await _context.Dokument
+        //        .Where(d => d.ModulId == modul.Id).ToListAsync();
+
+        //    modul.Dokument = dokument;
+
+        //   // var modul = await mapper
+        //   //     .ProjectTo<ModulDetaljerViewModel>(_context.Moduler)
+        //   //     .FirstOrDefaultAsync(s => s.Id == id); 
+        //   // var dokument = await _context.Dokument
+        //   //.Where(d => d.ModulId == modul.Id).ToListAsync();
+        //   // modul.Dokument = dokument;
+        //    return View(modul);
+        //}
         public async Task<IActionResult> Details(int? id)
         {
-            var modul = await mapper
-                .ProjectTo<ModulDetaljerViewModel>(_context.Moduler)
-                .FirstOrDefaultAsync(s => s.Id == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var modul = await _context.Moduler.Include(m=>m.Kurs)
+                .Include(c => c.Aktiviteter)            
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var kurs = _context.Kurser.Include(m => m.Moduler).Where(k => k.Id == modul.Id).FirstOrDefault();
+            var dokument = await _context.Dokument.Include(d=>d.Anvandare)
+                .Where(d => d.ModulId == modul.Id).ToListAsync();
+            modul.KursId = kurs.Id;                
+            modul.Dokument = dokument;
+            if (modul == null)
+            {
+                return NotFound();
+            }
+
             return View(modul);
         }
 
-       // GET: Moduler/Create
+        // GET: Moduler/Create
         public IActionResult Create()
         {
             var model = new Modul

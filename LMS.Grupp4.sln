@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Grupp4.Web", "LMS.Grupp4.Web\LMS.Grupp4.Web.csproj", "{D0548F70-F870-4F67-918E-443DA74980ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Grupp4.Web", "LMS.Grupp4.Web\LMS.Grupp4.Web.csproj", "{D0548F70-F870-4F67-918E-443DA74980ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Grupp4.Core", "LMS.Grupp4.Core\LMS.Grupp4.Core.csproj", "{10F78A33-A620-465A-9FEF-29147696179B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Grupp4.Core", "LMS.Grupp4.Core\LMS.Grupp4.Core.csproj", "{10F78A33-A620-465A-9FEF-29147696179B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Grupp4.Data", "LMS.Grupp4.Data\LMS.Grupp4.Data.csproj", "{EB6A86FB-BC8B-459B-B57A-074B04C54FDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Grupp4.Data", "LMS.Grupp4.Data\LMS.Grupp4.Data.csproj", "{EB6A86FB-BC8B-459B-B57A-074B04C54FDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMS.Grupp4.Test", "LMS.Grupp4.Test\LMS.Grupp4.Test.csproj", "{21C8BBC9-332D-4A38-BE0B-47BAEE81A2A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LMS.Grupp4.Test", "LMS.Grupp4.Test\LMS.Grupp4.Test.csproj", "{21C8BBC9-332D-4A38-BE0B-47BAEE81A2A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

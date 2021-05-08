@@ -94,7 +94,7 @@ namespace LMS.Grupp4.Web.Controllers
             }
             var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
 
-            var dokument = await _context.Dokument
+            var dokument = await _context.Dokument.Include(d => d.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
           
             kurs.Dokument = dokument;
@@ -304,6 +304,15 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             return View(viewModel);
+        }
+        public IActionResult UploadDokuemnt(int id)
+        {
+            var Dokument = new Dokument
+            {
+                GetDokumentTypNamn = GetDokumentTypNamn(),
+                KursId = id
+            };
+            return View(Dokument);
         }
 
         //// GET: ElevController/Details/5

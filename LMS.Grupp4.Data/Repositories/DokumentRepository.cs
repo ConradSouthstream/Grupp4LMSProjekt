@@ -49,6 +49,8 @@ namespace LMS.Grupp4.Data.Repositories
                                                 , newFileName + extension);
                     //save location to database (in URL format)
                     item.Path = "Uploads/" + newFileName + extension;
+                    item.Anvandare =  await _usermanager.GetUserAsync(User);
+
 
                     item.Namn = newFileName + extension;
                     //write file to file system

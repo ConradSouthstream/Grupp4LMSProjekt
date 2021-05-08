@@ -20,6 +20,8 @@ namespace LMS.Grupp4.Core.ViewModels.Modul
         public int KursId { get; set; }
         public string KursNamn { get; set; }
         public ICollection<LMS.Grupp4.Core.Entities.Aktivitet> Aktiviteter { get; set; }
+        public ICollection<Dokument> Dokument { get; set; }
+
 
 
     }

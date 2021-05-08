@@ -56,9 +56,8 @@ namespace LMS.Grupp4.Web.Controllers
                 .ThenInclude(e => e.Anvandare)
                 .Include(c => c.Moduler)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var dokument = await _context.Dokument
+            var dokument = await _context.Dokument.Include(e=>e.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
-
             kurs.Dokument = dokument;
             if (kurs == null)
             {
@@ -110,7 +109,6 @@ namespace LMS.Grupp4.Web.Controllers
             {
                 return NotFound();
             }
-            upload.Anvandare = await _userManager.GetUserAsync(User);
 
             await _uow.DokumentRepository.Create(upload);
 
