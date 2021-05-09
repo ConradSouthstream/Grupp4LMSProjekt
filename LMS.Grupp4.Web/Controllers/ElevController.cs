@@ -67,21 +67,21 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            if (upload.File==null)
-            {
-                TempData["msg"] = "Ni måste välja en fil";
-                upload.GetDokumentTypNamn = GetDokumentTypNamn();
+            //if (upload.File==null)
+            //{
+            //    TempData["msg"] = "Ni måste välja en fil";
+            //    upload.GetDokumentTypNamn = GetDokumentTypNamn();
 
-            return View(upload);
-            }
+            //return View(upload);
+            //}
             //if (!ModelState.IsValid)
             //{
             //    return View();
             //}
-            
+
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
-            
-           // var dokument = m_Mapper.Map<Dokument>(upload);
+
+            // var dokument = m_Mapper.Map<Dokument>(upload);
 
 
             await m_UnitOfWork.DokumentRepository.Create(upload);
@@ -89,10 +89,10 @@ namespace LMS.Grupp4.Web.Controllers
             await m_UnitOfWork.CompleteAsync();
             TempData["msg"] = "Filen har laddats upp";
 
-           // return Redirect("/Elev/Details/"+ upload.KursId);
-            //return Redirect("/Kurser/Details/" + upload.KursId);
+            // return Redirect("/Elev/Details/"+ upload.KursId);
+            //return Redirect("/Elev/ModulDetails/" + upload.KursId);
 
-             return View(upload);
+           return View(upload);
         }
         public async Task<IActionResult> Details(int? KursId)
         {
@@ -253,10 +253,10 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadDokument(Dokument upload)
         {
-            if (!ModelState.IsValid)
-            {
-                return NotFound();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return NotFound();
+            //}
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
 
             // var dokument = m_Mapper.Map<Dokument>(upload);
@@ -268,7 +268,8 @@ namespace LMS.Grupp4.Web.Controllers
 
             TempData["msg"] = "Filen har laddats upp";
             //return Redirect("/Elev/Details/"+ dokument.KursId);
-            return Redirect("/Elev/ModulDetails/" + upload.ModulId);
+            //return Redirect("/Elev/ModulDetails/" + upload.ModulId);
+            return Redirect("Elev/ModulDetails?ModulId ="+upload.ModulId);
 
             // return View(dokument);
         }

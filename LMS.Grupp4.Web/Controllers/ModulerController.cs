@@ -65,10 +65,10 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            if (!ModelState.IsValid)
-            {
-                return NotFound();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return NotFound();
+            //}
             upload.Anvandare = await _userManager.GetUserAsync(User);
 
             // var dokument = m_Mapper.Map<Dokument>(upload);

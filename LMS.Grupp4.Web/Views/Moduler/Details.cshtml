@@ -71,12 +71,12 @@
         </tr>
         @foreach (Dokument file in Model.Dokument)
         {
-            <tr>
-                <td>@file.Namn</td>
-                <td>@file.UppladdningsDatum</td>
-                <td>@file.Anvandare.FullNamn</td>
-                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-            </tr>
+    <tr>
+        <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+        <td>@file.UppladdningsDatum</td>
+        <td>@file.Anvandare.FullNamn</td>
+        <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+    </tr>
 
 
         }
