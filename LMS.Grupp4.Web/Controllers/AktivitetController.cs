@@ -3,13 +3,16 @@ using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.Enum;
 using LMS.Grupp4.Core.IRepository;
 using LMS.Grupp4.Core.ViewModels.Aktivitet;
+using LMS.Grupp4.Data;
 using LMS.Grupp4.Web.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Web.Controllers
@@ -23,9 +26,12 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-        public AktivitetController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager) :
+               private readonly ApplicationDbContext _context;
+
+        public AktivitetController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context) :
             base(uow, mapper, userManager)
         {
+            _context = context;
         }
 
         // GET: AktivitetController
@@ -48,6 +54,9 @@ namespace LMS.Grupp4.Web.Controllers
             if (id.HasValue)
             {
                 Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetIncludeKursAsync(id.Value);
+                var dokument = await _context.Dokument.Include(d => d.Anvandare)
+               .Where(d => d.AktivitetId == aktivitet.Id).ToListAsync();
+                aktivitet.Dokument = dokument;
                 AktivitetDetailsViewModel viewModel = m_Mapper.Map<AktivitetDetailsViewModel>(aktivitet);
                 return View(viewModel);
             }
@@ -284,6 +293,56 @@ namespace LMS.Grupp4.Web.Controllers
             TempData["typeOfMessage"] = TypeOfMessage.Error;
 
             return RedirectToAction(nameof(Index));
+        }
+        private IEnumerable<SelectListItem> GetDokumentTypNamn()
+
+        {
+            var TypeName = _context.DokumentTyper;
+
+            var GetTypNamn = new List<SelectListItem>();
+            foreach (var type in TypeName)
+            {
+                var newNamn = (new SelectListItem
+                {
+                    Text = type.Namn,
+                    Value = type.Id.ToString(),
+                });
+                GetTypNamn.Add(newNamn);
+            }
+            return (GetTypNamn);
+        }
+        public IActionResult Upload(int id)
+        {
+            var Dokument = new Dokument
+            {
+                GetDokumentTypNamn = GetDokumentTypNamn(),
+                AktivitetId = id
+            };
+            return View(Dokument);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(Dokument upload)
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    return NotFound();
+            //}
+            upload.Anvandare = await m_UserManager.GetUserAsync(User);
+
+            // var dokument = m_Mapper.Map<Dokument>(upload);
+
+
+            await m_UnitOfWork.DokumentRepository.Create(upload);
+
+            await m_UnitOfWork.CompleteAsync();
+
+            TempData["msg"] = "Filen har laddats upp";
+            //return Redirect("/Elev/Details/"+ dokument.KursId);
+            //return Redirect("/Elev/ModulDetails/" + upload.ModulId);
+           // return Redirect("Aktivitet/Details/" + upload.AktivitetId);
+
+             return View(upload);
         }
     }
 }

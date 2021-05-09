@@ -16,54 +16,84 @@
 
 @if (Model != null)
 {
-<div>
-    <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
-    <hr />
+    <div>
+        <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Id)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Id)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Namn)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Namn)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StartDatum)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StartDatum)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SlutDatum)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SlutDatum)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Beskrivning)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Beskrivning)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AktivitetTypNamn)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AktivitetTypNamn)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ModulNamn)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ModulNamn)
+            </dd>
+        </dl>
+    </div>
+    <a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Namn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Namn)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDatum)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDatum)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SlutDatum)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SlutDatum)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Beskrivning)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Beskrivning)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.AktivitetTypNamn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.AktivitetTypNamn)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModulNamn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModulNamn)
-        </dd>
+
+        @*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">*@
+            <table class="table table-responsive table-bordered">
+                <tr>
+                    <th>Dokuments Namn</th>
+                    <th>Uppladdnings Datum</th>
+                    <th>Anvandare</th>
+                </tr>
+                @foreach (Dokument file in Model.Dokument)
+                {
+                    <tr>
+                        <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                        <td>@file.UppladdningsDatum</td>
+                        <td>@file.Anvandare.FullNamn</td>
+                        <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+                    </tr>
+
+
+                }
+            </table>
+
+        @*</div>*@
+
+
+
     </dl>
-</div>
+
+
 }
 else
 {

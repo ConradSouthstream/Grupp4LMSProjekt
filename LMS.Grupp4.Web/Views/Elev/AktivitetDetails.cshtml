@@ -60,26 +60,52 @@
                 <status start-datum="@(Model.StartDatum)" slut-datum="@(Model.SlutDatum)"></status>
             </dd>
         </dl>
+
+
+
     }
-    else
-    {
+
+
+        else
+        {
         <div class="alert alert-success" role="alert">
             Hittar inte sökt aktivitet
         </div>
-    }
-</div>
-<div>
-    @if (Model != null)
-    {
-        <div>
-            <a asp-action="Index">Tillbaka till kurs</a> | 
-            <a asp-action = "ModulDetails" asp-route-ModulId = "@Model.ModulId">Tillbaka till modul</a>
-        </div>
-    }
-    else
-    {
-        <div>
-            <a asp-action="Index">Tillbaka till kurs</a>
-        </div>        
-    }
-</div>
+        }
+
+    <a asp-action="UploadAktivity" asp-route-id="@Model.AktivitetId" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+        <table class="table table-responsive table-bordered">
+            <tr>
+                <th>Dokuments Namn</th>
+                <th>Uppladdnings Datum</th>
+                <th>Anvandare</th>
+            </tr>
+            @foreach (Dokument file in Model.Dokument)
+            {
+                <tr>
+                    <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                    <td>@file.UppladdningsDatum</td>
+                    <td>@file.Anvandare.FullNamn</td>
+                    <td><a href="/Elev/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+                </tr>
+
+
+            }
+        </table>
+    </div>
+    <div>
+        @if (Model != null)
+        {
+            <div>
+                <a asp-action="Index">Tillbaka till kurs</a> |
+                <a asp-action="ModulDetails" asp-route-ModulId="@Model.ModulId">Tillbaka till modul</a>
+            </div>
+        }
+        else
+        {
+            <div>
+                <a asp-action="Index">Tillbaka till kurs</a>
+            </div>
+        }
+    </div>
