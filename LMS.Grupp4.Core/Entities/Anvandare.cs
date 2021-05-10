@@ -28,5 +28,7 @@ namespace LMS.Grupp4.Core.Entities
 
         [NotMapped]
         public bool IsLarare { get; set; } = false;
+
+      
     }
 }

@@ -29,6 +29,34 @@ namespace LMS.Grupp4.Data.Data
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
 
+                var dokumentsTyper = new List<DokumentTyp>()
+                {
+                     new DokumentTyp()
+                     {
+                         Namn="Generalla Information"
+                     },
+                    new DokumentTyp()
+                     {
+                         Namn="Inlämningsuppgifter"
+                     },
+                    new DokumentTyp()
+                     {
+                         Namn="Moduldokument"
+                     },
+                    new DokumentTyp()
+                     {
+                         Namn="Föreläsningsunderlag"
+                     },
+                    new DokumentTyp()
+                     {
+                         Namn="Övningsuppgifter"
+
+                     },
+
+                };
+                
+
+
                 var aktivitetTyper = new List<AktivitetTyp>();
 
                 for (int i = 0; i < 10; i++)

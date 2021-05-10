@@ -31,6 +31,7 @@ namespace LMS.Grupp4.Core.Entities
         [NotMapped]
         [Required]
         public IEnumerable<SelectListItem> GetDokumentTypNamn { get; set; }
+       // public string AnvandareId { get; set; }
 
 
         //Navigation property
