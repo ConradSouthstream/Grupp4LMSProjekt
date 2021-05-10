@@ -40,6 +40,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .Include(c => c.AnvandareKurser)
                 .ThenInclude(e => e.Anvandare)
                 .Include(c => c.Moduler)
+                .ThenInclude(c => c.Aktiviteter)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (kurs == null)
             {

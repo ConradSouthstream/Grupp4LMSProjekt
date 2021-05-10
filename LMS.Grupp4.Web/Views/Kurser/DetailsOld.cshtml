@@ -1,0 +1,70 @@
+﻿@model LMS.Grupp4.Core.Entities.Kurs
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Larare">Hem</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Kurs</li>
+    </ol>
+</nav>
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div>
+    <h4>Kurs</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Namn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Namn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDatum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StartDatum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SlutDatum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SlutDatum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Beskrivning)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Beskrivning)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AnvandareKurser)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var enrollment in Model.AnvandareKurser)
+            {
+                <a asp-controller="Anvandare" asp-action="Details" asp-route-id="@enrollment.AnvandareId">
+                    @enrollment.Anvandare.FullNamn
+                </a><br />
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Moduler)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var modul in Model.Moduler)
+            {
+                <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
+                    @modul.Namn
+                </a><br />
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
