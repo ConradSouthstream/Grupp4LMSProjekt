@@ -11,6 +11,8 @@
     ViewData["Title"] = "Details";
 }
 
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
 <div class="row titlecardbox justify-content-center pad-0">
     <div class="card topbar titlecardbox">
         <h1 class="center">@Model.Namn Detaljer</h1>
@@ -44,7 +46,7 @@
     <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Create" asp-route-id="@Model.Id">Skapa ny Aktivitet</a>
 </div>
 
-<div class="row">    
+<div class="row">
     <div class="col-md" id="accordion">
         <div class="row">
             <Ctop class="col-3 topbar center border-right-0 corner-left">
@@ -86,7 +88,7 @@
                     <div class="col-3 border border-right-0">
                         <div class="center row">
                             <a class="btn btn-mhm btn-sm" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
-                            <a class="btn btn-mhm btn-sm" asp-controller="aktivitet" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>                            
+                            <a class="btn btn-mhm btn-sm" asp-controller="aktivitet" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
                         </div>
                     </div>
                     <div class="col-2 border">
@@ -95,7 +97,7 @@
                         </div>
                     </div>
                 </listdivision>
-                
+
             }
         </div>
     </div>
@@ -111,12 +113,12 @@
         </tr>
         @foreach (Dokument file in Model.Dokument)
         {
-    <tr>
-        <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
-        <td>@file.UppladdningsDatum</td>
-        <td>@file.Anvandare.FullNamn</td>
-        <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-    </tr>
+            <tr>
+                <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                <td>@file.UppladdningsDatum</td>
+                <td>@file.Anvandare.FullNamn</td>
+                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+            </tr>
 
 
         }

@@ -126,7 +126,8 @@ namespace LMS.Grupp4.Web.Controllers
                         TempData["message"] = $"Har skapat aktivitet {viewModel.Namn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
 
-                        return RedirectToAction(nameof(Index));
+                        //return RedirectToAction(nameof(Details(viewModel.ModulId)));
+                        return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                     }                    
                 }
                 catch (Exception) 

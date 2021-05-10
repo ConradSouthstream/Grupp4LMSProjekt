@@ -17,23 +17,21 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LMS.Grupp4.Web.Controllers
 {
-    public class ModulerController : Controller
+    public class ModulerController : BaseController
     {
         private readonly ApplicationDbContext _context;
-        private readonly IUnitOfWork uow;
-        private readonly IMapper mapper;
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<Anvandare> _userManager;
 
 
-        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager)
+        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager): 
+            base(uow, mapper, userManager)
         {
             _context = context;
-            this.uow = uow;
-            this.mapper = mapper;
             _env = env;
             _userManager = userManager;
         }
+
         public IActionResult Upload(int id)
         {
             var Dokument = new Dokument
@@ -74,9 +72,9 @@ namespace LMS.Grupp4.Web.Controllers
             // var dokument = m_Mapper.Map<Dokument>(upload);
 
 
-            await uow.DokumentRepository.Create(upload);
+            await m_UnitOfWork.DokumentRepository.Create(upload);
 
-            await uow.CompleteAsync();
+            await m_UnitOfWork.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
             //return Redirect("/Elev/Details/"+ dokument.KursId);
@@ -114,6 +112,8 @@ namespace LMS.Grupp4.Web.Controllers
         //}
         public async Task<IActionResult> Details(int? id)
         {
+            GetMessageFromTempData();
+
             if (id == null)
             {
                 return NotFound();
@@ -157,7 +157,7 @@ namespace LMS.Grupp4.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-            var modul   = mapper.Map<Modul>(viewModel);
+            var modul   = m_Mapper.Map<Modul>(viewModel);
                 _context.Add(modul);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
