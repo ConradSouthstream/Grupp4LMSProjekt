@@ -122,7 +122,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .Include(c => c.Aktiviteter)            
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            var kurs = _context.Kurser.Include(m => m.Moduler).Where(k => k.Id == modul.Id).FirstOrDefault();
+            var kurs = _context.Kurser.Where(k => k.Id == modul.KursId).FirstOrDefault();
             var dokument = await _context.Dokument.Include(d=>d.Anvandare)
                 .Where(d => d.ModulId == modul.Id).ToListAsync();
             modul.KursId = kurs.Id;                
@@ -165,7 +165,7 @@ namespace LMS.Grupp4.Web.Controllers
             return View(viewModel);
         }
 
-
+        //En lista på alla kursnamn och Id'n
         private IEnumerable<SelectListItem> GetKursNamn()
 
         {

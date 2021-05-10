@@ -30,45 +30,24 @@ namespace LMS.Grupp4.Data.Data
                 db.Database.Migrate();
 
                 var dokumentsTyper = new List<DokumentTyp>()
+                {                     
+                    new DokumentTyp(){Namn = "Generalla Information"},
+                    new DokumentTyp(){Namn = "Modul Information"},
+                    new DokumentTyp(){Namn = "Inlämning"},
+                    new DokumentTyp(){Namn = "Föreläsning"},
+                    new DokumentTyp(){Namn = "Uppgift"},
+                    new DokumentTyp(){Namn = "Föreläsning"},
+                    new DokumentTyp(){Namn = "E-learning"},
+                };
+                await db.AddRangeAsync(dokumentsTyper);
+
+                var aktivitetTyper = new List<AktivitetTyp>()
                 {
-                     new DokumentTyp()
-                     {
-                         Namn="Generalla Information"
-                     },
-                    new DokumentTyp()
-                     {
-                         Namn="Inlämningsuppgifter"
-                     },
-                    new DokumentTyp()
-                     {
-                         Namn="Moduldokument"
-                     },
-                    new DokumentTyp()
-                     {
-                         Namn="Föreläsningsunderlag"
-                     },
-                    new DokumentTyp()
-                     {
-                         Namn="Övningsuppgifter"
-
-                     },
-
+                    new AktivitetTyp(){Namn = "Föreläsning"},
+                    new AktivitetTyp(){Namn = "E-learning"},
+                    new AktivitetTyp(){Namn = "Uppgift"},
                 };
                 
-
-
-                var aktivitetTyper = new List<AktivitetTyp>();
-
-                for (int i = 0; i < 10; i++)
-                {
-                    var aktivitet = new AktivitetTyp
-                    {
-                        Namn = fake.Company.CatchPhrase(),
-                       
-                    };
-                    aktivitetTyper.Add(aktivitet);
-                }
-
                 await db.AddRangeAsync(aktivitetTyper);
 
                 var roleNames = new[] { "Elev", "Lärare" };

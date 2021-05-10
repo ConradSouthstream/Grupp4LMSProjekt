@@ -23,7 +23,7 @@
             @Html.DisplayNameFor(model => model.SlutDatum)
         </Ctop>
         <Ctop class="col-3 topbar center border-right-0">
-            Alternativ:
+            Alternativ
         </Ctop>
         @*<div class="col">
                 @Html.DisplayNameFor(model => model.Moduler)
@@ -55,9 +55,7 @@
                 <div class="col-3 border border-right-0">
                     <div class="row center">
                         <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
-                        <a type="button" class="btn btn-outline-primary" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
-                        @*<a asp-action="Details" asp-route-id="@item.Id" type="button" class="btn btn-outline-primary btn btn-mhm  btn-sm">Material</a>*@
-
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>                        
                         <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
                     </div>
                 </div>
@@ -71,7 +69,7 @@
                 <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
                     <div class="col-md-6 pad-0">
                         <h5 class="topbar corner-rounded">
-                            Beskrivning:
+                            Beskrivning
                         </h5>
                         <div class="card card-body">
                             @Html.DisplayFor(modelItem => item.Beskrivning)
