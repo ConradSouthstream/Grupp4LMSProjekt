@@ -55,6 +55,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .Include(c => c.AnvandareKurser)
                 .ThenInclude(e => e.Anvandare)
                 .Include(c => c.Moduler)
+                .ThenInclude(c => c.Aktiviteter)
                 .FirstOrDefaultAsync(m => m.Id == id);
             var dokument = await _context.Dokument.Include(e=>e.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();

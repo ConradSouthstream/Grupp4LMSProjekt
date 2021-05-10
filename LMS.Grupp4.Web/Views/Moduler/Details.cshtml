@@ -11,8 +11,94 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="row titlecardbox justify-content-center pad-0">
+    <div class="card topbar titlecardbox">
+        <h1 class="center">@Model.Namn Detaljer</h1>
+        <h4 class="center">Tillhör @Model.KursNamn</h4>
+    </div>
+</div>
+<div class="row titlecardbox justify-content-center pad-0">
+    <div class="card border titlecardbox">
+        <h5 class="pad-0 margin-3 center">
+            Från @Html.DisplayFor(model => model.StartDatum)
+        </h5>
+        <h5 class="pad-0 margin-3 center">
+            Till @Html.DisplayFor(model => model.SlutDatum)
+        </h5>
+    </div>
+</div>
+<div class="row titlecardbox justify-content-center pad-0">
+    <div class="col-7 topbar rounded">
+        <h2 class="center">
+            @Html.DisplayNameFor(model => model.Beskrivning)
+        </h2>
+    </div>
+    <div class="col-7 card card-body">
+        <div class="center">
+            @Html.DisplayFor(model => model.Beskrivning)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <a class="btn btn-mhm btn-lg" asp-controller="moduler" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+</div>
 
+<div class="row">    
+    <div class="col-md" id="accordion">
+        <div class="row">
+            <Ctop class="col-3 topbar center border-right-0 corner-left">
+                @Html.DisplayNameFor(model => model.Namn)
+            </Ctop>
+            <Ctop class="col-2 topbar center border-right-0">
+                @Html.DisplayNameFor(model => model.StartDatum)
+            </Ctop>
+            <Ctop class="col-2 topbar center border-right-0">
+                @Html.DisplayNameFor(model => model.SlutDatum)
+            </Ctop>
+            <Ctop class="col-3 topbar center border-right-0">
+                Alternativ:
+            </Ctop>
+            <Ctop class="col-2 topbar center corner-right">
+                Status
+            </Ctop>
+        </div>
+
+        <div>
+            @foreach (var item in Model.Aktiviteter.OrderBy(modul => modul.StartDatum))
+            {
+                <listdivision class="row">
+                    <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                        <h6 class="center">
+                            @Html.DisplayFor(modelItem => item.Namn)
+                        </h6>
+                    </div>
+                    <div class="col-2 border border-right-0">
+                        <h6 class="center">
+                            @Html.DisplayFor(modelItem => item.StartDatum)
+                        </h6>
+                    </div>
+                    <div class="col-2 border border-right-0">
+                        <h6 class="center">
+                            @Html.DisplayFor(modelItem => item.SlutDatum)
+                        </h6>
+                    </div>
+                    <div class="col-3 border border-right-0">
+                        <div class="center row">
+                            <a class="btn btn-mhm btn-sm" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
+                            <a class="btn btn-mhm btn-sm" asp-controller="aktivitet" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>                            
+                        </div>
+                    </div>
+                    <div class="col-2 border">
+                        <div class="center">
+                            <status start-datum="@(item.StartDatum)" slut-datum="@(item.SlutDatum)"></status>
+                        </div>
+                    </div>
+                </listdivision>
+                
+            }
+        </div>
+    </div>
+</div>
 <div>
     <h4>Modul</h4>
     <hr />

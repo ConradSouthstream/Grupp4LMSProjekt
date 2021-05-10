@@ -3,14 +3,289 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Larare">Hem</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Kurs</li>        
+        <li class="breadcrumb-item active" aria-current="page">Kurs</li>
     </ol>
 </nav>
 @{
     ViewData["Title"] = "Details";
 }
+<div class="row">
+    <div class="col-md-3">
 
-<h1>Details</h1>
+    </div>
+    <div class="col">
+        <div>
+            <div class="row titlecardbox justify-content-center pad-0">
+                <div class="topbar titlecardbox">
+                    <h1 class="center">@Model.Namn Detaljer</h1>
+                </div>
+            </div>
+            <div class="row titlecardbox justify-content-center pad-0">
+                <div class="card border titlecardbox">
+                    <h5 class="pad-0 margin-3 center">
+                        Från @Html.DisplayFor(model => model.StartDatum)
+                    </h5>
+                    <h5 class="pad-0 margin-3 center">
+                        Till @Html.DisplayFor(model => model.SlutDatum)
+                    </h5>
+                </div>
+            </div>
+            <div class="row titlecardbox justify-content-center pad-0">
+                <div class="col-7 topbar rounded">
+                    <h2 class="center">
+                        @Html.DisplayNameFor(model => model.Beskrivning)
+                    </h2>
+                </div>
+                <div class="col-7 card card-body">
+                    <div class="center">
+                        @Html.DisplayFor(model => model.Beskrivning)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+            </div>
+        </div>
+    </div>
+</div>
+    @*Ful hack av att lista olika roller*@
+    @{
+        @using Microsoft.AspNetCore.Identity
+        @inject UserManager<Anvandare> m_UserManager;
+        IList<string> lsRoles = null;
+        foreach (var anv in Model.AnvandareKurser)
+        {
+            // Vi borde bara få en roll tillbaka, men är role lärare kommer jag att break foreach
+            lsRoles = await m_UserManager.GetRolesAsync(anv.Anvandare);
+            if (lsRoles?.Count > 0)
+            {
+                foreach (string strRole in lsRoles)
+                {
+                    if (strRole == "Lärare")
+                    {
+                        anv.Anvandare.IsLarare = true;
+                        break;
+                    }
+                    else
+                    {
+                        anv.Anvandare.IsLarare = false;
+                    }
+                }
+            }
+        }
+        var listalärare = Model.AnvandareKurser.Where(a => a.Anvandare.IsLarare == true).ToList();
+        var listaelev = Model.AnvandareKurser.Where(a => a.Anvandare.IsLarare == false).ToList();
+    }
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="col-sm-12 topbar rounded">
+                <div class="center">
+                    Ansvariga lärare
+                </div>
+            </div>
+            <div class="col-sm-12 card card-body">
+                @foreach (var enrollment in listalärare)
+                {
+                    <a class="center" asp-controller="Anvandare" asp-action="Details" asp-route-id="@enrollment.AnvandareId">
+                        @enrollment.Anvandare.FullNamn
+                    </a>
+                }
+            </div>
+            <div class="col-12 topbar rounded">
+                <div class="center">
+                    @Html.DisplayNameFor(model => model.AnvandareKurser)
+                </div>
+            </div>
+            <div class="col-sm-12 card card-body">
+                @foreach (var enrollment in listaelev)
+                {
+                    <a class="center" asp-controller="Anvandare" asp-action="Details" asp-route-id="@enrollment.AnvandareId">
+                        @enrollment.Anvandare.FullNamn
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-md" id="accordion">
+            <div class="row">
+                <Ctop class="col-3 topbar center border-right-0 corner-left">
+                    @Html.DisplayNameFor(model => model.Namn)
+                </Ctop>
+                <Ctop class="col-2 topbar center border-right-0">
+                    @Html.DisplayNameFor(model => model.StartDatum)
+                </Ctop>
+                <Ctop class="col-2 topbar center border-right-0">
+                    @Html.DisplayNameFor(model => model.SlutDatum)
+                </Ctop>
+                <Ctop class="col-3 topbar center border-right-0">
+                    Alternativ:
+                </Ctop>
+                <Ctop class="col-2 topbar center corner-right">
+                    @Html.DisplayNameFor(model => model.KursStatus)
+                </Ctop>
+            </div>
+
+            <div>
+                @foreach (var item in Model.Moduler.OrderBy(modul => modul.StartDatum))
+                {
+                    <listdivision class="row">
+                        <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                            <h6 class="center">
+                                @Html.DisplayFor(modelItem => item.Namn)
+                            </h6>
+                        </div>
+                        <div class="col-2 border border-right-0">
+                            <h6 class="center">
+                                @Html.DisplayFor(modelItem => item.StartDatum)
+                            </h6>
+                        </div>
+                        <div class="col-2 border border-right-0">
+                            <h6 class="center">
+                                @Html.DisplayFor(modelItem => item.SlutDatum)
+                            </h6>
+                        </div>
+                        <div class="col-3 border border-right-0">
+                            <div class="center row">
+                                <a class="btn btn-mhm btn-sm" asp-controller="moduler" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
+                                <a class="btn btn-mhm btn-sm" asp-controller="moduler" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
+                                <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
+                            </div>
+                        </div>
+                        <div class="col-2 border">
+                            <div class="center">
+                                <status start-datum="@(item.StartDatum)" slut-datum="@(item.SlutDatum)"></status>
+                            </div>
+                        </div>
+                    </listdivision>
+                    <div>
+                        <div id="@("collapse" + item.Id)" class="row collapse
+                     @(item.StartDatum < DateTime.Now && DateTime.Now < item.SlutDatum ? "show" : "")"
+                             data-parent="#accordion">
+                            <div class="col-md-5 pad-0">
+                                <h5 class="topbar corner-rounded">
+                                    Beskrivning:
+                                </h5>
+                                <div class="card card-body">
+                                    @Html.DisplayFor(modelItem => item.Beskrivning)
+                                </div>
+                            </div>
+                            <div class="col-md-7 pad-0">
+                                <h5 class="topbar corner-rounded">
+                                    Moduler
+                                </h5>
+                                <div class="card card-body">
+                                    <div class="row">
+                                        <div class="col pad-2">
+
+                                        </div>
+                                        <div class="col pad-2">
+                                            <div class="center">
+                                                Från
+                                            </div>
+                                        </div>
+                                        <div class="col pad-2">
+                                            <div class="center">
+                                                Till
+                                            </div>
+                                        </div>
+                                        <div class="col-2 pad-2">
+                                            <div class="center">
+                                                Status
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @foreach (var aktivitet in item.Aktiviteter.OrderBy(aktivitet => aktivitet.StartDatum))
+                                    {
+                                        <div class="row">
+                                            <div class="col pad-2">
+                                                <a class="center" asp-controller="aktivitet" asp-action="Details" asp-route-id="@aktivitet.Id">
+                                                    @Html.DisplayFor(a => aktivitet.Namn)<br />
+                                                </a>
+                                            </div>
+                                            <div class="col pad-2">
+                                                <div class="center">
+                                                    @Html.DisplayFor(a => aktivitet.StartDatum)
+                                                </div>
+                                            </div>
+                                            <div class="col pad-2">
+                                                <div class="center">
+                                                    @Html.DisplayFor(a => aktivitet.SlutDatum)
+                                                </div>
+                                            </div>
+                                            <div class="col-2 pad-2">
+                                                <status class="center"
+                                                        scale="true"
+                                                        start-datum="@(aktivitet.StartDatum)"
+                                                        slut-datum="@(aktivitet.SlutDatum)">
+
+                                                </status>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    @*<div>
+            <h4>Kurs</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Namn)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Namn)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.StartDatum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.StartDatum)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.SlutDatum)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.SlutDatum)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Beskrivning)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Beskrivning)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.AnvandareKurser)
+                </dt>
+                <dd class="col-sm-10">
+                    @foreach (var enrollment in Model.AnvandareKurser)
+                    {
+                        <a asp-controller="Anvandare" asp-action="Details" asp-route-id="@enrollment.AnvandareId">
+                            @enrollment.Anvandare.FullNamn
+                        </a><br />
+                    }
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Moduler)
+                </dt>
+                <dd class="col-sm-10">
+                    @foreach (var modul in Model.Moduler)
+                    {
+                        <a asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
+                            @modul.Namn
+                        </a><br />
+                    }
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>*@
 
 <div>
     <h4>Kurs</h4>

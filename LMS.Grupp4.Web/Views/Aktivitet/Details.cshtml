@@ -12,10 +12,42 @@
         <li class="breadcrumb-item active" aria-current="page">Aktivitet</li>
     </ol>
 </nav>
-<h1>@ViewData["Title"] @Model.Namn</h1>
+@*<h1>@ViewData["Title"] @Model.Namn</h1>*@
 
 @if (Model != null)
 {
+<div class="row titlecardbox justify-content-center pad-0">
+    <div class="card topbar titlecardbox">
+        <h1 class="center">@Model.Namn Detaljer</h1>
+        <h4 class="center">Tillhör @Model.ModulNamn</h4>
+        <h5 class="center">Som i sin tur tillhör @Model.KursNamn</h5>
+    </div>
+</div>
+<div class="row titlecardbox justify-content-center pad-0">
+    <div class="card border titlecardbox">
+        <h5 class="pad-0 margin-3 center">
+            Från @Html.DisplayFor(model => model.StartDatum)
+        </h5>
+        <h5 class="pad-0 margin-3 center">
+            Till @Html.DisplayFor(model => model.SlutDatum)
+        </h5>
+    </div>
+</div>
+<div class="row titlecardbox justify-content-center pad-0">
+    <div class="col-7 topbar rounded">
+        <h2 class="center">
+            @Html.DisplayNameFor(model => model.Beskrivning)
+        </h2>
+    </div>
+    <div class="col-7 card card-body">
+        <div class="center">
+            @Html.DisplayFor(model => model.Beskrivning)
+        </div>
+    </div>
+</div>
+<div class="row">
+    <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+</div>
     <div>
         <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
         <hr />
@@ -97,12 +129,7 @@
 }
 else
 {
-    <div class="alert alert-danger" role="alert">
-        Hittar inte sökt aktivitet
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Editera", "Edit", new { id = Model.Id }) |
-    <a asp-action="Index">Tillbaka till listan</a>
+<div class="alert alert-danger" role="alert">
+    Hittar inte sökt aktivitet
 </div>
+}
