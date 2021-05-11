@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,9 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly ApplicationDbContext db; // remove later
         private readonly UserManager<Anvandare> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly IPasswordHasher<Anvandare> passwordHasher;
+        private readonly IConfiguration config;
+
+        //private readonly IPasswordHasher<Anvandare> passwordHasher;
         private readonly IUnitOfWork uow;
         private readonly SignInManager<Anvandare> signInManager;
 
@@ -28,13 +31,15 @@ namespace LMS.Grupp4.Web.Controllers
                                SignInManager<Anvandare> signInManager,
                                UserManager<Anvandare> userManager,
                                RoleManager<IdentityRole> roleManager,
-                               IPasswordHasher<Anvandare> passwordHasher)
+                               IConfiguration config
+                               )
         {
             this.uow = unitOfWork;
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.passwordHasher = passwordHasher;
+            this.config = config;
+            //this.passwordHasher = passwordHasher;
             db = context;
         }
 
@@ -43,26 +48,100 @@ namespace LMS.Grupp4.Web.Controllers
             return View();
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(userManager.Users);
-        }
-
-        public async Task<IActionResult> Create()
-        {
-            // Skapa SelectList till Dropdown
-            var roles = new SelectList(await roleManager.Roles.ToListAsync(), "Id", "Name");
-            var kurser = new SelectList(await uow.KursRepository.GetAllKurserAsync(), "Id", "Namn");
-            var model = new AdminCreateUserViewModel
+            var larare = new List<Anvandare>();
+            var elever = new List<Anvandare>();
+            foreach (var user in userManager.Users)
             {
-                Roles = roles,
-                Kurser = kurser
+                var userRoles = await userManager.GetRolesAsync(user);
+                var roleName = userRoles.FirstOrDefault();
+                if (roleName == "Lärare")
+                {
+                    user.IsLarare = true;
+                    larare.Add(user);
+                }
+                else
+                {
+                    user.IsLarare = false;
+                    elever.Add(user);
+                }
+            }
+            var model = new AdminListUsersViewModel
+            {
+                Larare = larare,
+                Elever = elever
             };
             return View(model);
         }
 
+
+        public async Task<IActionResult> CreateLarare()
+        {
+            var kurser = await uow.KursRepository.GetAllKurserAsync();
+            var model = new AdminCreateLarareViewModel
+            {
+                Kurser = kurser
+            };
+            return View("CreateLarare", model);
+        }
+
+        public async Task<IActionResult> CreateElev()
+        {
+            var kurser = await uow.KursRepository.GetAllKurserAsync();
+            var model = new AdminCreateElevViewModel
+            {
+                Kurser = kurser
+            };
+            return View("CreateElev", model);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Create(AdminCreateUserViewModel model)
+        public async Task<IActionResult> CreatLarare([FromBody] AdminCreateLarareViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new Anvandare
+                {
+                    EfterNamn = model.EfterNamn,
+                    ForNamn = model.ForNamn,
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Avatar = model.Avatar
+                };
+
+                var result = await userManager.CreateAsync(user, config["AdminPw"]);
+                if (result.Succeeded)
+                {
+                    // user created: add it to role
+                    var role = await roleManager.FindByIdAsync("Lärare");
+                    var res = await userManager.AddToRoleAsync(user, role.Name);
+                    // add user to kurs
+                    foreach (var kursId in model.KursId)
+                    {
+                        var kurs = await uow.KursRepository.GetKursAsync(kursId);
+                        db.AnvandareKurser.Add(new AnvandareKurs
+                        {
+                            Anvandare = user,
+                            Kurs = kurs
+                        });
+                    }
+                    db.SaveChanges();
+                    await uow.KursRepository.SaveAsync();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateElev(AdminCreateElevViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -76,14 +155,12 @@ namespace LMS.Grupp4.Web.Controllers
                     Avatar = model.Avatar
                 };
 
-                var result = await userManager.CreateAsync(user, model.Password);
+                var result = await userManager.CreateAsync(user, config["AdminPw"]);
                 if (result.Succeeded)
                 {
                     // user created: add it to role
-                    var role = await roleManager.FindByIdAsync(model.RoleId);
-                    var res = await userManager.AddToRoleAsync(user, role.Name);
+                    var res = await userManager.AddToRoleAsync(user, "Elev");
                     // add user to kurs
-
                     db.AnvandareKurser.Add(new AnvandareKurs
                     {
                         Anvandare = user,
@@ -102,30 +179,78 @@ namespace LMS.Grupp4.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Update(string id)
+        public async Task<IActionResult> UpdateElev(string id)
         {
             var user = await userManager.FindByIdAsync(id);
-            //var kurs = db.AnvandareKurser.Where(k => k.AnvandareId == user.Id).FirstOrDefault();
-            var userRoles = await userManager.GetRolesAsync(user);
-            var roleName = userRoles.FirstOrDefault();
-            if (user != null && roleName != null)
-            {
-                var role = await roleManager.FindByNameAsync(roleName);
-                var allRoles = await roleManager.Roles.ToListAsync();
-                var roles = new SelectList(allRoles, "Id", "Name");
-                //var allaKurser = await uow.KursRepository.GetAllKurserAsync();
-                //var kurser = new SelectList(allaKurser, "Id", "Namn");
 
-                var model = new AdminCreateUserViewModel
+            if (user != null)
+            {
+                var kurs = db.AnvandareKurser.Where(k => k.AnvandareId == user.Id).FirstOrDefault();
+                var allaKurser = await uow.KursRepository.GetAllKurserAsync();
+                var model = new AdminCreateElevViewModel
                 {
                     ForNamn = user.ForNamn,
                     EfterNamn = user.EfterNamn,
                     Email = user.Email,
                     Avatar = user.Avatar,
-                    RoleId = role.Id,
-                    Roles = roles,
-                    //KursId = kurs.KursId,
-                    //Kurser = kurser
+                    //KursId = kurs.Id,
+                    //Kurser = allaKurser
+                };
+               
+                return View(model);
+            }
+            else
+                return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateElev(string id, AdminCreateElevViewModel model)
+        {
+            var user = await userManager.FindByIdAsync(id);
+            if (model != null)
+            {
+                var kurs = await uow.KursRepository.GetKursAsync(model.KursId);
+                var kursList = new List<Kurs>();
+                kursList.Add(kurs);
+                if (!string.IsNullOrEmpty(model.Email))
+                    user.Email = model.Email;
+                else
+                    ModelState.AddModelError("", "Email cannot be empty");
+
+                if (!string.IsNullOrEmpty(model.Email))
+                {
+                    user.ForNamn = model.ForNamn;
+                    user.EfterNamn = model.EfterNamn;
+                    user.Email = model.Email;
+                    user.Avatar = model.Avatar;
+                    IdentityResult result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                        return RedirectToAction("Index");
+                    else
+                        Errors(result);
+                }
+            }
+            else
+                ModelState.AddModelError("", "User Not Found");
+            return View(user);
+        }
+
+        public async Task<IActionResult> UpdateLarare(string id)
+        {
+            var user = await userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                var kurs = db.AnvandareKurser.Where(k => k.AnvandareId == user.Id).FirstOrDefault();
+                var allaKurser = await uow.KursRepository.GetAllKurserAsync();
+                var model = new AdminCreateElevViewModel
+                {
+                    ForNamn = user.ForNamn,
+                    EfterNamn = user.EfterNamn,
+                    Email = user.Email,
+                    Avatar = user.Avatar,
+                    //KursId = kurs.Id,
+                    //Kurser = allaKurser
                 };
 
                 return View(model);
@@ -135,20 +260,18 @@ namespace LMS.Grupp4.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(string id, AdminCreateUserViewModel model)
+        public async Task<IActionResult> UpdateLarare(string id, AdminCreateElevViewModel model)
         {
             var user = await userManager.FindByIdAsync(id);
             if (model != null)
             {
+                var kurs = await uow.KursRepository.GetKursAsync(model.KursId);
+                var kursList = new List<Kurs>();
+                kursList.Add(kurs);
                 if (!string.IsNullOrEmpty(model.Email))
                     user.Email = model.Email;
                 else
                     ModelState.AddModelError("", "Email cannot be empty");
-
-                if (!string.IsNullOrEmpty(model.Password))
-                    user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
-                else
-                    ModelState.AddModelError("", "Password cannot be empty");
 
                 if (!string.IsNullOrEmpty(model.Email))
                 {
@@ -156,7 +279,6 @@ namespace LMS.Grupp4.Web.Controllers
                     user.EfterNamn = model.EfterNamn;
                     user.Email = model.Email;
                     user.Avatar = model.Avatar;
-                 
                     IdentityResult result = await userManager.UpdateAsync(user);
                     if (result.Succeeded)
                         return RedirectToAction("Index");

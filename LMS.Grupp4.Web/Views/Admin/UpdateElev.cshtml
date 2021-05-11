@@ -1,0 +1,44 @@
+﻿@model LMS.Grupp4.Core.ViewModels.Admin.AdminCreateElevViewModel
+
+<h1 class="">Uppdatera</h1>
+<a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="UpdateElev" method="post">
+    <div class="form-group">
+        <label asp-for="ForNamn">Förnamn</label>
+        <input asp-for="ForNamn" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EfterNamn">Efternamn</label>
+        <input asp-for="EfterNamn" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Email">Epost/Login</label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Avatar"></label>
+        <input asp-for="Avatar" class="form-control" />
+    </div>
+    @*<div class="form-group">
+            <label asp-for="RoleId">Användartyp</label>
+            <select asp-for="RoleId" asp-items="@Model.Roles" class="form-control">
+                <option selected="selected" value="@Model.RoleId">Välj användartyp</option>
+            </select>
+        </div>*@
+    @*<div class="form-group">
+        <label asp-for="KursId">Kurs</label>
+        <select asp-for="KursId"
+                asp-items="@(new SelectList(Model.Kurser,"Id","Namn"))" class="form-control">
+            <option selected="selected" value="@Model.KursId">Välj kurs</option>
+        </select>
+    </div>*@
+    @*<div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" class="form-control" />
+        </div>*@
+    <button type="submit" class="btn btn-primary">Spara</button>
+</form>
+
+
