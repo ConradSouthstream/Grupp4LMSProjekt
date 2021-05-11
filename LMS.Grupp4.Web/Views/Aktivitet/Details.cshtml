@@ -49,7 +49,7 @@
         <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
     </div>
 
-    <a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+    <a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-mhm btn-sm">Ladda upp Filer</a>
     <div class="row">
         <table class="table table-responsive table-bordered">
             <tr class="table-primary">
@@ -69,18 +69,12 @@
 
             }
         </table>
+    </div>
 
-        @*</div>*@
-
-
-
-        </div>
-
-
-    }
-    else
-    {
-        <div class="alert alert-danger" role="alert">
-            Hittar inte sökt aktivitet
-        </div>
-    }
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        Hittar inte sökt aktivitet
+    </div>
+}
