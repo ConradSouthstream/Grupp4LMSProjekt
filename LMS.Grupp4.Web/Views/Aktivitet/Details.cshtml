@@ -16,45 +16,43 @@
 
 @if (Model != null)
 {
-<div class="row titlecardbox justify-content-center pad-0">
-    <div class="card topbar titlecardbox">
-        <h1 class="center">@Model.Namn Detaljer</h1>
-        <h4 class="center">Tillhör @Model.ModulNamn</h4>
-        <h5 class="center">Som i sin tur tillhör @Model.KursNamn</h5>
-    </div>
-</div>
-<div class="row titlecardbox justify-content-center pad-0">
-    <div class="card border titlecardbox">
-        <h5 class="pad-0 margin-3 center">
-            Från @Html.DisplayFor(model => model.StartDatum)
-        </h5>
-        <h5 class="pad-0 margin-3 center">
-            Till @Html.DisplayFor(model => model.SlutDatum)
-        </h5>
-    </div>
-</div>
-<div class="row titlecardbox justify-content-center pad-0">
-    <div class="col-7 topbar rounded">
-        <h2 class="center">
-            @Html.DisplayNameFor(model => model.Beskrivning)
-        </h2>
-    </div>
-    <div class="col-7 card card-body">
-        <div class="center">
-            @Html.DisplayFor(model => model.Beskrivning)
+    <div class="row titlecardbox justify-content-center pad-0">
+        <div class="card topbar titlecardbox">
+            <h1 class="center">@Model.Namn Detaljer</h1>
+            <h4 class="center">Tillhör @Model.ModulNamn</h4>
+            <h5 class="center">Som i sin tur tillhör @Model.KursNamn</h5>
         </div>
     </div>
-</div>
-<div class="row">
-    <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
-</div>
-    
-<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
-<dl class="row">
+    <div class="row titlecardbox justify-content-center pad-0">
+        <div class="card border titlecardbox">
+            <h5 class="pad-0 margin-3 center">
+                Från @Html.DisplayFor(model => model.StartDatum)
+            </h5>
+            <h5 class="pad-0 margin-3 center">
+                Till @Html.DisplayFor(model => model.SlutDatum)
+            </h5>
+        </div>
+    </div>
+    <div class="row titlecardbox justify-content-center pad-0">
+        <div class="col-7 topbar rounded">
+            <h2 class="center">
+                @Html.DisplayNameFor(model => model.Beskrivning)
+            </h2>
+        </div>
+        <div class="col-7 card card-body">
+            <div class="center">
+                @Html.DisplayFor(model => model.Beskrivning)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+    </div>
 
-    @*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">*@
+    <a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+    <div class="row">
         <table class="table table-responsive table-bordered">
-            <tr>
+            <tr class="table-primary">
                 <th>Dokuments Namn</th>
                 <th>Uppladdnings Datum</th>
                 <th>Anvandare</th>
@@ -72,17 +70,17 @@
             }
         </table>
 
-    @*</div>*@
+        @*</div>*@
 
 
 
-</dl>
+        </div>
 
 
-}
-else
-{
-<div class="alert alert-danger" role="alert">
-    Hittar inte sökt aktivitet
-</div>
-}
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            Hittar inte sökt aktivitet
+        </div>
+    }

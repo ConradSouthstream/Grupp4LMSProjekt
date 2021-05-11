@@ -31,7 +31,7 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IWebHostEnvironment env ) :
+        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IWebHostEnvironment env) :
             base(uow, mapper, userManager)
         {
             _context = context;
@@ -88,11 +88,13 @@ namespace LMS.Grupp4.Web.Controllers
 
             await m_UnitOfWork.CompleteAsync();
             TempData["msg"] = "Filen har laddats upp";
+            // return RedirectToAction(nameof(Details), "Elev", new { Id = upload.KursId });
 
-            // return Redirect("/Elev/Details/"+ upload.KursId);
+
+            return Redirect("/Elev/Details?KursId=" + upload.KursId);
             //return Redirect("/Elev/ModulDetails/" + upload.KursId);
 
-           return View(upload);
+            // return View(upload);
         }
         public async Task<IActionResult> Details(int? KursId)
         {
@@ -104,7 +106,7 @@ namespace LMS.Grupp4.Web.Controllers
 
             var dokument = await _context.Dokument.Include(d => d.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
-          
+
             kurs.Dokument = dokument;
             if (kurs == null)
             {
@@ -267,12 +269,10 @@ namespace LMS.Grupp4.Web.Controllers
             await m_UnitOfWork.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
-            //return Redirect("/Elev/Details/"+ dokument.KursId);
-            //return Redirect("/Elev/ModulDetails/" + upload.ModulId);
-            return Redirect("Elev/ModulDetails?ModulId ="+upload.ModulId);
 
-            // return View(dokument);
-        } public IActionResult UploadAktivity(int id)
+            return Redirect("/Elev/ModulDetails?ModulId=" + upload.ModulId);
+        }
+        public IActionResult UploadAktivity(int id)
         {
             var Dokument = new Dokument
             {
@@ -299,13 +299,7 @@ namespace LMS.Grupp4.Web.Controllers
             await m_UnitOfWork.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
-            //return Redirect("/Elev/Details/"+ dokument.KursId);
-            //return Redirect("/Elev/ModulDetails/" + upload.ModulId);
-          //return Redirect("Elev/AktivitetDetails/"+upload.AktivitetId);
-          // return Redirect("Aktivitet/Details/" + upload.AktivitetId);
-
-
-           return View(upload);
+            return Redirect("/Elev/AktivitetDetails?AktivietetId=" + upload.AktivitetId);
         }
         public FileResult DownloadFile(string filename)
         {
@@ -387,6 +381,8 @@ namespace LMS.Grupp4.Web.Controllers
                     var dokument = await _context.Dokument.Include(d => d.Anvandare)
                        .Where(d => d.AktivitetId == aktivitet.Id).ToListAsync();
                     aktivitet.Dokument = dokument;
+                    var modul = aktivitet.Modul;
+
                     viewModel = m_Mapper.Map<AktivitetElevDetailsViewModel>(aktivitet);
                     viewModel.AktivitetStatus = AktivitetHelper.CalculateStatus(aktivitet);
                 }
@@ -394,7 +390,7 @@ namespace LMS.Grupp4.Web.Controllers
 
             return View(viewModel);
         }
-  
+
         //// GET: ElevController/Details/5
         //public ActionResult Details(int id)
         //{

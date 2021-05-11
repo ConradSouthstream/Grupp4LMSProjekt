@@ -119,7 +119,9 @@ namespace LMS.Grupp4.Web.Controllers
             await _uow.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
-            return View(upload);
+           // return View(upload);
+            return RedirectToAction(nameof(Details), "Kurser", new { Id = upload.KursId });
+
             //return Redirect("/Kurser/Details/" + upload.KursId);
 
         }

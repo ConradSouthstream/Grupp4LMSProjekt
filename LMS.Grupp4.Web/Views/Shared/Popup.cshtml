@@ -1,0 +1,57 @@
+﻿@model LMS.Grupp4.Core.Entities.Dokument
+
+
+<div class="modal fade" id="UploadModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Confirm Checkout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="Upload" enctype="multipart/form-data">
+                            <input hidden="hidden" asp-for="KursId" />
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="DokumentTypId" class="control-label"></label>
+                                <select id="select" asp-for="DokumentTypId" asp-items="Model.GetDokumentTypNamn" class="form-control"></select>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Namn" class="control-label"></label>
+                                <input asp-for="Namn" class="form-control" />
+                                <span asp-validation-for="Namn" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Beskrivning" class="control-label"></label>
+                                <input asp-for="Beskrivning" class="form-control" />
+                                <span asp-validation-for="Beskrivning" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="File" class="control-label"></label>
+                                <input type="file" name="file" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Ladda upp" class="btn btn-primary" />
+                            </div>
+                            <div class="form-group">
+                                <span>@TempData["msg"]</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                @*<input type="hidden" asp-for="Id" />*@
+                <input type="submit" value="Confirm" class="btn btn-danger" />
+                <button type="button" class="btn btn-outline-info" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
