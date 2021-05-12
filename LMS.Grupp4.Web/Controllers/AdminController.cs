@@ -61,6 +61,16 @@ namespace LMS.Grupp4.Web.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> CreateElev(string kursId)
+        {
+            var kurs = await uow.KursRepository.GetKursAsync(int.Parse(kursId));
+            var model = new AdminCreateElevViewModel
+            {
+                Kurs = kurs
+            };
+            return View(model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(AdminCreateUserViewModel model)
         {
@@ -77,6 +87,46 @@ namespace LMS.Grupp4.Web.Controllers
                 };
 
                 var result = await userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // user created: add it to role
+                    var role = await roleManager.FindByIdAsync(model.RoleId);
+                    var res = await userManager.AddToRoleAsync(user, role.Name);
+                    // add user to kurs
+
+                    db.AnvandareKurser.Add(new AnvandareKurs
+                    {
+                        Anvandare = user,
+                        Kurs = kurs
+                    });
+                    db.SaveChanges();
+                    await uow.KursRepository.SaveAsync();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateElev(AdminCreateElevViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new Anvandare
+                {
+                    EfterNamn = model.EfterNamn,
+                    ForNamn = model.ForNamn,
+                    UserName = model.Email,
+                    Email = model.Email,
+                    Avatar = model.Avatar
+                };
+
+                var result = await userManager.CreateAsync(user, );
                 if (result.Succeeded)
                 {
                     // user created: add it to role

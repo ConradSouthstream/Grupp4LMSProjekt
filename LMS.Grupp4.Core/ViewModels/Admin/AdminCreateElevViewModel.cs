@@ -23,7 +23,7 @@ namespace LMS.Grupp4.Core.ViewModels.Admin
 
         [Required]
         public int KursId { get; set; }
-        public ICollection<Kurs> Kurser { get; set; }
+        public Kurs Kurs { get; set; }
       
     }
 }
