@@ -23,7 +23,8 @@ namespace LMS.Grupp4.Core.Entities
         public int? ModulId { get; set; }
         public int? AktivitetId { get; set; }
         public int DokumentTypId { get; set; }
-        public int? AnvandareId { get; set; }
+        //public int? AnvandareId { get; set; }
+        public string  AnvandareId { get; set; }
         [NotMapped] //Tell Entity Framework to ignore property
         [Required]
         public IFormFile File { get; set; }
@@ -31,7 +32,9 @@ namespace LMS.Grupp4.Core.Entities
         [NotMapped]
         [Required]
         public IEnumerable<SelectListItem> GetDokumentTypNamn { get; set; }
-       // public string AnvandareId { get; set; }
+        public List<Watchlist> Watchlists { get; set; }
+
+        public bool IsCreated { get; set; }
 
 
         //Navigation property

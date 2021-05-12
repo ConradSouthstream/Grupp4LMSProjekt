@@ -1,17 +1,22 @@
+using ClientNotifications.ServiceExtensions;
 using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
 using LMS.Grupp4.Data;
+using LMS.Grupp4.Data.Hubs;
 using LMS.Grupp4.Data.MapperProfiles;
 using LMS.Grupp4.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace LMS.Grupp4.Web
 {
@@ -71,7 +76,14 @@ namespace LMS.Grupp4.Web
 
             services.AddAutoMapper(typeof(MapperProfile));
 
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IWatchlistRepository, WatchlistRepository>();
+
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+           // services.AddToastNotification();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,11 +103,17 @@ namespace LMS.Grupp4.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(this.Env.WebRootPath)),
+            //    RequestPath = new PathString("/vendor")
+            //});
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+           
 
             app.UseEndpoints(endpoints =>
             {
@@ -103,6 +121,7 @@ namespace LMS.Grupp4.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<SignalServer>("/signalServer");
             });
         }
     }
