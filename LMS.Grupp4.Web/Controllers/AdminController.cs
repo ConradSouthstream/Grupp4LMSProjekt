@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -21,6 +22,7 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly UserManager<Anvandare> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IPasswordHasher<Anvandare> passwordHasher;
+        private readonly IConfiguration config;
         private readonly IUnitOfWork uow;
         private readonly SignInManager<Anvandare> signInManager;
 
@@ -28,6 +30,7 @@ namespace LMS.Grupp4.Web.Controllers
                                SignInManager<Anvandare> signInManager,
                                UserManager<Anvandare> userManager,
                                RoleManager<IdentityRole> roleManager,
+                               IConfiguration config,
                                IPasswordHasher<Anvandare> passwordHasher)
         {
             this.uow = unitOfWork;
@@ -36,6 +39,7 @@ namespace LMS.Grupp4.Web.Controllers
             this.roleManager = roleManager;
             this.passwordHasher = passwordHasher;
             db = context;
+            this.config = config;
         }
 
         public IActionResult Login()
@@ -61,15 +65,6 @@ namespace LMS.Grupp4.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> CreateElev(string kursId)
-        {
-            var kurs = await uow.KursRepository.GetKursAsync(int.Parse(kursId));
-            var model = new AdminCreateElevViewModel
-            {
-                Kurs = kurs
-            };
-            return View(model);
-        }
 
         [HttpPost]
         public async Task<IActionResult> Create(AdminCreateUserViewModel model)
@@ -83,7 +78,8 @@ namespace LMS.Grupp4.Web.Controllers
                     ForNamn = model.ForNamn,
                     UserName = model.Email,
                     Email = model.Email,
-                    Avatar = model.Avatar
+                    Avatar = model.Avatar,
+                    Kurser = new List<Kurs>() { kurs }
                 };
 
                 var result = await userManager.CreateAsync(user, model.Password);
@@ -112,9 +108,21 @@ namespace LMS.Grupp4.Web.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> CreateElev(string kursId)
+        {
+            var kurs = await uow.KursRepository.GetKursAsync(int.Parse(kursId));
+            var model = new AdminCreateElevViewModel
+            {
+                KursId = kurs.Id,
+                Kurs = kurs
+            };
+            return View(model);
+        }
         [HttpPost]
         public async Task<IActionResult> CreateElev(AdminCreateElevViewModel model)
         {
+            var kurs = await uow.KursRepository.GetKursAsync(model.KursId);
+
             if (ModelState.IsValid)
             {
                 var user = new Anvandare
@@ -123,21 +131,21 @@ namespace LMS.Grupp4.Web.Controllers
                     ForNamn = model.ForNamn,
                     UserName = model.Email,
                     Email = model.Email,
-                    Avatar = model.Avatar
+                    Avatar = model.Avatar,
+                    Kurser = new List<Kurs>() { kurs }
                 };
 
-                var result = await userManager.CreateAsync(user, );
+                var result = await userManager.CreateAsync(user, config["AdminPw"]);
                 if (result.Succeeded)
                 {
                     // user created: add it to role
-                    var role = await roleManager.FindByIdAsync(model.RoleId);
-                    var res = await userManager.AddToRoleAsync(user, role.Name);
+                    var res = await userManager.AddToRoleAsync(user, "Elev");
                     // add user to kurs
 
                     db.AnvandareKurser.Add(new AnvandareKurs
                     {
                         Anvandare = user,
-                        Kurs = kurs
+                        Kurs = model.Kurs
                     });
                     db.SaveChanges();
                     await uow.KursRepository.SaveAsync();
