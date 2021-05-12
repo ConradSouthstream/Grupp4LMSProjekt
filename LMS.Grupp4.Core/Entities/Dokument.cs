@@ -32,9 +32,7 @@ namespace LMS.Grupp4.Core.Entities
         [NotMapped]
         [Required]
         public IEnumerable<SelectListItem> GetDokumentTypNamn { get; set; }
-        public List<Watchlist> Watchlists { get; set; }
-
-        public bool IsCreated { get; set; }
+       
 
 
         //Navigation property
