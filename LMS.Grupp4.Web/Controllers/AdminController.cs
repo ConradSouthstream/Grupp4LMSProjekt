@@ -109,6 +109,7 @@ namespace LMS.Grupp4.Web.Controllers
 
         public async Task<IActionResult> CreateElev(string kursId)
         {
+            // Hämta kurs med kursId
             var kurs = await uow.KursRepository.GetKursAsync(int.Parse(kursId));
             var model = new AdminCreateElevViewModel
             {
@@ -120,8 +121,6 @@ namespace LMS.Grupp4.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateElev(AdminCreateElevViewModel model)
         {
-            var kurs = await uow.KursRepository.GetKursAsync(model.KursId);
-
             if (ModelState.IsValid)
             {
                 var user = new Anvandare
@@ -130,17 +129,16 @@ namespace LMS.Grupp4.Web.Controllers
                     ForNamn = model.ForNamn,
                     UserName = model.Email,
                     Email = model.Email,
-                    Avatar = model.Avatar,
-               
+                    Avatar = model.Avatar
                 };
 
                 var result = await userManager.CreateAsync(user, config["AdminPw"]);
                 if (result.Succeeded)
                 {
-                    // user created: add it to role
-                    var res = await userManager.AddToRoleAsync(user, "Elev");
-                    // add user to kurs
+                    // Eleven skapad: lägg till den i bland avändare med rollen "Elev"
+                    await userManager.AddToRoleAsync(user, "Elev");
 
+                    // Lägg till användaren i kursen
                     db.AnvandareKurser.Add(new AnvandareKurs
                     {
                         AnvandareId = user.Id,
@@ -148,6 +146,7 @@ namespace LMS.Grupp4.Web.Controllers
                     });
                     db.SaveChanges();
                     await uow.KursRepository.SaveAsync();
+                    // Återvänd till kursens detaljsida
                     return RedirectToAction("Details", "Kurser", new { id = $"{model.KursId}" });
                 }
                 else
