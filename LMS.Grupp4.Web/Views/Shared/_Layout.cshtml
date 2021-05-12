@@ -30,18 +30,27 @@
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Moduler" asp-action="Index">Moduler</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Aktivitet" asp-action="Index">Aktivitet</a>
-                        </li>
+                        @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Moduler" asp-action="Index">Moduler</a>
+                            </li>
+                        }
+
+                        @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Aktivitet" asp-action="Index">Aktivitet</a>
+                            </li>
+                        }
+
                         @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Larare">Lärar Vyn</a>
                             </li>
                         }
+
                         @if (signinManager.IsSignedIn(User) && User.IsInRole("Elev"))
                         {
                             <li class="nav-item">
