@@ -79,7 +79,6 @@ namespace LMS.Grupp4.Web.Controllers
                     UserName = model.Email,
                     Email = model.Email,
                     Avatar = model.Avatar,
-                    Kurser = new List<Kurs>() { kurs }
                 };
 
                 var result = await userManager.CreateAsync(user, model.Password);
@@ -132,7 +131,7 @@ namespace LMS.Grupp4.Web.Controllers
                     UserName = model.Email,
                     Email = model.Email,
                     Avatar = model.Avatar,
-                    Kurser = new List<Kurs>() { kurs }
+               
                 };
 
                 var result = await userManager.CreateAsync(user, config["AdminPw"]);
@@ -144,12 +143,12 @@ namespace LMS.Grupp4.Web.Controllers
 
                     db.AnvandareKurser.Add(new AnvandareKurs
                     {
-                        Anvandare = user,
-                        Kurs = model.Kurs
+                        AnvandareId = user.Id,
+                        KursId = model.KursId
                     });
                     db.SaveChanges();
                     await uow.KursRepository.SaveAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Details", "Kurser", new { id = $"{model.KursId}" });
                 }
                 else
                 {
