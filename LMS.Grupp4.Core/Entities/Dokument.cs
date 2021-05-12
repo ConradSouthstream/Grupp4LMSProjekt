@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.Grupp4.Core.Entities
@@ -12,7 +13,9 @@ namespace LMS.Grupp4.Core.Entities
     public class Dokument
     {
         public int Id { get; set; }
+        [Required]
         public string Namn { get; set; }
+        [Required]
         public string Beskrivning { get; set; }
         public string Path{ get; set; }
         public DateTime UppladdningsDatum { get; set; }
@@ -22,10 +25,13 @@ namespace LMS.Grupp4.Core.Entities
         public int DokumentTypId { get; set; }
         public int? AnvandareId { get; set; }
         [NotMapped] //Tell Entity Framework to ignore property
+        [Required]
         public IFormFile File { get; set; }
 
         [NotMapped]
+        [Required]
         public IEnumerable<SelectListItem> GetDokumentTypNamn { get; set; }
+       // public string AnvandareId { get; set; }
 
 
         //Navigation property

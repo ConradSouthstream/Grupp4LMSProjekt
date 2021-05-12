@@ -23,7 +23,7 @@
             @Html.DisplayNameFor(model => model.SlutDatum)
         </Ctop>
         <Ctop class="col-3 topbar center border-right-0">
-            Alternativ:
+            Alternativ
         </Ctop>
         @*<div class="col">
                 @Html.DisplayNameFor(model => model.Moduler)
@@ -55,9 +55,7 @@
                 <div class="col-3 border border-right-0">
                     <div class="row center">
                         <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
-                        <a type="button" class="btn btn-outline-primary" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
-                        @*<a asp-action="Details" asp-route-id="@item.Id" type="button" class="btn btn-outline-primary btn btn-mhm  btn-sm">Material</a>*@
-
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>                        
                         <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
                     </div>
                 </div>
@@ -69,41 +67,64 @@
             </listdivision>
             <div>
                 <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
-                    <div class="col-md-8 pad-0">
+                    <div class="col-md-6 pad-0">
                         <h5 class="topbar corner-rounded">
-                            Beskrivning:
+                            Beskrivning
                         </h5>
                         <div class="card card-body">
                             @Html.DisplayFor(modelItem => item.Beskrivning)
                         </div>
                     </div>
-                    <div class="col-md-4 pad-0">
+                    <div class="col-md-6 pad-0">
                         <h5 class="topbar corner-rounded">
                             Moduler
                         </h5>
                         <div class="card card-body">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col pad-2">
 
                                 </div>
-                                <div class="col-4">
-                                    Från
+                                <div class="col pad-2">
+                                    <div class="center">
+                                        Från
+                                    </div>
                                 </div>
-                                <div class="col-4">
-                                    Till
+                                <div class="col pad-2">
+                                    <div class="center">
+                                        Till
+                                    </div>
+                                </div>
+                                <div class="col-2 pad-2">
+                                    <div class="center">
+                                        Status
+                                    </div>
                                 </div>
                             </div>
                             @foreach (var modul in item.Moduler.OrderBy(modul => modul.StartDatum))
                             {
                                 <div class="row">
-                                    <a class="col-4" asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
-                                        @Html.DisplayFor(a => modul.Namn)<br />
-                                    </a>
-                                    <div class="col-4">
-                                        @Html.DisplayFor(a => modul.StartDatum)
+                                    <div class="col pad-2">
+                                        <a class="center" asp-controller="Moduler" asp-action="Details" asp-route-id="@modul.Id">
+                                            @Html.DisplayFor(a => modul.Namn)<br />
+                                        </a>
                                     </div>
-                                    <div class="col-4">
-                                        @Html.DisplayFor(a => modul.SlutDatum)
+                                    <div class="col pad-2">
+                                        <div class="center">
+                                            @Html.DisplayFor(a => modul.StartDatum)
+                                        </div>
+                                    </div>
+                                    <div class="col pad-2">
+                                        <div class="center">
+                                            @Html.DisplayFor(a => modul.SlutDatum)
+                                        </div>
+                                    </div>
+                                    <div class="col-2 pad-2">
+                                        <status class="center"
+                                                scale="true"
+                                                start-datum="@(modul.StartDatum)"
+                                                slut-datum="@(modul.SlutDatum)">
+
+                                        </status>
                                     </div>
                                 </div>
                             }

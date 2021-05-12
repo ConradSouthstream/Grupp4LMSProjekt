@@ -55,10 +55,10 @@ namespace LMS.Grupp4.Web.Controllers
                 .Include(c => c.AnvandareKurser)
                 .ThenInclude(e => e.Anvandare)
                 .Include(c => c.Moduler)
+                .ThenInclude(c => c.Aktiviteter)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var dokument = await _context.Dokument
+            var dokument = await _context.Dokument.Include(e=>e.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
-
             kurs.Dokument = dokument;
             if (kurs == null)
             {
@@ -93,12 +93,15 @@ namespace LMS.Grupp4.Web.Controllers
             return File(bytes, "application/octet-stream", filename);
         }
 
+           
         public IActionResult Upload(int id)
         {
+
             var Dokument = new Dokument
             {
                 GetDokumentTypNamn = GetDokumentTypNamn(),
-                KursId = id
+                KursId = id,
+                //Anvandare = user,
             };
             return View(Dokument);
         }
@@ -106,18 +109,18 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            if (!ModelState.IsValid)
-            {
-                return NotFound();
-            }
-            upload.Anvandare = await _userManager.GetUserAsync(User);
-
+            //if (!ModelState.IsValid)
+            //{
+            //    return NotFound();
+            //}
+            upload.Anvandare =await _userManager.GetUserAsync(User);
             await _uow.DokumentRepository.Create(upload);
 
             await _uow.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
-            return Redirect("/Kurser/Details/" + upload.KursId);
+            return View(upload);
+            //return Redirect("/Kurser/Details/" + upload.KursId);
 
         }
 

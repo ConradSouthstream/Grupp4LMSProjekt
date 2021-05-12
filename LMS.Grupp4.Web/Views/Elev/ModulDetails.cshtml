@@ -47,6 +47,34 @@
                 <status start-datum="@(Model.StartDatum)" slut-datum="@(Model.SlutDatum)"></status>
             </dd>
         </dl>
+            <a asp-action="UploadDokument" asp-route-id="@Model.ModulId" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+        <dl class="row">
+
+            <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+                <table class="table table-responsive table-bordered">
+                    <tr>
+                        <th>Moduldokumentens Namn</th>
+                        <th>Uppladdnings Datum</th>
+                        <th>Anvandare</th>
+                    </tr>
+                    @foreach (Dokument file in Model.Dokument)
+                    {
+                <tr>
+                    <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                    <td>@file.UppladdningsDatum</td>
+                    <td>@file.Anvandare.FullNamn</td>
+                    <td><a href="/Elev/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+                </tr>
+
+
+                    }
+                </table>
+
+            </div>
+
+
+
+        </dl>
 
         <hr />
         <h4>Aktiviteter</h4>

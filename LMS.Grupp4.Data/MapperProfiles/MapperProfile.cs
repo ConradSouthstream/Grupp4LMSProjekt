@@ -48,7 +48,8 @@ namespace LMS.Grupp4.Data.MapperProfiles
                 .ForMember(dest => dest.ModulStartDatum, from => from.MapFrom(m => m.Modul.StartDatum))
                 .ForMember(dest => dest.ModulSlutDatum, from => from.MapFrom(m => m.Modul.SlutDatum))
                 .ForMember(dest => dest.AktivitetTypNamn, from => from.MapFrom(a => a.AktivitetTyp.Namn))
-                .ForMember(dest => dest.KursId, from => from.MapFrom(k => k.Modul.Kurs.Id));
+                .ForMember(dest => dest.KursId, from => from.MapFrom(k => k.Modul.Kurs.Id))
+                .ForMember(dest => dest.KursNamn, from => from.MapFrom(k => k.Modul.Kurs.Namn));
 
 
             CreateMap<Aktivitet, AktivitetDetailsViewModel>()
@@ -57,8 +58,9 @@ namespace LMS.Grupp4.Data.MapperProfiles
                 .ForMember(dest => dest.ModulStartDatum, from => from.MapFrom(m => m.Modul.StartDatum))
                 .ForMember(dest => dest.ModulSlutDatum, from => from.MapFrom(m => m.Modul.SlutDatum))
                 .ForMember(dest => dest.AktivitetTypNamn, from => from.MapFrom(a => a.AktivitetTyp.Namn))
-                .ForMember(dest => dest.KursId, from => from.MapFrom(a => a.Modul.Kurs.Id));
-                
+                .ForMember(dest => dest.KursId, from => from.MapFrom(a => a.Modul.Kurs.Id))
+                .ForMember(dest => dest.KursNamn, from => from.MapFrom(k => k.Modul.Kurs.Namn));
+
 
             CreateMap<Aktivitet, AktivitetEditViewModel>()
                 .ForMember(dest => dest.ModulNamn, from => from.MapFrom(m => m.Modul.Namn))

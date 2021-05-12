@@ -1,0 +1,78 @@
+﻿@model LMS.Grupp4.Core.ViewModels.Aktivitet.AktivitetDetailsViewModel
+
+@{
+    ViewData["Title"] = "Detaljer för aktivitet";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Larare">Hem</a></li>
+        <li class="breadcrumb-item"><a href="@("/kurser/Details/"+Model.KursId)">Kurs</a></li>
+        <li class="breadcrumb-item"><a href="@("/moduler/Details/"+Model.ModulId)">Modul</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Aktivitet</li>
+    </ol>
+</nav>
+<h1>@ViewData["Title"] @Model.Namn</h1>
+
+@if (Model != null)
+{
+<div>
+    <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Namn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Namn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDatum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StartDatum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SlutDatum)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SlutDatum)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Beskrivning)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Beskrivning)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AktivitetTypNamn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AktivitetTypNamn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModulNamn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModulNamn)
+        </dd>
+    </dl>
+</div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        Hittar inte sökt aktivitet
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Editera", "Edit", new { id = Model.Id }) |
+    <a asp-action="Index">Tillbaka till listan</a>
+</div>

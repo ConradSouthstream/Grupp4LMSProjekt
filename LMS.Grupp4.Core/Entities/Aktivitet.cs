@@ -29,12 +29,14 @@ namespace LMS.Grupp4.Core.Entities
         /// Tid när aktiviteten starta
         /// </summary>
         [Required(ErrorMessage = "Ni måste ange en startdatum för aktiviteten")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime StartDatum { get; set; }
 
         /// <summary>
         /// Tid när aktiviteten slutar
         /// </summary>
         [Required(ErrorMessage = "Ni måste ange en slutdatum för aktiviteten")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime SlutDatum { get; set; }
 
         /// <summary>

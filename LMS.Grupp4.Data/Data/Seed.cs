@@ -29,18 +29,25 @@ namespace LMS.Grupp4.Data.Data
                 db.Database.EnsureDeleted();
                 db.Database.Migrate();
 
-                var aktivitetTyper = new List<AktivitetTyp>();
+                var dokumentsTyper = new List<DokumentTyp>()
+                {                     
+                    new DokumentTyp(){Namn = "Generalla Information"},
+                    new DokumentTyp(){Namn = "Modul Information"},
+                    new DokumentTyp(){Namn = "Inlämning"},
+                    new DokumentTyp(){Namn = "Föreläsning"},
+                    new DokumentTyp(){Namn = "Uppgift"},
+                    new DokumentTyp(){Namn = "Föreläsning"},
+                    new DokumentTyp(){Namn = "E-learning"},
+                };
+                await db.AddRangeAsync(dokumentsTyper);
 
-                for (int i = 0; i < 10; i++)
+                var aktivitetTyper = new List<AktivitetTyp>()
                 {
-                    var aktivitet = new AktivitetTyp
-                    {
-                        Namn = fake.Company.CatchPhrase(),
-                       
-                    };
-                    aktivitetTyper.Add(aktivitet);
-                }
-
+                    new AktivitetTyp(){Namn = "Föreläsning"},
+                    new AktivitetTyp(){Namn = "E-learning"},
+                    new AktivitetTyp(){Namn = "Uppgift"},
+                };
+                
                 await db.AddRangeAsync(aktivitetTyper);
 
                 var roleNames = new[] { "Elev", "Lärare" };
@@ -85,8 +92,8 @@ namespace LMS.Grupp4.Data.Data
                     if (kurs.StartDatum > DateTime.Now.AddDays(1)&&kurs.SlutDatum> DateTime.Now)
                     {
                         kurs.KursStatus = Status.Kommande;
-                   }
-
+                    }
+                    //Tillägg 3 elever per kurs
                     for (int Useri = 0; Useri < 3; Useri++)
                     {
                         var fName = fake.Name.FirstName();
@@ -113,6 +120,33 @@ namespace LMS.Grupp4.Data.Data
                         };
                        enrollments.Add(enrollment);
                     }
+                    //Tillägg av 1 lärare per Kurs
+                    for (int Lärarei = 0; Lärarei < 1; Lärarei++)
+                    {
+                        var lärarefName = fake.Name.FirstName();
+                        var lärarelName = fake.Name.LastName();
+
+                        var lärare = new Anvandare
+                        {
+                            ForNamn = lärarefName,
+                            EfterNamn = lärarelName,
+                            Email = fake.Internet.Email(lärarefName, lärarelName),
+                            Avatar = fake.Internet.Avatar(),
+
+                        };
+                        lärare.UserName = lärare.Email;
+                        await userManager.FindByEmailAsync(lärare.Email);
+                        await userManager.CreateAsync(lärare, adminPw);
+                        await userManager.AddToRoleAsync(lärare, "Lärare");
+                        elever.Add(lärare);
+                        var lärareEnrollment = new AnvandareKurs
+                        {
+                            Kurs = kurs,
+                            Anvandare = lärare,
+                            Betyg = fake.Random.Int(1, 5)
+                        };
+                        enrollments.Add(lärareEnrollment);
+                    }
                     //varje kurs tillsätter 5 moduler
                     for (int moduli = 0; moduli < 5; moduli++)
                     {
@@ -123,7 +157,7 @@ namespace LMS.Grupp4.Data.Data
                             Beskrivning = fake.Lorem.Paragraph(),
                             Kurs = kurs,
                             StartDatum = modulstartdatum,
-                            SlutDatum = modulstartdatum.AddDays(((moduli + 1) * 7) -1)
+                            SlutDatum = modulstartdatum.AddDays(6)
                         };
                         //varje modul tillsätter 2 aktiviteter
                         for (int aktiviteti = 0; aktiviteti < 2; aktiviteti++)
@@ -193,6 +227,13 @@ namespace LMS.Grupp4.Data.Data
                     Anvandare = elev,
                     Betyg = fake.Random.Int(1, 5)
                 };
+                var statiskLärareEnrollment = new AnvandareKurs
+                {
+                    Kurs = kurser.First(),
+                    Anvandare = admin,
+                    Betyg = 5
+                };
+                await db.AddRangeAsync(statiskLärareEnrollment);
                 await db.AddRangeAsync(statiskElevEnrollment);
                 await db.SaveChangesAsync();
             }

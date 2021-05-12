@@ -1,5 +1,6 @@
 ﻿using LMS.Grupp4.Core.Entities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -80,5 +81,7 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         /// </summary>
         [DisplayName("Kursnamn")]
         public string KursNamn { get; set; }
+     public ICollection<Dokument> Dokument { get; set; }
     }
+
 }
