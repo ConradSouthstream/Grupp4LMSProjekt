@@ -141,13 +141,25 @@ namespace LMS.Grupp4.Web.Controllers
             try
             {                
                 // Hämta ämnen från webapi. Visas i dropdown
-                List<AmneDto> lsAmnen = await GetAmneAsync();
-                model.Amnen = KursLitteraturHelper.CreateAmneDropDown(lsAmnen);
+                List<AmneDto> lsAmnen = await GetAmneAsync();                
 
                 if (actionFrom == 1)
                 {
                     // Sök efter kurslitteraturen
                     model.Litteratur = await SearchForLitteraturAsync(titel, forfattare, AmneId);
+
+                    // Se till att det vi har sökt på syns i view
+                    model.Amnen = KursLitteraturHelper.CreateAmneDropDown(lsAmnen, AmneId.ToString());
+
+                    if (!String.IsNullOrWhiteSpace(titel))
+                        model.Titel = titel;
+
+                    if (!String.IsNullOrWhiteSpace(forfattare))
+                        model.Forfattare = forfattare;
+                }
+                else
+                {
+                    model.Amnen = KursLitteraturHelper.CreateAmneDropDown(lsAmnen);
                 }
             }
             catch(Exception exc) 

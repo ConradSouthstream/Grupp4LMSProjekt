@@ -9,6 +9,10 @@ namespace LMS.Grupp4.Core.ViewModels.KursLitteratur
 {
     public class LitteraturListViewModel
     {
+        public string Titel { get; set; }
+
+        public string Forfattare { get; set; }
+
         // Dropdown
 
         /// <summary>
