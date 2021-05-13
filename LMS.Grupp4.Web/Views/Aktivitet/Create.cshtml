@@ -8,10 +8,9 @@
 
 @{ await Html.RenderPartialAsync("_MessageView"); }
 
-<h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Create">
             <div>
                 <input type="hidden" asp-for="ModulId" />
@@ -30,15 +29,46 @@
                 <input asp-for="Namn" class="form-control" />
                 <span asp-validation-for="Namn" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StartDatum" class="control-label"></label>
-                <input asp-for="StartDatum" class="form-control" />
-                <span asp-validation-for="StartDatum" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SlutDatum" class="control-label"></label>
-                <input asp-for="SlutDatum" class="form-control" />
-                <span asp-validation-for="SlutDatum" class="text-danger"></span>
+            <div class="col-12">
+                <div class="row colpadding">
+                    <div class="col-12 center topbar LRpad-0">Datum gällande Modul och aktiviteter</div>
+                    <div class="col-4 center">
+                        @Html.DisplayFor(Model => Model.ModulNamn)
+                    </div>
+                    <div class="col-4 center">
+                        @Html.DisplayFor(Model => Model.ModulStartDatum)
+                    </div>
+                    <div class="col-4 center">
+                        @Html.DisplayFor(Model => Model.ModulSlutDatum)
+                    </div>
+                </div>
+                <div class="colpadding">
+                    <div class="row topbar LRpad-0">
+                        <div class="col-4 center">
+                            Modul
+                        </div>
+                        <div class="col-4 center">
+                            Från
+                        </div>
+                        <div class="col-4 center">
+                            Till
+                        </div>
+                    </div>                    
+                    @foreach (var item in @Model.Aktiviteter.OrderBy(o => o.StartDatum))
+                    {
+                        <listdivision class="row">
+                            <div class="col-4 center">
+                                @item.Namn
+                            </div>
+                            <div class="col-4 center">
+                                @Html.DisplayFor(modulitem => item.StartDatum)
+                            </div>
+                            <div class="col-4 center">
+                                @Html.DisplayFor(modulitem => item.SlutDatum)
+                            </div>
+                        </listdivision>
+                    }
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Beskrivning" class="control-label"></label>

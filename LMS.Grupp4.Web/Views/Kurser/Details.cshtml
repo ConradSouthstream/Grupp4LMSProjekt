@@ -9,6 +9,9 @@
 @{
     ViewData["Title"] = "Details";
 }
+
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
 <div class="row">
     <div class="col-md-3">
 
@@ -44,6 +47,7 @@
             </div>
             <div class="row">
                 <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+                <a class="btn btn-mhm btn-lg" asp-controller="moduler" asp-action="Create" asp-route-id="@Model.Id">Skapa ny Modul</a>
             </div>
         </div>
     </div>
@@ -171,7 +175,7 @@
                         </div>
                         <div class="col-md-7 pad-0">
                             <h5 class="topbar corner-rounded">
-                                Moduler
+                                Aktiviteter
                             </h5>
                             <div class="card card-body">
                                 <div class="row">
@@ -241,9 +245,9 @@
         </tr>
         @foreach (Dokument file in Model.Dokument)
         {
-            
+
             <tr>
-                 
+
                 <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
                 <td>@file.UppladdningsDatum</td>
                 <td>@file.Anvandare.FullNamn</td>

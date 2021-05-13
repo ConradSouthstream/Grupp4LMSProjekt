@@ -72,7 +72,15 @@ namespace LMS.Grupp4.Web.Controllers
                 AktivitetCreateViewModel viewModel = new AktivitetCreateViewModel();
 
                 // Hämta information om Model
-                Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(id.Value);
+                Modul modul = await m_UnitOfWork.ModulRepository.GetModulWithAktiviteterAsync(id.Value);
+                
+                //Kolla om det finns aktiviteter på modulen, om det gör det ta det äldsta slutdatumet som startdatum.
+                //Annars ta modulen startdatum.
+                DateTime SenasteAktivitetDatum;
+                if (modul.Aktiviteter.Any())
+                { SenasteAktivitetDatum = modul.Aktiviteter.Max(m => m.SlutDatum); }
+                else { SenasteAktivitetDatum = modul.StartDatum; }
+
                 if (modul != null)
                 {
                     viewModel.ModulId = modul.Id;
@@ -81,10 +89,11 @@ namespace LMS.Grupp4.Web.Controllers
                     viewModel.ModulSlutDatum = modul.SlutDatum;
                 }
 
+                viewModel.Aktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(viewModel.ModulId);
                 // Sätt upp startvärden för kalendrar
                 DateTime dtNow = DateTime.Now;
-                viewModel.StartDatum = dtNow;
-                viewModel.SlutDatum = dtNow.AddDays(1);
+                viewModel.StartDatum = SenasteAktivitetDatum.AddDays(1);
+                viewModel.SlutDatum = SenasteAktivitetDatum.AddDays(2);
 
                 // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
                 List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
@@ -125,8 +134,7 @@ namespace LMS.Grupp4.Web.Controllers
 
                         TempData["message"] = $"Har skapat aktivitet {viewModel.Namn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
-
-                        //return RedirectToAction(nameof(Details(viewModel.ModulId)));
+                                                
                         return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                     }                    
                 }
@@ -168,6 +176,8 @@ namespace LMS.Grupp4.Web.Controllers
                 {
                     AktivitetEditViewModel viewModel = m_Mapper.Map<AktivitetEditViewModel>(aktivitet);
 
+                    viewModel.Aktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(viewModel.ModulId);
+
                     // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
                     List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
                     List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, aktivitet.AktivitetTypId.ToString());
@@ -202,7 +212,8 @@ namespace LMS.Grupp4.Web.Controllers
                             TempData["message"] = $"Har uppdaterat aktivitet {viewModel.Namn}";
                             TempData["typeOfMessage"] = TypeOfMessage.Info;                           
 
-                            return RedirectToAction(nameof(Index));
+                            //return RedirectToAction(nameof(Index));
+                            return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                         }
                     }
                     catch (Exception)

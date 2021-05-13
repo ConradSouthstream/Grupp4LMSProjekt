@@ -14,38 +14,41 @@ using LMS.Grupp4.Core.IRepository;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using LMS.Grupp4.Core.Enum;
 
 namespace LMS.Grupp4.Web.Controllers
 {
     [Authorize(Roles = "Lärare")]
-    public class KurserController : Controller
+    public class KurserController : BaseController
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _uow;
+        
         private readonly UserManager<Anvandare> _userManager;
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _context;
 
 
 
-        public KurserController(ApplicationDbContext context, IMapper mapper, IUnitOfWork uow, UserManager<Anvandare> usermanager, IWebHostEnvironment env)
+        public KurserController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager): 
+            base(uow, mapper, userManager)
         {
-            _context = context;
-            _mapper = mapper;
-            _uow = uow;
-            _userManager = usermanager;
+            _context = context;                        
+            _userManager = userManager;
             _env = env;
+            _mapper = mapper;
         }
 
         // GET: Kurs
         public async Task<IActionResult> Index()
         {
+            GetMessageFromTempData();
             var kurs = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
             return View(kurs);
         }
 
         public async Task<IActionResult> Details(int? id)
         {
+            GetMessageFromTempData();
             if (id == null)
             {
                 return NotFound();
@@ -114,9 +117,9 @@ namespace LMS.Grupp4.Web.Controllers
             //    return NotFound();
             //}
             upload.Anvandare =await _userManager.GetUserAsync(User);
-            await _uow.DokumentRepository.Create(upload);
+            await m_UnitOfWork.DokumentRepository.Create(upload);
 
-            await _uow.CompleteAsync();
+            await m_UnitOfWork.CompleteAsync();
 
             TempData["msg"] = "Filen har laddats upp";
             return View(upload);
@@ -127,7 +130,12 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Kurs/Create
         public IActionResult Create()
         {
-            return View();
+            var kurs = new Kurs
+            {
+                StartDatum = DateTime.Now.Date,
+                SlutDatum = DateTime.Now.Date.AddDays(35),                
+            };
+            return View(kurs);
         }
 
         // POST: Kurs/Create
@@ -154,6 +162,9 @@ namespace LMS.Grupp4.Web.Controllers
 
                 _context.Add(kurs);
                 await _context.SaveChangesAsync();
+
+                TempData["message"] = $"Har skapat kurs {kurs.Namn}";
+                TempData["typeOfMessage"] = TypeOfMessage.Info;
                 return RedirectToAction(nameof(Index));
             }
             return View(kurs);
@@ -205,6 +216,8 @@ namespace LMS.Grupp4.Web.Controllers
                         throw;
                     }
                 }
+                TempData["message"] = $"Har uppdaterat kurs {kurs.Namn}";
+                TempData["typeOfMessage"] = TypeOfMessage.Info;
                 return RedirectToAction(nameof(Index));
             }
             return View(kurs);

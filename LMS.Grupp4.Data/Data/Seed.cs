@@ -34,7 +34,6 @@ namespace LMS.Grupp4.Data.Data
                     new DokumentTyp(){Namn = "Generalla Information"},
                     new DokumentTyp(){Namn = "Modul Information"},
                     new DokumentTyp(){Namn = "Inlämning"},
-                    new DokumentTyp(){Namn = "Föreläsning"},
                     new DokumentTyp(){Namn = "Uppgift"},
                     new DokumentTyp(){Namn = "Föreläsning"},
                     new DokumentTyp(){Namn = "E-learning"},

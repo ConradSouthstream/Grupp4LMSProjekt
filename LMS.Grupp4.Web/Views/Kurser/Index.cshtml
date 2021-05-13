@@ -8,6 +8,8 @@
 </head>
 <h1>Lista över Kurser</h1>
 
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
 <div>
     <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Create">Skapa ny Kurs</a>
 </div>
@@ -55,7 +57,7 @@
                 <div class="col-3 border border-right-0">
                     <div class="row center">
                         <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
-                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>                        
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
                         <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
                     </div>
                 </div>

@@ -67,6 +67,13 @@ namespace LMS.Grupp4.Data.Repositories
                 .Where(m => m.Id == iModulId)
                 .FirstOrDefaultAsync();
         }
+        public async Task<Modul> GetModulWithAktiviteterAsync(int iModulId)
+        {
+            return await m_DbContext.Moduler
+                .Include(a => a.Aktiviteter)
+                .Where(m => m.Id == iModulId)
+                .FirstOrDefaultAsync();
+        }
 
         /// <summary>
         /// Async metod som returnerar sökt Modul inklusive Kurs eller null
