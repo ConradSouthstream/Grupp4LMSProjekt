@@ -61,6 +61,10 @@ for details on configuring this project to bundle and minify static web assets. 
 .horizontalcenter {
     margin: 0px auto 0px auto;
 }
+.rows {
+    display: flex;
+    flex-direction: column;
+}
 Ctop{
     font-size: 1.25rem;
     font-weight: 500;

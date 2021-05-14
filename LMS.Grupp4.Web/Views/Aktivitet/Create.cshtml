@@ -18,16 +18,29 @@
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="AktivitetTypId" class="control-label">Aktivitettyp</label>
-                @Html.DropDownList("AktivitetTypId", Model.AktivitetTyper, new { @class = "form-control" })
-                <span asp-validation-for="AktivitetTypId" class="text-danger"></span>
-            </div>
+            
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="AktivitetTypId" class="control-label">Aktivitettyp</label>
+                    @Html.DropDownList("AktivitetTypId", Model.AktivitetTyper, new { @class = "form-control" })
+                    <span asp-validation-for="AktivitetTypId" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label asp-for="Namn" class="control-label"></label>
-                <input asp-for="Namn" class="form-control" />
-                <span asp-validation-for="Namn" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="Namn" class="control-label"></label>
+                    <input asp-for="Namn" class="form-control" />
+                    <span asp-validation-for="Namn" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDatum" class="control-label"></label>
+                    <input asp-for="StartDatum" class="form-control" />
+                    <span asp-validation-for="StartDatum" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SlutDatum" class="control-label"></label>
+                    <input asp-for="SlutDatum" class="form-control" />
+                    <span asp-validation-for="SlutDatum" class="text-danger"></span>
+                </div>
             </div>
             <div class="col-12">
                 <div class="row colpadding">
@@ -53,7 +66,7 @@
                         <div class="col-4 center">
                             Till
                         </div>
-                    </div>                    
+                    </div>
                     @foreach (var item in @Model.Aktiviteter.OrderBy(o => o.StartDatum))
                     {
                         <listdivision class="row">
@@ -69,22 +82,23 @@
                         </listdivision>
                     }
                 </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="Beskrivning" class="control-label"></label>
-                <input asp-for="Beskrivning" class="form-control" />
-                <span asp-validation-for="Beskrivning" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Skapa" class="btn btn-primary" />
+                <div class="form-group">
+                    <label asp-for="Beskrivning" class="control-label"></label>
+                    <input asp-for="Beskrivning" class="form-control" />
+                    <span asp-validation-for="Beskrivning" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Skapa" class="btn btn-primary" />
+                </div>                
+                <div>
+                    <a asp-controller="moduler" asp-action="Details" asp-route-id="@Model.ModulId">Tillbaka</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

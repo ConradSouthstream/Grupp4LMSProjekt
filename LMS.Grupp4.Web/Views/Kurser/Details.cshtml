@@ -34,12 +34,12 @@
                 </div>
             </div>
             <div class="row titlecardbox justify-content-center pad-0">
-                <div class="col-7 topbar rounded">
+                <div class="col-md-7 topbar rounded">
                     <h2 class="center">
                         @Html.DisplayNameFor(model => model.Beskrivning)
                     </h2>
                 </div>
-                <div class="col-7 card card-body">
+                <div class="col-md-7 card card-body">
                     <div class="center">
                         @Html.DisplayFor(model => model.Beskrivning)
                     </div>
@@ -47,7 +47,9 @@
             </div>
             <div class="row">
                 <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+                <a class="btn btn-mhm btn-lg" asp-controller="kurser" asp-action="Delete" asp-route-id="@Model.Id">Radera @Model.Namn</a>
                 <a class="btn btn-mhm btn-lg" asp-controller="moduler" asp-action="Create" asp-route-id="@Model.Id">Skapa ny Modul</a>
+
             </div>
         </div>
     </div>
@@ -200,6 +202,7 @@
                                 </div>
                                 @foreach (var aktivitet in item.Aktiviteter.OrderBy(aktivitet => aktivitet.StartDatum))
                                 {
+                                    
                                     <div class="row">
                                         <div class="col pad-2">
                                             <a class="center" asp-controller="aktivitet" asp-action="Details" asp-route-id="@aktivitet.Id">
@@ -224,6 +227,9 @@
 
                                             </status>
                                         </div>
+                                    </div>                                    
+                                    <div>
+                                         Typ: @aktivitet.AktivitetTyp.Namn
                                     </div>
                                 }
                             </div>

@@ -120,7 +120,8 @@ namespace LMS.Grupp4.Web.Controllers
                 return NotFound();
             }
             var modul = await _context.Moduler.Include(m=>m.Kurs)
-                .Include(c => c.Aktiviteter)            
+                .Include(c => c.Aktiviteter)
+                .ThenInclude(a => a.AktivitetTyp)                
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var kurs = _context.Kurser.Where(k => k.Id == modul.KursId).FirstOrDefault();
@@ -145,12 +146,12 @@ namespace LMS.Grupp4.Web.Controllers
             //Annars ta kursens startdatum.
             DateTime SenasteModulDatum;
             if (kurs.Moduler.Any())
-            { SenasteModulDatum = kurs.Moduler.Max(m => m.SlutDatum); }
+            { SenasteModulDatum = kurs.Moduler.Max(m => m.SlutDatum).AddDays(1); }
             else { SenasteModulDatum = kurs.StartDatum; }
 
             var model = new Modul
             {   
-                StartDatum = SenasteModulDatum.AddDays(1),
+                StartDatum = SenasteModulDatum,
                 SlutDatum = SenasteModulDatum.AddDays(6),
                 GetKursNamn = GetKursNamn(),                
                 Kurs = kurs,
@@ -282,7 +283,9 @@ namespace LMS.Grupp4.Web.Controllers
             var modul = await _context.Moduler.FindAsync(id);
             _context.Moduler.Remove(modul);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            TempData["message"] = $"Har raderat modul: {modul.Namn}";
+            TempData["typeOfMessage"] = TypeOfMessage.Info;
+            return RedirectToAction(nameof(Details), "Kurser", new { Id = modul.KursId });
         }
 
         private bool ModulExists(int id)

@@ -59,6 +59,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .ThenInclude(e => e.Anvandare)
                 .Include(c => c.Moduler)
                 .ThenInclude(c => c.Aktiviteter)
+                .ThenInclude(c => c.AktivitetTyp)
                 .FirstOrDefaultAsync(m => m.Id == id);
             var dokument = await _context.Dokument.Include(e=>e.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
@@ -249,6 +250,8 @@ namespace LMS.Grupp4.Web.Controllers
             var kurs = await _context.Kurser.FindAsync(id);
             _context.Kurser.Remove(kurs);
             await _context.SaveChangesAsync();
+            TempData["message"] = $"Har raderat kurs: {kurs.Namn}";
+            TempData["typeOfMessage"] = TypeOfMessage.Info;
             return RedirectToAction(nameof(Index));
         }
 

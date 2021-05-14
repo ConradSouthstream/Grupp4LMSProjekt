@@ -78,7 +78,7 @@ namespace LMS.Grupp4.Web.Controllers
                 //Annars ta modulen startdatum.
                 DateTime SenasteAktivitetDatum;
                 if (modul.Aktiviteter.Any())
-                { SenasteAktivitetDatum = modul.Aktiviteter.Max(m => m.SlutDatum); }
+                { SenasteAktivitetDatum = modul.Aktiviteter.Max(m => m.SlutDatum).AddDays(1); }
                 else { SenasteAktivitetDatum = modul.StartDatum; }
 
                 if (modul != null)
@@ -92,7 +92,7 @@ namespace LMS.Grupp4.Web.Controllers
                 viewModel.Aktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(viewModel.ModulId);
                 // Sätt upp startvärden för kalendrar
                 DateTime dtNow = DateTime.Now;
-                viewModel.StartDatum = SenasteAktivitetDatum.AddDays(1);
+                viewModel.StartDatum = SenasteAktivitetDatum;
                 viewModel.SlutDatum = SenasteAktivitetDatum.AddDays(2);
 
                 // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
@@ -266,6 +266,8 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteAktivitet(int? Id, string AktivitetNamn)
         {
+            Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(Id.Value);
+            AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
             if (Id.HasValue)
             {
                 try
@@ -275,23 +277,21 @@ namespace LMS.Grupp4.Web.Controllers
                     if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
                     {// Aktiviteten är raderad
 
-                        TempData["message"] = $"Raderade aktiviteten {AktivitetNamn}";
+                        TempData["message"] = $"Har raderat aktiviteten: {AktivitetNamn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
 
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                     }
                     else
                     {// Det gick inte radera aktiviteten
 
-                        Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(Id.Value);
+                        
                         if (aktivitet != null)
-                        {
-                            AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
-
+                        { 
                             ViewBag.Message = "Det gick inte radera aktiviteten";
                             ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
 
-                            return View(nameof(Delete), viewModel);
+                            return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                         }
                     }
                 }
@@ -304,7 +304,7 @@ namespace LMS.Grupp4.Web.Controllers
             TempData["message"] = "Det gick inte radera aktiviteten";
             TempData["typeOfMessage"] = TypeOfMessage.Error;
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
         }
         private IEnumerable<SelectListItem> GetDokumentTypNamn()
 
