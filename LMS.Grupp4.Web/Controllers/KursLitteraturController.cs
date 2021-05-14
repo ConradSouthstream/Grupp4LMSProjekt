@@ -525,7 +525,7 @@ namespace LMS.Grupp4.Web.Controllers
 
 
         /// <summary>
-        /// Async action som skapar en ny författareny litteratur
+        /// Async action som skapar en ny författare
         /// </summary>
         /// <param name="model">Information om nya författern från view</param>
         /// <returns></returns>
@@ -545,7 +545,7 @@ namespace LMS.Grupp4.Web.Controllers
                         TempData["message"] = $"Har skapat författare {model.ForNamn} {model.EfterNamn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
 
-                        return RedirectToAction("SearchLitteratur");
+                        return RedirectToAction("EditLitteratur", new { id = model.LitteraturId});
                     }
                 }
             }
