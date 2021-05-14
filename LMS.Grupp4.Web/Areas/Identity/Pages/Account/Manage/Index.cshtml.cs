@@ -34,20 +34,25 @@ namespace LMS.Grupp4.Web.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Telefonnummer")]
             public string PhoneNumber { get; set; }
+            [Display(Name = "Avatar")]
+            public string Avatar { get; set; }
         }
+
 
         private async Task LoadAsync(Anvandare user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var avatar = user.Avatar;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Avatar = avatar
             };
         }
 
@@ -88,8 +93,10 @@ namespace LMS.Grupp4.Web.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            user.Avatar = Input.Avatar;
+            await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Din profil har uppdaterats";
             return RedirectToPage();
         }
     }
