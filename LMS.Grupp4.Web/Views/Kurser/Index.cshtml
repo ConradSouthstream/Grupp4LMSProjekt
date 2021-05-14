@@ -55,10 +55,10 @@
                 <div class="col-4 border border-right-0">
                     <div class="row center">
                         <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Kurs.Id">Editera</a>
-                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Kurs.Id">Detaljer</a>                        
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Kurs.Id">Detaljer</a>
                         <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Kurs.Id)">Mera</button>
-                        <label asp-for="@item.IsTeacher" class="checkbox-inline">Lärare</label>
-                        <input asp-for="@item.IsTeacher" class="checkbox-inline"/>
+                        <input type="button" name="btnRegKurs" class="btn btn-mhm btn-sm" value="@(item.IsTeacher? "Lärare" : "Lägg till")"
+                               onclick="RegKurs(this, '@item.Kurs.Id', @item.IsTeacher.ToString().ToLower())" />
                     </div>
                 </div>
                 <div class="col-2 border">
@@ -136,8 +136,33 @@
             </div>
         }
     </div>
-    <div >
-        button
-    </div>
+
 </div>
+
+@section Scripts
+{
+    <script>
+        function RegKurs(obj, id, isTeacherOnThisKurs) {
+            var $this = $(obj);
+            var url = "/kurser/";
+            if (isTeacherOnThisKurs)
+                url += "removelarare?kursId=" + id;
+            else
+                url += "addlarare?kursId=" + id;
+
+            console.log("url:" + url);
+            $.ajax({
+                type: "post",
+                url: url,
+                success: function () {
+                    console.log("Success : " + $this);
+                    location.reload();
+                },
+                error: function () {
+                    alert("Somehing got wrong");
+                }
+            });
+        }
+    </script>
+}
 

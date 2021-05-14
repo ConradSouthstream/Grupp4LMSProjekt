@@ -60,16 +60,39 @@ namespace LMS.Grupp4.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(List<KursListViewModel> model)
+        public async Task<IActionResult> AddLarare(string kursId)
         {
-            for(int i=0; i< model.Count; i++)
+            if (int.TryParse(kursId, out int iKursId))
             {
-                if (model[i].IsTeacher)
+                var userId = _userManager.GetUserId(this.User);
+                var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+                _context.AnvandareKurser.Add(new AnvandareKurs
                 {
+                    Anvandare = user,
+                    Kurs = await _uow.KursRepository.GetKursAsync(iKursId)
+                });
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
 
+        [HttpPost]
+        public IActionResult RemoveLarare(string kursId)
+        {
+            if (int.TryParse(kursId, out int iKursId))
+            {
+                var userId = _userManager.GetUserId(this.User);
+                //var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+
+                //var kurs = await _uow.KursRepository.GetKursAsync(iKursId);
+                var anvKurs = _context.AnvandareKurser.Where(k => k.KursId == iKursId && k.AnvandareId == userId).FirstOrDefault();
+                if (anvKurs != null)
+                {
+                    _context.AnvandareKurser.Remove(anvKurs);
+                    _context.SaveChanges();
                 }
             }
-            return View();
+            return Ok();
         }
 
         public async Task<IActionResult> Details(int? id)
