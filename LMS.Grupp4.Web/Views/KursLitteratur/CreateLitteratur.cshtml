@@ -1,0 +1,62 @@
+﻿@model LMS.Grupp4.Core.ViewModels.KursLitteratur.KursLitteraturEditLitteraturViewModel
+
+@{
+    ViewData["Title"] = "Skapa ny Litteratur";
+}
+
+<h1>Skapa ny Litteratur</h1>
+
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="CreateLitteratur">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label for="AmneId" class="control-label">Ämne</label>
+                @Html.DropDownList("AmneId", Model.Amnen, new { @class = "form-control" })
+                <span asp-validation-for="AmneId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="NivaId" class="control-label">Nivå</label>
+                @Html.DropDownList("NivaId", Model.Nivaer, new { @class = "form-control" })
+                <span asp-validation-for="NivaId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Titel" class="control-label"></label>
+                <input asp-for="Titel" class="form-control" />
+                <span asp-validation-for="Titel" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UtgivningsDatum" class="control-label"></label>
+                <input asp-for="UtgivningsDatum" class="form-control" />
+                <span asp-validation-for="UtgivningsDatum" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Beskrivning" class="control-label"></label>
+                <input asp-for="Beskrivning" class="form-control" />
+                <span asp-validation-for="Beskrivning" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Skapa litteratur" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

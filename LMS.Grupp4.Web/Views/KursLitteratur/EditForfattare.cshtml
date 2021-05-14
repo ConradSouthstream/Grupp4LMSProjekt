@@ -1,0 +1,55 @@
+﻿@model LMS.Grupp4.Core.ViewModels.KursLitteratur.KursLitteraturEditForfattareViewModel
+
+@{
+    ViewData["Title"] = "Editera Forfattare";
+}
+
+<h1>Editera Forfattare</h1>
+
+@{ await Html.RenderPartialAsync("_MessageView"); }
+
+@if (Model.NoForfattare == false)
+{
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="EditForfattare">
+                <input type="hidden" id="ForfatterId" name="ForfatterId" value="@Model.ForfatterId" />
+                <input type="hidden" id="LitteraturId" name="LitteraturId" value="@Model.LitteraturId" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="ForNamn" class="control-label"></label>
+                    <input asp-for="ForNamn" class="form-control" />
+                    <span asp-validation-for="ForNamn" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EfterNamn" class="control-label"></label>
+                    <input asp-for="EfterNamn" class="form-control" />
+                    <span asp-validation-for="EfterNamn" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="FodelseDatum" class="control-label"></label>
+                    <input asp-for="FodelseDatum" class="form-control" />
+                    <span asp-validation-for="FodelseDatum" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Uppdatera" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            Hittade inte författaren
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
