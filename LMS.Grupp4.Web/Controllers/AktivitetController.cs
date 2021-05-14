@@ -19,6 +19,7 @@ namespace LMS.Grupp4.Web.Controllers
 {
     public class AktivitetController : BaseController
     {
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Konstruktor
@@ -26,8 +27,7 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-               private readonly ApplicationDbContext _context;
-
+        /// <param name="context">Databas context</param>
         public AktivitetController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context) :
             base(uow, mapper, userManager)
         {

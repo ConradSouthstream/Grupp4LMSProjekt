@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -21,6 +22,7 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly UserManager<Anvandare> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IPasswordHasher<Anvandare> passwordHasher;
+        private readonly IConfiguration config;
         private readonly IUnitOfWork uow;
         private readonly SignInManager<Anvandare> signInManager;
 
@@ -28,6 +30,7 @@ namespace LMS.Grupp4.Web.Controllers
                                SignInManager<Anvandare> signInManager,
                                UserManager<Anvandare> userManager,
                                RoleManager<IdentityRole> roleManager,
+                               IConfiguration config,
                                IPasswordHasher<Anvandare> passwordHasher)
         {
             this.uow = unitOfWork;
@@ -36,6 +39,7 @@ namespace LMS.Grupp4.Web.Controllers
             this.roleManager = roleManager;
             this.passwordHasher = passwordHasher;
             db = context;
+            this.config = config;
         }
 
         public IActionResult Login()
@@ -61,6 +65,7 @@ namespace LMS.Grupp4.Web.Controllers
             return View(model);
         }
 
+
         [HttpPost]
         public async Task<IActionResult> Create(AdminCreateUserViewModel model)
         {
@@ -73,10 +78,11 @@ namespace LMS.Grupp4.Web.Controllers
                     ForNamn = model.ForNamn,
                     UserName = model.Email,
                     Email = model.Email,
-                    Avatar = model.Avatar
+                    PhoneNumber = model.Telefonnummer,
+                    Avatar = model.Avatar,
                 };
 
-                var result = await userManager.CreateAsync(user, model.Password);
+                var result = await userManager.CreateAsync(user, config["AdminPw"]);
                 if (result.Succeeded)
                 {
                     // user created: add it to role
@@ -102,6 +108,58 @@ namespace LMS.Grupp4.Web.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> CreateElev(string kursId)
+        {
+            // Hämta kurs med kursId
+            var kurs = await uow.KursRepository.GetKursAsync(int.Parse(kursId));
+            var model = new AdminCreateElevViewModel
+            {
+                KursId = kurs.Id,
+                Kurs = kurs
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateElev(AdminCreateElevViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new Anvandare
+                {
+                    EfterNamn = model.EfterNamn,
+                    ForNamn = model.ForNamn,
+                    UserName = model.Email,
+                    Email = model.Email,
+                    PhoneNumber = model.Telefonnummer,
+                    Avatar = model.Avatar
+                };
+
+                var result = await userManager.CreateAsync(user, config["AdminPw"]);
+                if (result.Succeeded)
+                {
+                    // Eleven skapad: lägg till den i bland avändare med rollen "Elev"
+                    await userManager.AddToRoleAsync(user, "Elev");
+
+                    // Lägg till användaren i kursen
+                    db.AnvandareKurser.Add(new AnvandareKurs
+                    {
+                        AnvandareId = user.Id,
+                        KursId = model.KursId
+                    });
+                    db.SaveChanges();
+                    await uow.KursRepository.SaveAsync();
+                    // Återvänd till kursens detaljsida
+                    return RedirectToAction("Details", "Kurser", new { id = $"{model.KursId}" });
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError("", error.Description);
+                }
+            }
+            return View(model);
+        }
+
         public async Task<IActionResult> Update(string id)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -113,19 +171,19 @@ namespace LMS.Grupp4.Web.Controllers
                 var role = await roleManager.FindByNameAsync(roleName);
                 var allRoles = await roleManager.Roles.ToListAsync();
                 var roles = new SelectList(allRoles, "Id", "Name");
-                //var allaKurser = await uow.KursRepository.GetAllKurserAsync();
-                //var kurser = new SelectList(allaKurser, "Id", "Namn");
+                var allaKurser = await uow.KursRepository.GetAllKurserAsync();
+                var kurser = new SelectList(allaKurser, "Id", "Namn");
 
                 var model = new AdminCreateUserViewModel
                 {
                     ForNamn = user.ForNamn,
                     EfterNamn = user.EfterNamn,
                     Email = user.Email,
+                    Telefonnummer = user.PhoneNumber,
                     Avatar = user.Avatar,
                     RoleId = role.Id,
                     Roles = roles,
-                    //KursId = kurs.KursId,
-                    //Kurser = kurser
+                    Kurser = kurser
                 };
 
                 return View(model);
@@ -143,18 +201,14 @@ namespace LMS.Grupp4.Web.Controllers
                 if (!string.IsNullOrEmpty(model.Email))
                     user.Email = model.Email;
                 else
-                    ModelState.AddModelError("", "Email cannot be empty");
-
-                if (!string.IsNullOrEmpty(model.Password))
-                    user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
-                else
-                    ModelState.AddModelError("", "Password cannot be empty");
+                    ModelState.AddModelError("", "Email måste ha ett värde");
 
                 if (!string.IsNullOrEmpty(model.Email))
                 {
                     user.ForNamn = model.ForNamn;
                     user.EfterNamn = model.EfterNamn;
                     user.Email = model.Email;
+                    user.PhoneNumber = model.Telefonnummer;
                     user.Avatar = model.Avatar;
                  
                     IdentityResult result = await userManager.UpdateAsync(user);

@@ -14,6 +14,7 @@ using LMS.Grupp4.Core.IRepository;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using LMS.Grupp4.Core.ViewModels.KursViewModel;
 using LMS.Grupp4.Core.Enum;
 
 namespace LMS.Grupp4.Web.Controllers
@@ -41,9 +42,70 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Kurs
         public async Task<IActionResult> Index()
         {
+            var userId = _userManager.GetUserId(this.User);
+            //var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+            var myKurser = await _uow.AnvandareRepository.GetKurserForAnvandareAsync(userId);
+            //var myKurser = user.Kurser;
+            var allKurser = new List<Kurs>();
+            var model = new List<KursListViewModel>();
+            allKurser = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
+            for (int i = 0; i < allKurser.Count; i++)
+            {
+                model.Add(new KursListViewModel
+                {
+                    Kurs = allKurser[i],
+                    IsTeacher = myKurser?.Contains(allKurser[i]) ?? false
+                });
+            }
             GetMessageFromTempData();
-            var kurs = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
-            return View(kurs);
+            return View(model);
+        }
+
+        /// <summary>
+        /// Lägger till aktuell användare som lärare på en kurs med kursId
+        /// i tabellen AnvandareKurs
+        /// </summary>
+        /// <param name="kursId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> AddLarare(string kursId)
+        {
+            if (int.TryParse(kursId, out int iKursId))
+            {
+                var userId = _userManager.GetUserId(this.User);
+                var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+                _context.AnvandareKurser.Add(new AnvandareKurs
+                {
+                    Anvandare = user,
+                    Kurs = await _uow.KursRepository.GetKursAsync(iKursId)
+                });
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// Tar bort kopplingen för denna AnvandareKurs
+        /// </summary>
+        /// <param name="kursId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult RemoveLarare(string kursId)
+        {
+            if (int.TryParse(kursId, out int iKursId))
+            {
+                var userId = _userManager.GetUserId(this.User);
+                //var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+
+                //var kurs = await _uow.KursRepository.GetKursAsync(iKursId);
+                var anvKurs = _context.AnvandareKurser.Where(k => k.KursId == iKursId && k.AnvandareId == userId).FirstOrDefault();
+                if (anvKurs != null)
+                {
+                    _context.AnvandareKurser.Remove(anvKurs);
+                    _context.SaveChanges();
+                }
+            }
+            return Ok();
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -61,7 +123,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .ThenInclude(c => c.Aktiviteter)
                 .ThenInclude(c => c.AktivitetTyp)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var dokument = await _context.Dokument.Include(e=>e.Anvandare)
+            var dokument = await _context.Dokument.Include(e => e.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
             kurs.Dokument = dokument;
             if (kurs == null)
@@ -97,7 +159,7 @@ namespace LMS.Grupp4.Web.Controllers
             return File(bytes, "application/octet-stream", filename);
         }
 
-           
+
         public IActionResult Upload(int id)
         {
 
@@ -117,7 +179,7 @@ namespace LMS.Grupp4.Web.Controllers
             //{
             //    return NotFound();
             //}
-            upload.Anvandare =await _userManager.GetUserAsync(User);
+            upload.Anvandare = await _userManager.GetUserAsync(User);
             await m_UnitOfWork.DokumentRepository.Create(upload);
 
             await m_UnitOfWork.CompleteAsync();

@@ -32,7 +32,7 @@ namespace LMS.Grupp4.Data.Repositories
         /// Async metod som returnerar alla anvandare på en kurs
         /// </summary>
         /// <param name="iKursId">Kursens id</param>
-        /// <returns>Lis med användare på en kurs</returns>
+        /// <returns>Lista med användare på en kurs</returns>
         public async Task <List<Anvandare>> GetAnvandarePaKursAsync(int iKursId)
         {
             var anvandareKurs = await m_DbContext.AnvandareKurser
@@ -43,5 +43,22 @@ namespace LMS.Grupp4.Data.Repositories
 
             return anvandareKurs;
         }
+
+        /// <summary>
+        /// Async metod som returnerar alla kurser en användare har
+        /// </summary>
+        /// <param name="anvandareId"></param>
+        /// <returns>Lista med kurser en användare är kopplad till</returns>
+        public async Task<List<Kurs>> GetKurserForAnvandareAsync(string anvandareId)
+        {
+            var anvandareKurs = await m_DbContext.AnvandareKurser
+                .Include(k => k.Kurs)
+                .Where(a => a.AnvandareId == anvandareId)
+                .Select(k => k.Kurs)
+                .ToListAsync();
+
+            return anvandareKurs;
+        }
+
     }
 }

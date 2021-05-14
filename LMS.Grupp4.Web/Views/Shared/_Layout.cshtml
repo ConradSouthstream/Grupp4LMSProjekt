@@ -30,25 +30,38 @@
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Moduler" asp-action="Index">Moduler</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Aktivitet" asp-action="Index">Aktivitet</a>
-                        </li>
+                        @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Moduler" asp-action="Index">Moduler</a>
+                            </li>
+                        }
+
+                        @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Aktivitet" asp-action="Index">Aktivitet</a>
+                            </li>
+                        }
+
                         @if (signinManager.IsSignedIn(User) && User.IsInRole("Lärare"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Larare">Lärar Vyn</a>
                             </li>
                         }
+
                         @if (signinManager.IsSignedIn(User) && User.IsInRole("Elev"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Elev" asp-action="Index">Elev Vyn</a>
+                            </li>
+                        }
+
+                        @if (signinManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="KursLitteratur" asp-action="SearchLitteratur">Sök kurslitteratur</a>
                             </li>
                         }
                     </ul>
@@ -64,9 +77,9 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        @*<div class="container">
-            &copy; 2021 - LMS.Grupp4.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>*@
+        <div class="container">
+            &copy; 2021 - LMS.Grupp4.Web
+        </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
