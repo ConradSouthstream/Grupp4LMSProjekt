@@ -44,7 +44,7 @@ namespace LMS.Grupp4.Web.Controllers
         {
             var userId = _userManager.GetUserId(this.User);
             //var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
-            var myKurser = await _uow.AnvandareRepository.GetKurserForAnvandareAsync(userId);
+            var myKurser = await m_UnitOfWork.AnvandareRepository.GetKurserForAnvandareAsync(userId);
             //var myKurser = user.Kurser;
             var allKurser = new List<Kurs>();
             var model = new List<KursListViewModel>();
@@ -73,11 +73,11 @@ namespace LMS.Grupp4.Web.Controllers
             if (int.TryParse(kursId, out int iKursId))
             {
                 var userId = _userManager.GetUserId(this.User);
-                var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+                var user = await m_UnitOfWork.ElevRepository.GetAnvandareAsync(userId);
                 _context.AnvandareKurser.Add(new AnvandareKurs
                 {
                     Anvandare = user,
-                    Kurs = await _uow.KursRepository.GetKursAsync(iKursId)
+                    Kurs = await m_UnitOfWork.KursRepository.GetKursAsync(iKursId)
                 });
                 _context.SaveChanges();
             }
