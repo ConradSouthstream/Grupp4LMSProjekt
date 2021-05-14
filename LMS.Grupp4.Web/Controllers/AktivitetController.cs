@@ -58,7 +58,7 @@ namespace LMS.Grupp4.Web.Controllers
             if (id.HasValue)
             {
                 Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetIncludeKursAsync(id.Value);
-                var dokument = await _context.Dokument.Include(d => d.Anvandare)
+                var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d=>d.DokumentTyp)
                .Where(d => d.AktivitetId == aktivitet.Id).ToListAsync();
                 aktivitet.Dokument = dokument;
                 AktivitetDetailsViewModel viewModel = m_Mapper.Map<AktivitetDetailsViewModel>(aktivitet);
@@ -318,8 +318,15 @@ namespace LMS.Grupp4.Web.Controllers
         }
         public IActionResult Upload(int id)
         {
+            var aktivitet = _context.Aktiviteter
+                .Include(ak=>ak.AktivitetTyp)
+                .Where(ak => ak.Id == id).FirstOrDefault();
+            
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == aktivitet.AktivitetTyp.Namn).FirstOrDefault();
             var Dokument = new Dokument
             {
+
+                DokumentTypId = dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 AktivitetId = id
             };

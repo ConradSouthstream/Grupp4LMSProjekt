@@ -72,22 +72,24 @@
         </div>
         }
 
-    <a asp-action="UploadAktivity" asp-route-id="@Model.AktivitetId" type="button" class="btn btn-mhm btn-sm">Ladda upp Filer</a>
+    <a asp-action="UploadAktivity" asp-route-id="@Model.AktivitetId" type="button" class="btn btn-mhm btn-sm">Lämna In</a>
 <div class="row">
     <table class="table table-responsive table-bordered">
         <tr class="table-primary">
+            <th>DokumentsTyp</th>
             <th>Aktivitetdokumentens Namn</th>
             <th>Uppladdnings Datum</th>
             <th>Anvandare</th>
         </tr>
         @foreach (Dokument file in Model.Dokument)
         {
-            <tr>
-                <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
-                <td>@file.UppladdningsDatum</td>
-                <td>@file.Anvandare.FullNamn</td>
-                <td><a href="/Elev/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-            </tr>
+    <tr>
+        <td>@file.DokumentTyp.Namn</td>
+        <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+        <td>@file.UppladdningsDatum</td>
+        <td>@file.Anvandare.FullNamn</td>
+        <td><a href="/Elev/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+    </tr>
 
 
         }

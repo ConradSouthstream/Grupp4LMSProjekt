@@ -43,8 +43,10 @@ namespace LMS.Grupp4.Web.Controllers
         }
         public IActionResult Upload(int id)
         {
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Generalla Information").FirstOrDefault();
             var Dokument = new Dokument
             {
+                DokumentTypId = dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 KursId = id
             };
@@ -87,7 +89,7 @@ namespace LMS.Grupp4.Web.Controllers
             }
             var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
 
-            var dokument = await _context.Dokument.Include(d => d.Anvandare)
+            var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d=>d.DokumentTyp)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
 
             kurs.Dokument = dokument;
@@ -227,8 +229,10 @@ namespace LMS.Grupp4.Web.Controllers
         }
         public IActionResult UploadDokument(int id)
         {
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Modul Information").FirstOrDefault();
             var Dokument = new Dokument
             {
+                DokumentTypId = dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 ModulId = id
             };
@@ -269,8 +273,11 @@ namespace LMS.Grupp4.Web.Controllers
         }
         public IActionResult UploadAktivity(int id)
         {
+
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Inlämning").FirstOrDefault();
             var Dokument = new Dokument
             {
+                DokumentTypId=dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn2(),
                 AktivitetId = id
             };
@@ -312,7 +319,7 @@ namespace LMS.Grupp4.Web.Controllers
                 if (modul != null)
                 {
                     // Mappa Modul till ViewModel
-                    var dokument = await _context.Dokument.Include(d => d.Anvandare)
+                    var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d=>d.DokumentTyp)
                         .Where(d => d.ModulId == modul.Id).ToListAsync();
                     modul.Dokument = dokument;
                     viewModel = m_Mapper.Map<ModulElevDetailsViewModel>(modul);
@@ -367,7 +374,7 @@ namespace LMS.Grupp4.Web.Controllers
                 {
                     var adminList = await m_UserManager.GetUsersInRoleAsync("Lärare");
                     var currentUser = await m_UserManager.GetUserAsync(User);
-                    var dokument = await _context.Dokument.Include(d => d.Anvandare)
+                    var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d=>d.DokumentTyp)
                        .Where(d => d.AktivitetId == aktivitet.Id && d.Anvandare== currentUser ||(adminList.Contains(d.Anvandare)&&d.AktivitetId==aktivitet.Id)).ToListAsync();
                     aktivitet.Dokument = dokument;
                     var modul = aktivitet.Modul;

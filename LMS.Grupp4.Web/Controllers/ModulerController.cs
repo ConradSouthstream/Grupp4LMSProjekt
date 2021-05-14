@@ -38,8 +38,10 @@ namespace LMS.Grupp4.Web.Controllers
 
         public IActionResult Upload(int id)
         {
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Modul Information").FirstOrDefault();
             var Dokument = new Dokument
             {
+                DokumentTypId = dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 ModulId = id
                
@@ -67,7 +69,6 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            
             upload.Anvandare = await _userManager.GetUserAsync(User);
             // var dokument = m_Mapper.Map<Dokument>(upload);
             await m_UnitOfWork.DokumentRepository.Create(upload);
@@ -118,7 +119,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var kurs = _context.Kurser.Where(k => k.Id == modul.KursId).FirstOrDefault();
-            var dokument = await _context.Dokument.Include(d=>d.Anvandare)
+            var dokument = await _context.Dokument.Include(d=>d.Anvandare).Include(d=>d.DokumentTyp)
                 .Where(d => d.ModulId == modul.Id).ToListAsync();
             modul.KursId = kurs.Id;                
             modul.Dokument = dokument;

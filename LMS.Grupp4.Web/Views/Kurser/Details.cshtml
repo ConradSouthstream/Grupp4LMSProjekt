@@ -228,41 +228,35 @@
                 </div>
             }
         </div>
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-mhm btn-sm">Ladda upp Filer</a>
+<div class="row">
+        <table class="table table-responsive table-bordered" border="1">
+        @*<table class="table table-hover responsive nowrap" style="width:100%">*@
+            <tr class="table-primary">
+                <th>Dokuments Typ</th>
+                <th>Kursdokumentens Namn</th>
+                <th>Uppladdnings Datum</th>
+                <th>Anvandare</th>
+            </tr>
+            @foreach (Dokument file in Model.Dokument)
+            {
+
+                <tr>
+
+                    <td>@file.DokumentTyp.Namn</td>
+                    <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                    <td>@file.UppladdningsDatum</td>
+                    <td>@file.Anvandare.FullNamn</td>
+                    <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+                </tr>
+
+
+            }
+        </table>
+    </div>
     </div>
 </div>
 
-<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-mhm btn-sm">Ladda upp Filer</a>
-@*<div id="endButtons">
-    <button id="NoPrint" type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#UploadModalCenter">Confirm</button>
-</div>
-
-  @await Html.PartialAsync("/views/shared/popup.cshtml")*@
-
-@*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">*@
-<div class="row">
-    <table class="table table-responsive table-bordered">
-        <tr class="table-primary">
-            <th>Kursdokumentens Namn</th>
-            <th>DokumentsTyp</th>
-            <th>Uppladdnings Datum</th>
-            <th>Anvandare</th>
-        </tr>
-        @foreach (Dokument file in Model.Dokument)
-        {
-
-    <tr>
-
-        <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
-        <td>@file.DokumentTyp</td>
-        <td>@file.UppladdningsDatum</td>
-        <td>@file.Anvandare.FullNamn</td>
-        <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-    </tr>
-
-
-        }
-    </table>
-</div>
 
 
 <!-- Modal -->

@@ -53,7 +53,7 @@ namespace LMS.Grupp4.Web
             {
                 ProgressBar =true,
                 PositionClass=ToastPositions.TopRight,
-                PreventDuplicates=true,
+                PreventDuplicates=true,               
             } );
 
             services.AddDatabaseDeveloperPageExceptionFilter();
