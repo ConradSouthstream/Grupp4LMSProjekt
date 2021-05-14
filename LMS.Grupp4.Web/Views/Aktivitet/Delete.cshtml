@@ -8,54 +8,46 @@
 
 @if (Model != null)
 {
-    <h3>Vill ni radera aktiviteten?</h3>
-    <div>
-        <h4>Modul: @Model.ModulNamn - (@Model.ModulStartDatum.ToShortDateString() till @Model.ModulSlutDatum.ToShortDateString())</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Id)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Id)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Namn)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Namn)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StartDatum)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StartDatum)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.SlutDatum)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.SlutDatum)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Beskrivning)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Beskrivning)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.AktivitetTypNamn)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.AktivitetTypNamn)
-            </dd>
-        </dl>
+    <h1 class="center">Radera Aktiviteten</h1>
 
-        <form asp-action="DeleteAktivitet">
-            <input type="hidden" value="@Model.Id" id="AktivitetId" name="AktivitetId" />
-            <input type="hidden" value="@Model.Namn" id="AktivitetNamn" name="AktivitetNamn" />
-            <input type="submit" value="Radera" class="btn btn-danger" />
-        </form>
+    <h3 class="center">Är du verkligen säker på att du vill göra det här?</h3>
+    <div>
+        <div class="row titlecardbox justify-content-center pad-0">
+            <div class="card topbar titlecardbox">
+                <h1 class="center">@Model.Namn</h1>
+            </div>
+        </div>
+        <div class="row titlecardbox justify-content-center pad-0">
+            <div class="card border titlecardbox">
+                <h5 class="pad-0 margin-3 center">
+                    Från @Html.DisplayFor(model => model.StartDatum)
+                </h5>
+                <h5 class="pad-0 margin-3 center">
+                    Till @Html.DisplayFor(model => model.SlutDatum)
+                </h5>
+            </div>
+        </div>
+        <div class="rows titlecardbox center pad-0">
+            <div class="col-md-6 topbar rounded">
+                <h2 class="center">
+                    @Html.DisplayNameFor(model => model.Beskrivning)
+                </h2>
+            </div>
+            <div class="col-md-6 card card-body">
+                <div class="center">
+                    @Html.DisplayFor(model => model.Beskrivning)
+                </div>
+            </div>
+        </div>
+        <div class="rows center">
+            <form asp-action="DeleteAktivitet">
+                <input type="hidden" value="@Model.Id" id="Id" name="Id" />
+                <input type="hidden" value="@Model.Namn" id="AktivitetNamn" name="AktivitetNamn" />
+                <input type="submit" value="Radera" class="btn-lg btn-danger" />
+            </form>
+            <br />
+            <a asp-controller="aktivitet" asp-action="Details" asp-route-id="@Model.Id" class="center btn-mhm btn-lg">Tillbaka till Modulen</a>
+        </div>
     </div>
 }
 else
@@ -64,8 +56,3 @@ else
         Hittar inte sökt aktivitet
     </div>
 }
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

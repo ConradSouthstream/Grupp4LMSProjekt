@@ -19,6 +19,9 @@ namespace LMS.Grupp4.Core.ViewModels.Elev
         [DisplayName("Namn")]
         public string FullNamn => $"{ForNamn} {EfterNamn}";
 
+         [DisplayName("Epost")]
+        public string Email { get; set; }
+
         //public ICollection<Kurs> Kurser { get; set; }
 
         /// <summary>

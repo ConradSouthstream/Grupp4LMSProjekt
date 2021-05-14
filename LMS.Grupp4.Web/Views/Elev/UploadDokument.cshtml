@@ -3,19 +3,18 @@
     ViewData["Title"] = "UploadDokument";
 }
 
-<h1>Index</h1>
 
 <h4>Dokument</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Upload" enctype="multipart/form-data">
+        <form asp-action="UploadDokument" enctype="multipart/form-data">
             <input hidden="hidden" asp-for="ModulId" />
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="DokumentTypId" class="control-label"></label>
-                <select id="select" asp-for="DokumentTypId" asp-items="Model.GetDokumentTypNamn" class="form-control"></select>
+                <input type="hidden" asp-for="DokumentTypId" />
+
             </div>
             <div class="form-group">
                 <label asp-for="Namn" class="control-label"></label>
@@ -42,7 +41,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">TillBaka till kurs</a>
 </div>
 
 @section Scripts {

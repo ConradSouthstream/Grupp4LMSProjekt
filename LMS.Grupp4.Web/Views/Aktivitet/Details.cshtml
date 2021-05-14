@@ -24,6 +24,12 @@
     </div>
 </div>
 <div class="row titlecardbox justify-content-center pad-0">
+    <listdivision class="rows titlecardbox center">
+        <h5 class="center">AktivitetsTyp:</h5>
+        <h3 class="center">@Model.AktivitetTypNamn</h3>
+    </listdivision>
+</div>
+<div class="row titlecardbox justify-content-center pad-0">
     <div class="card border titlecardbox">
         <h5 class="pad-0 margin-3 center">
             Från @Html.DisplayFor(model => model.StartDatum)
@@ -34,12 +40,12 @@
     </div>
 </div>
 <div class="row titlecardbox justify-content-center pad-0">
-    <div class="col-7 topbar rounded">
+    <div class="col-md-7 topbar rounded">
         <h2 class="center">
             @Html.DisplayNameFor(model => model.Beskrivning)
         </h2>
     </div>
-    <div class="col-7 card card-body">
+    <div class="col-md-7 card card-body">
         <div class="center">
             @Html.DisplayFor(model => model.Beskrivning)
         </div>
@@ -47,42 +53,39 @@
 </div>
 <div class="row">
     <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+    <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Delete" asp-route-id="@Model.Id">Radera @Model.Namn</a>
 </div>
-    
-<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
-<dl class="row">
 
-    @*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">*@
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+<div>
+    
         <table class="table table-responsive table-bordered">
-            <tr>
+            <tr class="table-primary">
+                <th>Dokuments Typ</th>
                 <th>Dokuments Namn</th>
                 <th>Uppladdnings Datum</th>
                 <th>Anvandare</th>
             </tr>
             @foreach (Dokument file in Model.Dokument)
             {
-                <tr>
-                    <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
-                    <td>@file.UppladdningsDatum</td>
-                    <td>@file.Anvandare.FullNamn</td>
-                    <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-                </tr>
+            <tr>
+                <td>@file.DokumentTyp.Namn</td>
+                <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                <td>@file.UppladdningsDatum</td>
+                <td>@file.Anvandare.FullNamn</td>
+                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+            </tr>
 
 
             }
         </table>
-
-    @*</div>*@
-
-
-
-</dl>
+</div>
 
 
 }
 else
 {
-<div class="alert alert-danger" role="alert">
-    Hittar inte sökt aktivitet
-</div>
+    <div class="alert alert-danger" role="alert">
+        Hittar inte sökt aktivitet
+    </div>
 }

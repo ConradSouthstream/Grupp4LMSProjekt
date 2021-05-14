@@ -37,11 +37,12 @@
         
     </dl>
 </div>
-<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-mhm btn-sm">Ladda upp Filer</a>
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <table class="table table-responsive table-bordered">
-        <tr>
+        <tr class="table-primary">
+            <th>Dokuments Typ</th>
             <th>Dokuments Namn</th>
             <th>Uppladdnings Datum</th>
             <th>Anvandare</th>
@@ -49,12 +50,13 @@
         @foreach (Dokument file in Model.Dokument)
         {
     <tr>
+        <td>@file.DokumentTyp.Namn</td>
         <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
         <td>@file.UppladdningsDatum</td>
         <td>@file.Anvandare.FullNamn</td>
         <td><a href="/Elev/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
     </tr>
-       
+
 
         }
     </table>

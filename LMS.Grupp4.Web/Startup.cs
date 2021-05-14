@@ -1,19 +1,26 @@
+using ClientNotifications;
+using ClientNotifications.ServiceExtensions;
 using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
 using LMS.Grupp4.Data;
+using LMS.Grupp4.Data.Hubs;
 using LMS.Grupp4.Data.MapperProfiles;
 using LMS.Grupp4.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Net.Http.Headers;
+using NToastNotify;
+using System.IO;
 
 namespace LMS.Grupp4.Web
 {
@@ -44,6 +51,12 @@ namespace LMS.Grupp4.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+            {
+                ProgressBar =true,
+                PositionClass=ToastPositions.TopRight,
+                PreventDuplicates=true,               
+            } );
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -60,7 +73,6 @@ namespace LMS.Grupp4.Web
             })
                  .AddRoles<IdentityRole>()
                  .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.AddControllersWithViews(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -69,10 +81,7 @@ namespace LMS.Grupp4.Web
 
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
-
-
             services.AddAutoMapper(typeof(MapperProfile));
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddHttpClient("KursLitteraturWebApiHttpClient", c =>
@@ -108,6 +117,7 @@ namespace LMS.Grupp4.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+           
 
             app.UseEndpoints(endpoints =>
             {

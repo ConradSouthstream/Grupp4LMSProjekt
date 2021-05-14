@@ -30,12 +30,12 @@
     </div>
 </div>
 <div class="row titlecardbox justify-content-center pad-0">
-    <div class="col-7 topbar rounded">
+    <div class="col-md-7 topbar rounded">
         <h2 class="center">
             @Html.DisplayNameFor(model => model.Beskrivning)
         </h2>
     </div>
-    <div class="col-7 card card-body">
+    <div class="col-md-7 card card-body">
         <div class="center">
             @Html.DisplayFor(model => model.Beskrivning)
         </div>
@@ -43,6 +43,7 @@
 </div>
 <div class="row">
     <a class="btn btn-mhm btn-lg" asp-controller="moduler" asp-action="Edit" asp-route-id="@Model.Id">Editera @Model.Namn</a>
+    <a class="btn btn-mhm btn-lg" asp-controller="moduler" asp-action="Delete" asp-route-id="@Model.Id">Radera @Model.Namn</a>
     <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Create" asp-route-id="@Model.Id">Skapa ny Aktivitet</a>
 </div>
 
@@ -89,6 +90,7 @@
                         <div class="center row">
                             <a class="btn btn-mhm btn-sm" asp-controller="aktivitet" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
                             <a class="btn btn-mhm btn-sm" asp-controller="aktivitet" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>
+                            <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
                         </div>
                     </div>
                     <div class="col-2 border">
@@ -97,28 +99,53 @@
                         </div>
                     </div>
                 </listdivision>
+                <div>
+                    <div id="@("collapse" + item.Id)" class="row collapse
+                 @(item.StartDatum < DateTime.Now && DateTime.Now < item.SlutDatum ? "show" : "")"
+                         data-parent="#accordion">
+                        <div class="col-md-5 pad-0">
+                            <h5 class="topbar corner-rounded">
+                                Beskrivning
+                            </h5>
+                            <div class="card card-body">
+                                @Html.DisplayFor(modelItem => item.Beskrivning)
+                            </div>
+                        </div>
+                        <div class="col-md-6 pad-0">
+                            <h5 class="topbar corner-rounded">
+                                Aktivitetstyp
+                            </h5>
+                            <div class="card card-body">
+                                @item.AktivitetTyp.Namn
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             }
         </div>
     </div>
 </div>
 
-<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-mhm btn-sm">Ladda upp Filer</a>
+@*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">*@
+<div class="row">
     <table class="table table-responsive table-bordered">
-        <tr>
+        <tr class="table-primary">
+            <th>DokumentsTyp</th>
             <th>Moduldokumentens Namn</th>
             <th>Uppladdnings Datum</th>
             <th>Anvandare</th>
         </tr>
         @foreach (Dokument file in Model.Dokument)
         {
-            <tr>
-                <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
-                <td>@file.UppladdningsDatum</td>
-                <td>@file.Anvandare.FullNamn</td>
-                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-            </tr>
+    <tr>
+        <td>@file.DokumentTyp.Namn</td>
+        <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+        <td>@file.UppladdningsDatum</td>
+        <td>@file.Anvandare.FullNamn</td>
+        <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+    </tr>
 
 
         }

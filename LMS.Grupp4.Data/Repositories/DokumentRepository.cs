@@ -55,9 +55,6 @@ namespace LMS.Grupp4.Data.Repositories
                     using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fs);
-                   // item.Anvandare = await _usermanager.GetUserAsync(User);
-              //  item.Anvandare = await _usermanager.GetUserAsync(User);
-
                     }
                     _dbContext.Dokument.Add(item);
                     _dbContext.SaveChanges();

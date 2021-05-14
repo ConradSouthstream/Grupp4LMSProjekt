@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using LMS.Grupp4.Core.Entities;
 
 namespace LMS.Grupp4.Core.Entities
 {
@@ -29,6 +30,7 @@ namespace LMS.Grupp4.Core.Entities
         [NotMapped]
         public bool IsLarare { get; set; } = false;
 
-      
+
+
     }
 }
