@@ -19,6 +19,8 @@ namespace LMS.Grupp4.Core.ViewModels.Admin
         [Required]
         [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")]
         public string Email { get; set; }
+
+        public string Telefonnummer { get; set; }
         public string Avatar { get; set; }
 
         [Required]

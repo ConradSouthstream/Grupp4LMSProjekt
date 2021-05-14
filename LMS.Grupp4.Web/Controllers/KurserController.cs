@@ -14,6 +14,7 @@ using LMS.Grupp4.Core.IRepository;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using LMS.Grupp4.Core.ViewModels.KursViewModel;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -40,8 +41,35 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Kurs
         public async Task<IActionResult> Index()
         {
-            var kurs = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
-            return View(kurs);
+            var userId = _userManager.GetUserId(this.User);
+            //var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+            var myKurser = await _uow.AnvandareRepository.GetKurserForAnvandareAsync(userId);
+            //var myKurser = user.Kurser;
+            var allKurser = new List<Kurs>();
+            var model = new List<KursListViewModel>();
+            allKurser = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
+            for (int i = 0; i < allKurser.Count; i++)
+            {
+                model.Add(new KursListViewModel
+                {
+                    Kurs = allKurser[i],
+                    IsTeacher = myKurser?.Contains(allKurser[i]) ?? false
+                });
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Index(List<KursListViewModel> model)
+        {
+            for(int i=0; i< model.Count; i++)
+            {
+                if (model[i].IsTeacher)
+                {
+
+                }
+            }
+            return View();
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -57,7 +85,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .Include(c => c.Moduler)
                 .ThenInclude(c => c.Aktiviteter)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var dokument = await _context.Dokument.Include(e=>e.Anvandare)
+            var dokument = await _context.Dokument.Include(e => e.Anvandare)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
             kurs.Dokument = dokument;
             if (kurs == null)
@@ -93,7 +121,7 @@ namespace LMS.Grupp4.Web.Controllers
             return File(bytes, "application/octet-stream", filename);
         }
 
-           
+
         public IActionResult Upload(int id)
         {
 
@@ -113,7 +141,7 @@ namespace LMS.Grupp4.Web.Controllers
             //{
             //    return NotFound();
             //}
-            upload.Anvandare =await _userManager.GetUserAsync(User);
+            upload.Anvandare = await _userManager.GetUserAsync(User);
             await _uow.DokumentRepository.Create(upload);
 
             await _uow.CompleteAsync();

@@ -78,10 +78,11 @@ namespace LMS.Grupp4.Web.Controllers
                     ForNamn = model.ForNamn,
                     UserName = model.Email,
                     Email = model.Email,
+                    PhoneNumber = model.Telefonnummer,
                     Avatar = model.Avatar,
                 };
 
-                var result = await userManager.CreateAsync(user, model.Password);
+                var result = await userManager.CreateAsync(user, config["AdminPw"]);
                 if (result.Succeeded)
                 {
                     // user created: add it to role
@@ -129,6 +130,7 @@ namespace LMS.Grupp4.Web.Controllers
                     ForNamn = model.ForNamn,
                     UserName = model.Email,
                     Email = model.Email,
+                    PhoneNumber = model.Telefonnummer,
                     Avatar = model.Avatar
                 };
 
@@ -169,19 +171,19 @@ namespace LMS.Grupp4.Web.Controllers
                 var role = await roleManager.FindByNameAsync(roleName);
                 var allRoles = await roleManager.Roles.ToListAsync();
                 var roles = new SelectList(allRoles, "Id", "Name");
-                //var allaKurser = await uow.KursRepository.GetAllKurserAsync();
-                //var kurser = new SelectList(allaKurser, "Id", "Namn");
+                var allaKurser = await uow.KursRepository.GetAllKurserAsync();
+                var kurser = new SelectList(allaKurser, "Id", "Namn");
 
                 var model = new AdminCreateUserViewModel
                 {
                     ForNamn = user.ForNamn,
                     EfterNamn = user.EfterNamn,
                     Email = user.Email,
+                    Telefonnummer = user.PhoneNumber,
                     Avatar = user.Avatar,
                     RoleId = role.Id,
                     Roles = roles,
-                    //KursId = kurs.KursId,
-                    //Kurser = kurser
+                    Kurser = kurser
                 };
 
                 return View(model);
@@ -199,18 +201,14 @@ namespace LMS.Grupp4.Web.Controllers
                 if (!string.IsNullOrEmpty(model.Email))
                     user.Email = model.Email;
                 else
-                    ModelState.AddModelError("", "Email cannot be empty");
-
-                if (!string.IsNullOrEmpty(model.Password))
-                    user.PasswordHash = passwordHasher.HashPassword(user, model.Password);
-                else
-                    ModelState.AddModelError("", "Password cannot be empty");
+                    ModelState.AddModelError("", "Email måste ha ett värde");
 
                 if (!string.IsNullOrEmpty(model.Email))
                 {
                     user.ForNamn = model.ForNamn;
                     user.EfterNamn = model.EfterNamn;
                     user.Email = model.Email;
+                    user.PhoneNumber = model.Telefonnummer;
                     user.Avatar = model.Avatar;
                  
                     IdentityResult result = await userManager.UpdateAsync(user);

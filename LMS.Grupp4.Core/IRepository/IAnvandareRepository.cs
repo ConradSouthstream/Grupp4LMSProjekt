@@ -12,5 +12,7 @@ namespace LMS.Grupp4.Core.IRepository
         /// <param name="iKursId">Kursens id</param>
         /// <returns>Lis med användare på en kurs</returns>
         Task<List<Anvandare>> GetAnvandarePaKursAsync(int iKursId);
+
+        Task<List<Kurs>> GetKurserForAnvandareAsync(string anvandareId);
     }
 }

@@ -1,5 +1,5 @@
-﻿@model IEnumerable<LMS.Grupp4.Core.Entities.Kurs>
-
+﻿@*@model IEnumerable<LMS.Grupp4.Core.Entities.Kurs>*@
+@model IEnumerable<LMS.Grupp4.Core.ViewModels.KursViewModel.KursListViewModel>
 @{
     ViewData["Title"] = "Index";
 }
@@ -13,66 +13,68 @@
 </div>
 <div class="col" id="accordion">
     <div class="row">
-        <Ctop class="col-3 topbar center border-right-0 corner-left">
-            @Html.DisplayNameFor(model => model.Namn)
+        <Ctop class="col-2 topbar center border-right-0 corner-left">
+            @Html.DisplayNameFor(model => model.Kurs.Namn)
         </Ctop>
         <Ctop class="col-2 topbar center border-right-0">
-            @Html.DisplayNameFor(model => model.StartDatum)
+            @Html.DisplayNameFor(model => model.Kurs.StartDatum)
         </Ctop>
         <Ctop class="col-2 topbar center border-right-0">
-            @Html.DisplayNameFor(model => model.SlutDatum)
+            @Html.DisplayNameFor(model => model.Kurs.SlutDatum)
         </Ctop>
-        <Ctop class="col-3 topbar center border-right-0">
+        <Ctop class="col-4 topbar center border-right-0">
             Alternativ
         </Ctop>
         @*<div class="col">
                 @Html.DisplayNameFor(model => model.Moduler)
             </div>*@
         <Ctop class="col-2 topbar center corner-right">
-            @Html.DisplayNameFor(model => model.KursStatus)
+            @Html.DisplayNameFor(model => model.Kurs.KursStatus)
         </Ctop>
     </div>
 
     <div>
-        @foreach (var item in Model.OrderBy(kurs => kurs.StartDatum))
+        @foreach (var item in Model.OrderBy(kurs => kurs.Kurs.StartDatum))
         {
             <listdivision class="row">
-                <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Id)">
+                <div class="col-2 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.Kurs.Id)">
                     <h6 class="center">
-                        @Html.DisplayFor(modelItem => item.Namn)
+                        @Html.DisplayFor(modelitem => item.Kurs.Namn)
                     </h6>
                 </div>
                 <div class="col-2 border border-right-0">
                     <h6 class="center">
-                        @Html.DisplayFor(modelItem => item.StartDatum)
+                        @Html.DisplayFor(modelItem => item.Kurs.StartDatum)
                     </h6>
                 </div>
                 <div class="col-2 border border-right-0">
                     <h6 class="center">
-                        @Html.DisplayFor(modelItem => item.SlutDatum)
+                        @Html.DisplayFor(modelItem => item.Kurs.SlutDatum)
                     </h6>
                 </div>
-                <div class="col-3 border border-right-0">
+                <div class="col-4 border border-right-0">
                     <div class="row center">
-                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Id">Editera</a>
-                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Id">Detaljer</a>                        
-                        <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Id)">Mera</button>
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Edit" asp-route-id="@item.Kurs.Id">Editera</a>
+                        <a class="btn btn-mhm btn-sm" asp-controller="kurser" asp-action="Details" asp-route-id="@item.Kurs.Id">Detaljer</a>                        
+                        <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.Kurs.Id)">Mera</button>
+                        <label asp-for="@item.IsTeacher" class="checkbox-inline">Lärare</label>
+                        <input asp-for="@item.IsTeacher" class="checkbox-inline"/>
                     </div>
                 </div>
                 <div class="col-2 border">
                     <div class="center">
-                        <status start-datum="@(item.StartDatum)" slut-datum="@(item.SlutDatum)"></status>
+                        <status start-datum="@(item.Kurs.StartDatum)" slut-datum="@(item.Kurs.SlutDatum)"></status>
                     </div>
                 </div>
             </listdivision>
             <div>
-                <div id="@("collapse" + item.Id)" class="row collapse" data-parent="#accordion">
+                <div id="@("collapse" + item.Kurs.Id)" class="row collapse" data-parent="#accordion">
                     <div class="col-md-6 pad-0">
                         <h5 class="topbar corner-rounded">
                             Beskrivning
                         </h5>
                         <div class="card card-body">
-                            @Html.DisplayFor(modelItem => item.Beskrivning)
+                            @Html.DisplayFor(modelItem => item.Kurs.Beskrivning)
                         </div>
                     </div>
                     <div class="col-md-6 pad-0">
@@ -100,7 +102,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @foreach (var modul in item.Moduler.OrderBy(modul => modul.StartDatum))
+                            @foreach (var modul in item.Kurs.Moduler.OrderBy(modul => modul.StartDatum))
                             {
                                 <div class="row">
                                     <div class="col pad-2">
@@ -133,6 +135,9 @@
                 </div>
             </div>
         }
+    </div>
+    <div >
+        button
     </div>
 </div>
 

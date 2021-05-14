@@ -18,6 +18,10 @@
         <input asp-for="Email" class="form-control" />
     </div>
     <div class="form-group">
+        <label asp-for="Telefonnummer"></label>
+        <input asp-for="Telefonnummer" class="form-control" />
+    </div>
+    <div class="form-group">
         <label asp-for="Avatar"></label>
         <input asp-for="Avatar" class="form-control" />
     </div>
@@ -27,16 +31,13 @@
             <option selected="selected" value="@Model.RoleId">Välj användartyp</option>
         </select>
     </div>
-    @*<div class="form-group">
-        <label asp-for="KursId"></label>
+    <div class="form-group">
+        <label asp-for="KursId">Kurs</label>
         <select asp-for="KursId" asp-items="@Model.Kurser" class="form-control">
             <option selected="selected" value="@Model.KursId">Välj kurs</option>
         </select>
-    </div>*@
-    <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" name="password" class="form-control" />
     </div>
+
     <button type="submit" class="btn btn-primary">Spara</button>
 </form>
 
