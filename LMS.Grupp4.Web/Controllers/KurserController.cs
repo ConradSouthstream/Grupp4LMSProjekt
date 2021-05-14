@@ -126,7 +126,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .ThenInclude(c => c.Aktiviteter)
                 .ThenInclude(c => c.AktivitetTyp)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var dokument = await _context.Dokument.Include(e = >e.Anvandare).Include(d = >d.DokumentTyp)
+            var dokument = await _context.Dokument.Include(e =>e.Anvandare).Include(d =>d.DokumentTyp)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
             kurs.Dokument = dokument;
             if (kurs == null)

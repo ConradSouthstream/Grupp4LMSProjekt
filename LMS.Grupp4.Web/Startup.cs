@@ -125,7 +125,6 @@ namespace LMS.Grupp4.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapHub<SignalServer>("/signalServer");
             });
         }
     }

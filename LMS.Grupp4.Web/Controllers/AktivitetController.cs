@@ -28,7 +28,7 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-        private readonly ApplicationDbContext _context;
+        
         private readonly IToastNotification _not;
 
 
