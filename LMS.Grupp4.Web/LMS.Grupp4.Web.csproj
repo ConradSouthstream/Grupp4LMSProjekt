@@ -33,4 +33,19 @@
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Grupp4Lms.Core">
+      <HintPath>wwwroot\lib\Grupp4Lms.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Grupp4Lms.Data">
+      <HintPath>wwwroot\lib\Grupp4Lms.Data.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Grupp4Lms.Data.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

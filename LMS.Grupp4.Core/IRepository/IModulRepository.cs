@@ -12,6 +12,12 @@ namespace LMS.Grupp4.Core.IRepository
         /// <param name="iModulId">ModulId för sökt Modul</param>
         /// <returns>Task med sökt Modul eller null</returns>
         Task<Modul> GetModulAsync(int iModulId);
+        /// <summary>
+        /// Async metod som returnerar sökt Modul inklusive aktiviteter eller null
+        /// </summary>
+        /// <param name="iModulId">ModulId för sökt Modul</param>
+        /// <returns>Task med sökt Modul eller null</returns>
+        Task<Modul> GetModulWithAktiviteterAsync(int iModulId);
 
         /// <summary>
         /// Async metod som returnerar sökt Modul inklusive Kurs eller null

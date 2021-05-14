@@ -77,6 +77,8 @@ namespace LMS.Grupp4.Core.ViewModels.Aktivitet
         [DisplayName("Modulens slutdatum")]
         public DateTime ModulSlutDatum { get; set; }
 
+        public List<Entities.Aktivitet> Aktiviteter { get; set; }
+
 
         // Dropdown
 

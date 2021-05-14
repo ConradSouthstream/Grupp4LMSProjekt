@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using NToastNotify;
 
+
 namespace LMS.Grupp4.Web.Controllers
 {
     public class ModulerController : BaseController
@@ -115,7 +116,8 @@ namespace LMS.Grupp4.Web.Controllers
                 return NotFound();
             }
             var modul = await _context.Moduler.Include(m=>m.Kurs)
-                .Include(c => c.Aktiviteter)            
+                .Include(c => c.Aktiviteter)
+                .ThenInclude(a => a.AktivitetTyp)                
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var kurs = _context.Kurser.Where(k => k.Id == modul.KursId).FirstOrDefault();
@@ -132,15 +134,26 @@ namespace LMS.Grupp4.Web.Controllers
         }
 
         // GET: Moduler/Create
-        public IActionResult Create()
+        public IActionResult Create(int? Id)
         {
-            var model = new Modul
-            {
-                StartDatum = DateTime.Now,
-                SlutDatum = DateTime.Now.AddDays(5),
-                GetKursNamn = GetKursNamn(),
+            var kurs = _context.Kurser.Include(kurs => kurs.Moduler).Where(k => k.Id == Id).FirstOrDefault();
+            
+            //Kolla om det finns aktiviteter på kursen, om det gör det ta det äldsta slutdatumet som startdatum.
+            //Annars ta kursens startdatum.
+            DateTime SenasteModulDatum;
+            if (kurs.Moduler.Any())
+            { SenasteModulDatum = kurs.Moduler.Max(m => m.SlutDatum).AddDays(1); }
+            else { SenasteModulDatum = kurs.StartDatum; }
 
+            var model = new Modul
+            {   
+                StartDatum = SenasteModulDatum,
+                SlutDatum = SenasteModulDatum.AddDays(6),
+                GetKursNamn = GetKursNamn(),                
+                Kurs = kurs,
+                KursId = kurs.Id,
             };
+
             return View(model);
         }
 
@@ -149,14 +162,17 @@ namespace LMS.Grupp4.Web.Controllers
         //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ModulCreateViewModel viewModel)
+        public async Task<IActionResult> Create([Bind("Namn, StartDatum, SlutDatum, Beskrivning, KursId")] Modul viewModel)
         {
             if (ModelState.IsValid)
             {
-            var modul   = m_Mapper.Map<Modul>(viewModel);
+                var modul = viewModel;
                 _context.Add(modul);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                TempData["message"] = $"Har skapat modul {viewModel.Namn}";
+                TempData["typeOfMessage"] = TypeOfMessage.Info;
+                return RedirectToAction(nameof(Details), "Kurser", new { Id = viewModel.KursId });
             }
             return View(viewModel);
         }
@@ -188,12 +204,13 @@ namespace LMS.Grupp4.Web.Controllers
             }
 
             var modul = await _context.Moduler.FindAsync(id);
-
+            var kurs = await _context.Kurser.Include(kurs => kurs.Moduler).Where(k => k.Id == modul.KursId).FirstOrDefaultAsync();
             if (modul == null)
             {
                 return NotFound();
             }
             modul.GetKursNamn = GetKursNamn();
+            modul.Kurs = kurs;
             return View(modul);
         }
 
@@ -227,7 +244,9 @@ namespace LMS.Grupp4.Web.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                TempData["message"] = $"Har uppdaterat modul {modul.Namn}";
+                TempData["typeOfMessage"] = TypeOfMessage.Info;
+                return RedirectToAction(nameof(Details), "Kurser", new { Id = modul.KursId });
             }
             ViewData["KursId"] = new SelectList(_context.Kurser, "Id", "Id", modul.KursId);
             return View(modul);
@@ -260,7 +279,9 @@ namespace LMS.Grupp4.Web.Controllers
             var modul = await _context.Moduler.FindAsync(id);
             _context.Moduler.Remove(modul);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            TempData["message"] = $"Har raderat modul: {modul.Namn}";
+            TempData["typeOfMessage"] = TypeOfMessage.Info;
+            return RedirectToAction(nameof(Details), "Kurser", new { Id = modul.KursId });
         }
 
         private bool ModulExists(int id)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using LMS.Grupp4.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace LMS.Grupp4.Core.ViewModels.Admin
 {
-    public class AdminCreateUserViewModel
+    public class AdminCreateElevViewModel
     {
         [Required]
         public string EfterNamn { get; set; }
@@ -23,12 +24,8 @@ namespace LMS.Grupp4.Core.ViewModels.Admin
         public string Avatar { get; set; }
 
         [Required]
-        public string RoleId { get; set; }
-        public SelectList Roles { get; set; }
-
-        [Required]
         public int KursId { get; set; }
-        public SelectList Kurser { get; set; }
-        public string Password { get; set; }
+        public Kurs Kurs { get; set; }
+      
     }
 }

@@ -1,0 +1,138 @@
+﻿@model LMS.Grupp4.Core.ViewModels.KursLitteratur.LitteraturListViewModel
+
+@{
+    ViewData["Title"] = "Sök litteratur";
+}
+
+<h1>Sök efter litteratur</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="SearchLitteratur">
+            <input type="hidden" id="actionFrom" name="actionFrom" value="1" />
+
+            <div class="form-group">
+                <label for="AmneId" class="control-label">Ämne</label>
+                @Html.DropDownList("AmneId", Model.Amnen, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="titel" class="control-label">Titel</label>
+                <input id="titel" name="titel" class="form-control" placeholder="Sök på titel" value="@Model.Titel" />
+            </div>
+            <div class="form-group">
+                <label for="forfattare" class="control-label">Författare</label>
+                <input id="forfattare" name="forfattare" class="form-control" placeholder="Sök på författare" value="@Model.Forfattare" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sök" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Litteratur != null)
+{
+    <div class="col" id="accordion">
+        <div class="row">
+            <Ctop class="col-3 topbar center border-right-0 corner-left">
+                @Html.DisplayNameFor(model => model.Litteratur.First().Titel)
+            </Ctop>
+            <Ctop class="col-2 topbar center border-right-0">
+                @Html.DisplayNameFor(model => model.Litteratur.First().UtgivningsDatum)
+            </Ctop>
+            <Ctop class="col-3 topbar center border-right-0">
+                @Html.DisplayNameFor(model => model.Litteratur.First().Amne)
+            </Ctop>
+            <Ctop class="col-2 topbar center border-right-0">
+                @Html.DisplayNameFor(model => model.Litteratur.First().Niva)
+            </Ctop>
+            <Ctop class="col-1 topbar center border-right-0">
+                @Html.DisplayNameFor(model => model.Litteratur.First().Url)
+            </Ctop>
+            <Ctop class="col-1 topbar center corner-right">&nbsp;</Ctop>
+        </div>
+        <div>
+            @foreach (var item in Model.Litteratur)
+            {
+                <listdivision class="row">
+                    <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.LitteraturId)">
+                        <h6 class="center">@Html.DisplayFor(modelItem => item.Titel)</h6>
+                    </div>
+                    <div class="col-2 border border-right-0">
+                        <h6 class="center">
+                            @Html.DisplayFor(modelItem => item.UtgivningsDatum)
+                        </h6>
+                    </div>
+                    <div class="col-3 border border-right-0">
+                        <h6 class="center">
+                            @Html.DisplayFor(modelItem => item.Amne)
+                        </h6>
+                    </div>
+                    <div class="col-2 border border-right-0">
+                        <h6 class="center">
+                            @Html.DisplayFor(modelItem => item.Niva)
+                        </h6>
+                    </div>
+                    <div class="col-1 border border-right-0">
+                        <h6 class="center">
+                            <a href="@item.Url" target="_blank">Hemsida</a>
+                        </h6>
+                    </div>
+                    <div class="col-1 border">
+                        <h6 class="center">
+                            <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.LitteraturId)">Mera</button>
+                        </h6>
+                    </div>
+                </listdivision>
+                <div>
+                    <div id="@("collapse" + item.LitteraturId)" class="row collapse" data-parent="#accordion">
+                        <div class="col-md-6 pad-0">
+                            <h5 class="topbar corner-rounded">
+                                @Html.DisplayNameFor(model => model.Litteratur.First().Beskrivning)
+                            </h5>
+                            <div class="card card-body">
+                                @Html.DisplayFor(modelItem => item.Beskrivning)
+                            </div>
+                        </div>
+                        <div class="col-md-6 pad-0">
+                            <h5 class="topbar corner-rounded">
+                                Författare
+                            </h5>
+                            <div class="card card-body">
+
+                                @if (item.Forfattare != null && item.Forfattare.Count() > 0)
+                                {
+                                    string namn = "";
+
+                                    <div class="row">
+                                        <div class="col-8">
+                                            Namn
+                                        </div>
+                                        <div class="col-4">
+                                            Ålder
+                                        </div>
+                                    </div>
+
+                                    @foreach(var fe in item.Forfattare)
+                                    {
+                                        namn = fe.ForNamn + " " + fe.EfterNamn;
+
+                                        <div class="row">
+                                            <div class="col-8">
+                                                @namn
+                                            </div>
+                                            <div class="col-4">
+                                                @fe.Age
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+    </div>
+}

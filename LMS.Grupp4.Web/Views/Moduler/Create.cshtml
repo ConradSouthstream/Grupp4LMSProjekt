@@ -9,27 +9,78 @@
 <h4>Modul</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="KursId" class="control-label"></label>
-                <select id="select" asp-for="KursId" asp-items="@Model.GetKursNamn" class="form-control"></select>
+            <div>
+                <input type="hidden" asp-for="KursId" />
             </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @*<div class="form-group">
+            <label asp-for="KursId" class="control-label"></label>
+            <select id="select" asp-for="KursId" asp-items="@Model.GetKursNamn" class="form-control"></select>
+            </div>*@
             <div class="form-group">
                 <label asp-for="Namn" class="control-label"></label>
                 <input asp-for="Namn" class="form-control" />
                 <span asp-validation-for="Namn" class="text-danger"></span>
+
             </div>
-            <div class="form-group">
-                <label asp-for="StartDatum" class="control-label"></label>
-                <input asp-for="StartDatum" class="form-control" />
-                <span asp-validation-for="StartDatum" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SlutDatum" class="control-label"></label>
-                <input asp-for="SlutDatum" class="form-control" />
-                <span asp-validation-for="SlutDatum" class="text-danger"></span>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label asp-for="StartDatum" class="control-label"></label>
+                        <input asp-for="StartDatum" class="form-control" />
+                        <span asp-validation-for="StartDatum" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SlutDatum" class="control-label"></label>
+                        <input asp-for="SlutDatum" class="form-control" />
+                        <span asp-validation-for="SlutDatum" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="row colpadding">
+                        <div class="col-12 center topbar LRpad-0">Datum gällande Kurs och Moduler</div>
+                        <div class="col-4 center">
+                            @Html.DisplayFor(Model => Model.Kurs.Namn)
+                        </div>
+                        <div class="col-4 center">
+                            @Html.DisplayFor(Model => Model.Kurs.StartDatum)
+                        </div>
+                        <div class="col-4 center">
+                            @Html.DisplayFor(Model => Model.Kurs.SlutDatum)
+                        </div>
+                    </div>
+                    <div class="colpadding">
+                        <div class="row topbar LRpad-0">
+                            <div class="col-4 center">
+                                Modul
+                            </div>
+                            <div class="col-4 center">
+                                Från
+                            </div>
+                            <div class="col-4 center">
+                                Till
+                            </div>
+                        </div>
+                        @{ var list = @Model.Kurs.Moduler.ToList(); }
+                        @foreach (var item in list)
+                        {
+                            <listdivision class="row">
+                                <div class="col-4 center">
+                                    @item.Namn
+                                </div>
+                                <div class="col-4 center">
+                                    @Html.DisplayFor(modulitem => item.StartDatum)
+                                </div>
+                                <div class="col-4 center">
+                                    @Html.DisplayFor(modulitem => item.SlutDatum)
+                                </div>
+                            </listdivision>
+                        }
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Beskrivning" class="control-label"></label>
@@ -42,10 +93,8 @@
         </form>
     </div>
 </div>
+    
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

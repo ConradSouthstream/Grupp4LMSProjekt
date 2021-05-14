@@ -17,6 +17,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Net.Http.Headers;
 using NToastNotify;
 using System.IO;
 
@@ -81,7 +83,16 @@ namespace LMS.Grupp4.Web
             });
             services.AddAutoMapper(typeof(MapperProfile));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddSignalR();
+
+            services.AddHttpClient("KursLitteraturWebApiHttpClient", c =>
+            {
+                c.BaseAddress = new Uri(Configuration["UrlWebApi:Url"]);
+                //c.DefaultRequestHeaders.Add("Content-Type", "application/json");
+                c.DefaultRequestHeaders.Add("Accept", "*/*");//"application/json");
+                //c.DefaultRequestHeaders.Add("User-Agent", "Vehicle tracker");
+                c.Timeout = new TimeSpan(0, 0, 50);
+                c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

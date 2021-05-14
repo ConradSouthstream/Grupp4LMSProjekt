@@ -33,7 +33,7 @@ namespace LMS.Grupp4.Core.Entities
         /// <summary>
         /// Tid när modul starta
         /// </summary>
-        [Remote("CheckModuleStartDate","Validation",AdditionalFields ="KursId,Id")]
+        [Remote(action: "IfValidDatesEditStartDatum", controller: "Validation", AdditionalFields = "SlutDatum, KursId, Id")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en starttid för modulen")]
@@ -41,7 +41,7 @@ namespace LMS.Grupp4.Core.Entities
         /// <summary>
         /// Tid när modul slutar
         /// </summary>
-        [Remote("CheckModuleSlutDate", "Validation",AdditionalFields ="KursId,StartDatum,Id")]
+        [Remote(action: "IfValidDatesEditSlutDatum", controller: "Validation", AdditionalFields = "StartDatum, KursId, Id")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         [Required(ErrorMessage = "Ni måste ange en sluttid för modulen")]

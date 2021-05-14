@@ -20,6 +20,7 @@ namespace LMS.Grupp4.Web.Controllers
 {
     public class AktivitetController : BaseController
     {
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Konstruktor
@@ -76,7 +77,15 @@ namespace LMS.Grupp4.Web.Controllers
                 AktivitetCreateViewModel viewModel = new AktivitetCreateViewModel();
 
                 // Hämta information om Model
-                Modul modul = await m_UnitOfWork.ModulRepository.GetModulAsync(id.Value);
+                Modul modul = await m_UnitOfWork.ModulRepository.GetModulWithAktiviteterAsync(id.Value);
+                
+                //Kolla om det finns aktiviteter på modulen, om det gör det ta det äldsta slutdatumet som startdatum.
+                //Annars ta modulen startdatum.
+                DateTime SenasteAktivitetDatum;
+                if (modul.Aktiviteter.Any())
+                { SenasteAktivitetDatum = modul.Aktiviteter.Max(m => m.SlutDatum).AddDays(1); }
+                else { SenasteAktivitetDatum = modul.StartDatum; }
+
                 if (modul != null)
                 {
                     viewModel.ModulId = modul.Id;
@@ -85,10 +94,11 @@ namespace LMS.Grupp4.Web.Controllers
                     viewModel.ModulSlutDatum = modul.SlutDatum;
                 }
 
+                viewModel.Aktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(viewModel.ModulId);
                 // Sätt upp startvärden för kalendrar
                 DateTime dtNow = DateTime.Now;
-                viewModel.StartDatum = dtNow;
-                viewModel.SlutDatum = dtNow.AddDays(1);
+                viewModel.StartDatum = SenasteAktivitetDatum;
+                viewModel.SlutDatum = SenasteAktivitetDatum.AddDays(2);
 
                 // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
                 List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
@@ -129,8 +139,7 @@ namespace LMS.Grupp4.Web.Controllers
 
                         TempData["message"] = $"Har skapat aktivitet {viewModel.Namn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
-
-                        //return RedirectToAction(nameof(Details(viewModel.ModulId)));
+                                                
                         return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                     }                    
                 }
@@ -172,6 +181,8 @@ namespace LMS.Grupp4.Web.Controllers
                 {
                     AktivitetEditViewModel viewModel = m_Mapper.Map<AktivitetEditViewModel>(aktivitet);
 
+                    viewModel.Aktiviteter = await m_UnitOfWork.AktivitetRepository.GetModulesAktivitetAsync(viewModel.ModulId);
+
                     // Hämta alla AktivitetTyp från repository. Skapa en dropdown med AktivitetTyper
                     List<AktivitetTyp> lsAktivitetTyper = await m_UnitOfWork.AktivitetRepository.GetAktivitetTyperAsync();
                     List<SelectListItem> lsAktivitetTyperDropDown = AktivitetHelper.CreateAktivitetTypDropDown(lsAktivitetTyper, aktivitet.AktivitetTypId.ToString());
@@ -206,7 +217,8 @@ namespace LMS.Grupp4.Web.Controllers
                             TempData["message"] = $"Har uppdaterat aktivitet {viewModel.Namn}";
                             TempData["typeOfMessage"] = TypeOfMessage.Info;                           
 
-                            return RedirectToAction(nameof(Index));
+                            //return RedirectToAction(nameof(Index));
+                            return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                         }
                     }
                     catch (Exception)
@@ -259,6 +271,8 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteAktivitet(int? Id, string AktivitetNamn)
         {
+            Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(Id.Value);
+            AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
             if (Id.HasValue)
             {
                 try
@@ -268,23 +282,21 @@ namespace LMS.Grupp4.Web.Controllers
                     if (await m_UnitOfWork.AktivitetRepository.SaveAsync())
                     {// Aktiviteten är raderad
 
-                        TempData["message"] = $"Raderade aktiviteten {AktivitetNamn}";
+                        TempData["message"] = $"Har raderat aktiviteten: {AktivitetNamn}";
                         TempData["typeOfMessage"] = TypeOfMessage.Info;
 
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                     }
                     else
                     {// Det gick inte radera aktiviteten
 
-                        Aktivitet aktivitet = await m_UnitOfWork.AktivitetRepository.GetAktivitetAsync(Id.Value);
+                        
                         if (aktivitet != null)
-                        {
-                            AktivitetDeleteViewModel viewModel = m_Mapper.Map<AktivitetDeleteViewModel>(aktivitet);
-
+                        { 
                             ViewBag.Message = "Det gick inte radera aktiviteten";
                             ViewBag.TypeOfMessage = (int)TypeOfMessage.Error;
 
-                            return View(nameof(Delete), viewModel);
+                            return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
                         }
                     }
                 }
@@ -297,7 +309,7 @@ namespace LMS.Grupp4.Web.Controllers
             TempData["message"] = "Det gick inte radera aktiviteten";
             TempData["typeOfMessage"] = TypeOfMessage.Error;
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), "Moduler", new { Id = viewModel.ModulId });
         }
         private IEnumerable<SelectListItem> GetDokumentTypNamn()
 

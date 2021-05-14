@@ -15,14 +15,16 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using NToastNotify;
+using LMS.Grupp4.Core.ViewModels.KursViewModel;
+using LMS.Grupp4.Core.Enum;
 
 namespace LMS.Grupp4.Web.Controllers
 {
     [Authorize(Roles = "Lärare")]
-    public class KurserController : Controller
+    public class KurserController : BaseController
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _uow;
+        
         private readonly UserManager<Anvandare> _userManager;
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _context;
@@ -30,26 +32,88 @@ namespace LMS.Grupp4.Web.Controllers
 
 
 
-
-        public KurserController(ApplicationDbContext context, IMapper mapper, IUnitOfWork uow, UserManager<Anvandare> usermanager, IWebHostEnvironment env, IToastNotification not)
+        public KurserController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager, IToastNotification not) : 
+            base(uow, mapper, userManager)
         {
-            _context = context;
-            _mapper = mapper;
-            _uow = uow;
-            _userManager = usermanager;
+            _context = context;                        
+            _userManager = userManager;
             _env = env;
             _not = not;
+            _mapper = mapper;
         }
 
         // GET: Kurs
         public async Task<IActionResult> Index()
         {
-            var kurs = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
-            return View(kurs);
+            var userId = _userManager.GetUserId(this.User);
+            //var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+            var myKurser = await m_UnitOfWork.AnvandareRepository.GetKurserForAnvandareAsync(userId);
+            //var myKurser = user.Kurser;
+            var allKurser = new List<Kurs>();
+            var model = new List<KursListViewModel>();
+            allKurser = await _context.Kurser.Include(k => k.Moduler).ToListAsync();
+            for (int i = 0; i < allKurser.Count; i++)
+            {
+                model.Add(new KursListViewModel
+                {
+                    Kurs = allKurser[i],
+                    IsTeacher = myKurser?.Contains(allKurser[i]) ?? false
+                });
+            }
+            GetMessageFromTempData();
+            return View(model);
+        }
+
+        /// <summary>
+        /// Lägger till aktuell användare som lärare på en kurs med kursId
+        /// i tabellen AnvandareKurs
+        /// </summary>
+        /// <param name="kursId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> AddLarare(string kursId)
+        {
+            if (int.TryParse(kursId, out int iKursId))
+            {
+                var userId = _userManager.GetUserId(this.User);
+                var user = await m_UnitOfWork.ElevRepository.GetAnvandareAsync(userId);
+                _context.AnvandareKurser.Add(new AnvandareKurs
+                {
+                    Anvandare = user,
+                    Kurs = await m_UnitOfWork.KursRepository.GetKursAsync(iKursId)
+                });
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// Tar bort kopplingen för denna AnvandareKurs
+        /// </summary>
+        /// <param name="kursId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult RemoveLarare(string kursId)
+        {
+            if (int.TryParse(kursId, out int iKursId))
+            {
+                var userId = _userManager.GetUserId(this.User);
+                //var user = await _uow.ElevRepository.GetAnvandareAsync(userId);
+
+                //var kurs = await _uow.KursRepository.GetKursAsync(iKursId);
+                var anvKurs = _context.AnvandareKurser.Where(k => k.KursId == iKursId && k.AnvandareId == userId).FirstOrDefault();
+                if (anvKurs != null)
+                {
+                    _context.AnvandareKurser.Remove(anvKurs);
+                    _context.SaveChanges();
+                }
+            }
+            return Ok();
         }
 
         public async Task<IActionResult> Details(int? id)
         {
+            GetMessageFromTempData();
             if (id == null)
             {
                 return NotFound();
@@ -60,8 +124,9 @@ namespace LMS.Grupp4.Web.Controllers
                 .ThenInclude(e => e.Anvandare)
                 .Include(c => c.Moduler)
                 .ThenInclude(c => c.Aktiviteter)
+                .ThenInclude(c => c.AktivitetTyp)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var dokument = await _context.Dokument.Include(e=>e.Anvandare).Include(d=>d.DokumentTyp)
+            var dokument = await _context.Dokument.Include(e = >e.Anvandare).Include(d = >d.DokumentTyp)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
             kurs.Dokument = dokument;
             if (kurs == null)
@@ -97,7 +162,7 @@ namespace LMS.Grupp4.Web.Controllers
             return File(bytes, "application/octet-stream", filename);
         }
 
-           
+
         public IActionResult Upload(int id)
         {
             var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Generalla Information").FirstOrDefault();
@@ -117,8 +182,8 @@ namespace LMS.Grupp4.Web.Controllers
             //   .Include(c => c.DokumentTyp).Where(d=>d.Id==upload.Id).FirstOrDefaultAsync();
             //upload.DokumentTyp=_context.DokumentTyper.Where(d => d.Id == upload.DokumentTypId).FirstOrDefault();
             upload.Anvandare =await _userManager.GetUserAsync(User);
-            await _uow.DokumentRepository.Create(upload);
-            await _uow.CompleteAsync();
+            await m_UnitOfWork.DokumentRepository.Create(upload);
+            await m_UnitOfWork.CompleteAsync();
             _not.AddSuccessToastMessage("Filen har laddats upp");
             return RedirectToAction(nameof(Details), "Kurser", new { Id = upload.KursId });
 
@@ -127,7 +192,12 @@ namespace LMS.Grupp4.Web.Controllers
         // GET: Kurs/Create
         public IActionResult Create()
         {
-            return View();
+            var kurs = new Kurs
+            {
+                StartDatum = DateTime.Now.Date,
+                SlutDatum = DateTime.Now.Date.AddDays(35),                
+            };
+            return View(kurs);
         }
 
         // POST: Kurs/Create
@@ -154,6 +224,9 @@ namespace LMS.Grupp4.Web.Controllers
 
                 _context.Add(kurs);
                 await _context.SaveChangesAsync();
+
+                TempData["message"] = $"Har skapat kurs {kurs.Namn}";
+                TempData["typeOfMessage"] = TypeOfMessage.Info;
                 return RedirectToAction(nameof(Index));
             }
             return View(kurs);
@@ -205,6 +278,8 @@ namespace LMS.Grupp4.Web.Controllers
                         throw;
                     }
                 }
+                TempData["message"] = $"Har uppdaterat kurs {kurs.Namn}";
+                TempData["typeOfMessage"] = TypeOfMessage.Info;
                 return RedirectToAction(nameof(Index));
             }
             return View(kurs);
@@ -236,6 +311,8 @@ namespace LMS.Grupp4.Web.Controllers
             var kurs = await _context.Kurser.FindAsync(id);
             _context.Kurser.Remove(kurs);
             await _context.SaveChangesAsync();
+            TempData["message"] = $"Har raderat kurs: {kurs.Namn}";
+            TempData["typeOfMessage"] = TypeOfMessage.Info;
             return RedirectToAction(nameof(Index));
         }
 

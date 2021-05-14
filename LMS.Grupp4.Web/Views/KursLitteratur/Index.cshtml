@@ -1,18 +1,22 @@
-﻿@model LMS.Grupp4.Core.Entities.Kurs
+﻿@model LMS.Grupp4.Core.ViewModels.Elev.KursElevDetailsViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Edit</h1>
+<h1>Index</h1>
 
-<h4>Kurs</h4>
+<h4>KursElevDetailsViewModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Index">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="KursId" class="control-label"></label>
+                <input asp-for="KursId" class="form-control" />
+                <span asp-validation-for="KursId" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Namn" class="control-label"></label>
                 <input asp-for="Namn" class="form-control" />
@@ -31,17 +35,27 @@
             <div class="form-group">
                 <label asp-for="Beskrivning" class="control-label"></label>
                 <input asp-for="Beskrivning" class="form-control" />
-                <span asp-validation-for="Beskrivning" ro class="text-danger"></span>
+                <span asp-validation-for="Beskrivning" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <label asp-for="KursStatusId" class="control-label"></label>
+                <input asp-for="KursStatusId" class="form-control" />
+                <span asp-validation-for="KursStatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KursStatus" class="control-label"></label>
+                <input asp-for="KursStatus" class="form-control" />
+                <span asp-validation-for="KursStatus" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-controller="kurser" asp-action="Details" asp-route-id="@Model.Id">Tillbaka</a>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
