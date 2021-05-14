@@ -1,0 +1,44 @@
+﻿@model LMS.Grupp4.Core.ViewModels.KursLitteratur.KursLitteraturEditLitteraturViewModel
+
+@{
+    ViewData["Title"] = "Radera Litteratur";
+}
+
+<h1>Radera Litteratur</h1>
+
+<h3>Vill nu verkligen radera litteraturen?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Titel)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Titel)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UtgivningsDatum)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UtgivningsDatum)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Amne)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Amne)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Niva)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Niva)
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteLitteratur">
+        <input type="hidden" id="LitteraturId" name="LitteraturId" value="@Model.LitteraturId" />
+        <input type="hidden" id="Titel" name="Titel" value="@Model.Titel" />
+        <input type="submit" value="Radera litteraturen" class="btn btn-danger" />
+    </form>
+</div>
