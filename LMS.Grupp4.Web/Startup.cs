@@ -1,3 +1,4 @@
+using ClientNotifications;
 using ClientNotifications.ServiceExtensions;
 using LMS.Grupp4.Core.Entities;
 using LMS.Grupp4.Core.IRepository;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using NToastNotify;
 using System.IO;
 
 namespace LMS.Grupp4.Web
@@ -47,6 +49,12 @@ namespace LMS.Grupp4.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+            {
+                ProgressBar =true,
+                PositionClass=ToastPositions.TopRight,
+                PreventDuplicates=true,
+            } );
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -63,7 +71,6 @@ namespace LMS.Grupp4.Web
             })
                  .AddRoles<IdentityRole>()
                  .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.AddControllersWithViews(config =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -72,17 +79,8 @@ namespace LMS.Grupp4.Web
 
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
-
-
             services.AddAutoMapper(typeof(MapperProfile));
-
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IWatchlistRepository, WatchlistRepository>();
-
-            services.AddScoped<INotificationRepository, NotificationRepository>();
-           // services.AddToastNotification();
-
             services.AddSignalR();
         }
 
@@ -103,11 +101,6 @@ namespace LMS.Grupp4.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            //app.UseStaticFiles(new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(this.Env.WebRootPath)),
-            //    RequestPath = new PathString("/vendor")
-            //});
 
             app.UseRouting();
 

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,8 @@ namespace LMS.Grupp4.Web.Controllers
     {
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _context;
+        private readonly IToastNotification _not;
+
 
         /// <summary>
         /// Konstruktor
@@ -31,11 +34,12 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IWebHostEnvironment env) :
+        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IWebHostEnvironment env, IToastNotification not) :
             base(uow, mapper, userManager)
         {
             _context = context;
             _env = env;
+            _not = not;
         }
         public IActionResult Upload(int id)
         {
@@ -71,7 +75,8 @@ namespace LMS.Grupp4.Web.Controllers
             // var dokument = m_Mapper.Map<Dokument>(upload);
             await m_UnitOfWork.DokumentRepository.Create(upload);
             await m_UnitOfWork.CompleteAsync();
-            TempData["msg"] = "Filen har laddats upp";
+            // TempData["msg"] = "Filen har laddats upp";
+            _not.AddSuccessToastMessage("Filen har laddats upp");
             return Redirect("/Elev/Details?KursId=" + upload.KursId);
         }
         public async Task<IActionResult> Details(int? KursId)
@@ -233,21 +238,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadDokument(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
-
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
-
-            TempData["msg"] = "Filen har laddats upp";
-
+            _not.AddSuccessToastMessage("Filen har laddats upp");
+            // TempData["msg"] = "Filen har laddats upp";
             return Redirect("/Elev/ModulDetails?ModulId=" + upload.ModulId);
         }
         private IEnumerable<SelectListItem> GetDokumentTypNamn2()
@@ -284,20 +280,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadAktivity(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
-
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
-
-            TempData["msg"] = "Filen har laddats upp";
+            _not.AddSuccessToastMessage("Filen har laddats upp");
+            // TempData["msg"] = "Filen har laddats upp";
             return Redirect("/Elev/AktivitetDetails?AktivietetId=" + upload.AktivitetId);
         }
         public FileResult DownloadFile(string filename)

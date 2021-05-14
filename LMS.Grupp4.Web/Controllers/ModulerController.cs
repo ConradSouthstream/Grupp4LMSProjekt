@@ -14,6 +14,7 @@ using LMS.Grupp4.Web.Utils;
 using LMS.Grupp4.Core.Enum;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using NToastNotify;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -22,14 +23,17 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<Anvandare> _userManager;
+        private readonly IToastNotification _not;
 
 
-        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager): 
+
+        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager, IToastNotification not) : 
             base(uow, mapper, userManager)
         {
             _context = context;
             _env = env;
             _userManager = userManager;
+            _not = not;
         }
 
         public IActionResult Upload(int id)
@@ -63,24 +67,15 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
+            
             upload.Anvandare = await _userManager.GetUserAsync(User);
-
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
 
-            TempData["msg"] = "Filen har laddats upp";
-            //return Redirect("/Elev/Details/"+ dokument.KursId);
+            //TempData["msg"] = "Filen har laddats upp";
+            _not.AddSuccessToastMessage("Filen har laddats upp");
             return Redirect("/Moduler/Details/" + upload.ModulId);
-
-            // return View(dokument);
         }
 
         // GET: Moduler

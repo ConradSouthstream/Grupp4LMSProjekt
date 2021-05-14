@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,12 +27,15 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-               private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
+        private readonly IToastNotification _not;
 
-        public AktivitetController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context) :
+
+        public AktivitetController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IToastNotification not) :
             base(uow, mapper, userManager)
         {
             _context = context;
+            _not = not;
         }
 
         // GET: AktivitetController
@@ -325,20 +329,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
-
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
-
-            TempData["msg"] = "Filen har laddats upp";
+            //TempData["msg"] = "Filen har laddats upp";
+            _not.AddSuccessToastMessage("Filen har laddats upp");
             return RedirectToAction(nameof(Details), "Aktivitet", new { Id = upload.AktivitetId });
 
            

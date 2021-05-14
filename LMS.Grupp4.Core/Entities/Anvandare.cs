@@ -29,8 +29,7 @@ namespace LMS.Grupp4.Core.Entities
 
         [NotMapped]
         public bool IsLarare { get; set; } = false;
-        public List<Watchlist> Watchlists { get; set; }
-        public List<NotificationAnvandare> NotificationAnvandare { get; set; }
+
 
 
     }

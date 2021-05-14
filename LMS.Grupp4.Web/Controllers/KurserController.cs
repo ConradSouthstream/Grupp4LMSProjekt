@@ -14,6 +14,7 @@ using LMS.Grupp4.Core.IRepository;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using NToastNotify;
 
 namespace LMS.Grupp4.Web.Controllers
 {
@@ -25,16 +26,19 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly UserManager<Anvandare> _userManager;
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _context;
+        private readonly IToastNotification _not;
 
 
 
-        public KurserController(ApplicationDbContext context, IMapper mapper, IUnitOfWork uow, UserManager<Anvandare> usermanager, IWebHostEnvironment env)
+
+        public KurserController(ApplicationDbContext context, IMapper mapper, IUnitOfWork uow, UserManager<Anvandare> usermanager, IWebHostEnvironment env, IToastNotification not)
         {
             _context = context;
             _mapper = mapper;
             _uow = uow;
             _userManager = usermanager;
             _env = env;
+            _not = not;
         }
 
         // GET: Kurs
@@ -101,7 +105,6 @@ namespace LMS.Grupp4.Web.Controllers
             {
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 KursId = id,
-                //Anvandare = user,
             };
             return View(Dokument);
         }
@@ -109,20 +112,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
+            
             upload.Anvandare =await _userManager.GetUserAsync(User);
             await _uow.DokumentRepository.Create(upload);
-
             await _uow.CompleteAsync();
-
-            TempData["msg"] = "Filen har laddats upp";
-           // return View(upload);
+            _not.AddSuccessToastMessage("Filen har laddats upp");
             return RedirectToAction(nameof(Details), "Kurser", new { Id = upload.KursId });
-
-            //return Redirect("/Kurser/Details/" + upload.KursId);
 
         }
 

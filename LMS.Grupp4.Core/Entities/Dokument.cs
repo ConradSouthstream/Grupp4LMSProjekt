@@ -23,8 +23,8 @@ namespace LMS.Grupp4.Core.Entities
         public int? ModulId { get; set; }
         public int? AktivitetId { get; set; }
         public int DokumentTypId { get; set; }
-        //public int? AnvandareId { get; set; }
-        public string  AnvandareId { get; set; }
+        public int? AnvandareId { get; set; }
+        //public string  AnvandareId { get; set; }
         [NotMapped] //Tell Entity Framework to ignore property
         [Required]
         public IFormFile File { get; set; }

@@ -19,9 +19,7 @@ namespace LMS.Grupp4.Data
         public  DbSet<Aktivitet> Aktiviteter{ get; set; }
 
         public DbSet<AktivitetTyp> AktivitetTyper { get; set; }
-        public DbSet<Watchlist> Watchlists { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationAnvandare> AnvandareNotification { get; set; }
+      
 
 
 
@@ -43,8 +41,7 @@ namespace LMS.Grupp4.Data
                     e => e.HasOne(e => e.Anvandare).WithMany(s => s.KurserAnvandare));
             builder.Entity<Dokument>().Property(d => d.UppladdningsDatum).HasDefaultValueSql("getdate()");
 
-            builder.Entity<NotificationAnvandare>()
-                    .HasKey(k => new { k.NotificationId, k.AnvandareId });
+          
 
 
         }
