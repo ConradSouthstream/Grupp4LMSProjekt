@@ -13,6 +13,16 @@ namespace LMS.Grupp4.Core.ViewModels.KursLitteratur
 
         public string Forfattare { get; set; }
 
+        public string SortBy { get; set; }
+
+        public string SortOrder { get; set; }
+
+        public string OldSortBy { get; set; }
+
+        public bool OrderAuthorByName { get; set; }
+
+        public bool OrderAuthorByAge { get; set; }
+
         // Dropdown
 
         /// <summary>

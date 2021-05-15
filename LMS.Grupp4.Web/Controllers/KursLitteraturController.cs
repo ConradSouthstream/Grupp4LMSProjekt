@@ -171,6 +171,55 @@ namespace LMS.Grupp4.Web.Controllers
             return lsLitteratur;
         }
 
+
+        /// <summary>
+        /// Metoden sorterar en lista med litteratur enligt parametrarna SortOrder och SortBy
+        /// Default sortering är Titel
+        /// </summary>
+        /// <param name="litteratur">Lista med litetratur som skall sorteras</param>
+        /// <param name="SortOrder">Sorterings order. ascending eller descending</param>
+        /// <param name="SortBy">Vilken parameter skall vi sortera med. Kan vara Titel, UtgivningsDatum, Amne eller Niva</param>
+        /// <returns>Sorterad IEnumerable med litteratur </returns>
+        private IEnumerable<KursLitteraturListViewModel> SortLitteratur(IEnumerable<KursLitteraturListViewModel> litteratur, string SortOrder, string SortBy)
+        {
+            // Nu skall jag sortera enligt användarens val
+            switch (SortBy)
+            {
+                //case "Titel":
+                //    break;
+                case "UtgivningsDatum":
+                    if (SortOrder == "ascending")
+                        litteratur = litteratur.OrderBy(l => l.UtgivningsDatum);
+                    else
+                        litteratur = litteratur.OrderByDescending(l => l.UtgivningsDatum);
+
+                    break;
+                case "Amne":
+                    if (SortOrder == "ascending")
+                        litteratur = litteratur.OrderBy(l => l.Amne);
+                    else
+                        litteratur = litteratur.OrderByDescending(l => l.Amne);
+
+                    break;
+                case "Niva":
+                    if (SortOrder == "ascending")
+                        litteratur = litteratur.OrderBy(l => l.Niva);
+                    else
+                        litteratur = litteratur.OrderByDescending(l => l.Niva);
+
+                    break;
+                default:
+                    if (SortOrder == "ascending")
+                        litteratur = litteratur.OrderBy(l => l.Titel);
+                    else
+                        litteratur = litteratur.OrderByDescending(l => l.Titel);
+
+                    break;
+            }
+
+            return litteratur;
+        }
+
         #endregion // End of region private metoder
 
         #region SearchLitteratur
@@ -183,8 +232,13 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="forfattare">Söker på författares förnamn och efternamn och ser om det innehåller forfattare texten. Är det null eller tom sträng söks det ej på denna</param>
         /// <param name="AmneId">Söker på ämne. Om amne inte är större än 0 söks det inte på ämne</param>
         /// <param name="actionFrom">actionFrom=1 om anropet till action kommer från view. Då görs det en sökning mot web API. Annars kommer vi hoppa över sökningen</param>
+        /// <param name="OrderAuthorByName">true om vi skall sortera författarena efter deras namn. Annars är den false. Default är den false</param>
+        /// <param name="OrderAuthorByAge">true om vi skall sortera författarena efter deras ålder. Annars är den false. Default är den false</param>
+        /// <param name="SortBy">Namn på det vi skall sortera på i litteratur. Kan var en tom sträng</param>
+        /// <param name="OldSortBy">Namn på det vi tidigare har sorterat litteratur på. Kan var en tom sträng</param>
+        /// <param name="SortOrder">Vilken ordning som data i view är sorterad. ascending eller descending. Deafult ascending</param>
         /// <returns>View</returns>
-        public async Task<ActionResult<LitteraturListViewModel>> SearchLitteratur(string titel, string forfattare, int AmneId = -1, int actionFrom = -1, bool OrderAuthorByName = false, bool OrderAuthorByAge = false)
+        public async Task<ActionResult<LitteraturListViewModel>> SearchLitteratur(string titel, string forfattare, int AmneId = -1, int actionFrom = -1, bool OrderAuthorByName = false, bool OrderAuthorByAge = false, string SortBy = "", string OldSortBy = "", string SortOrder = "")
         {
             LitteraturListViewModel model = new LitteraturListViewModel();
 
@@ -193,31 +247,58 @@ namespace LMS.Grupp4.Web.Controllers
             try
             {                
                 // Hämta ämnen från webapi. Visas i dropdown
-                List<AmneDto> lsAmnen = await GetAmneAsync();                
+                List<AmneDto> lsAmnen = await GetAmneAsync();
 
                 if (actionFrom == 1)
                 {
                     // Sök efter kurslitteraturen
                     model.Litteratur = await SearchForLitteraturAsync(titel, forfattare, AmneId);
 
-                    // OrderAuthorByName = false, bool OrderAuthorByAge 
-                    if (model.Litteratur != null)
+                    if (model.Litteratur != null && model.Litteratur.Count() > 0)
                     {
-                        if(OrderAuthorByName == true || OrderAuthorByAge == true)
+                        // Här sätter jag upp lite variabler för att få det att fungera på ett logiskt sätt
+                        // Om vi inte har en sort order sätter vi den till descending.
+                        // För default är att vi skall sortera ascending och det ändrar vi nedan
+                        if (String.IsNullOrWhiteSpace(SortOrder))
+                            SortOrder = "descending";
+
+                        if (!String.IsNullOrWhiteSpace(OldSortBy) && !String.IsNullOrWhiteSpace(SortBy))
+                        {
+                            if (OldSortBy != SortBy)
+                            {// Detta innebär att vi inte sorterar på samma variabel dvs.
+                             // vi skall återgå till default sortering som är ascending
+                                SortOrder = "descending";
+                            }
+                        }
+
+                        // default sortering är på Titel. Är det inte satt från view sätter jag det här
+                        if (String.IsNullOrWhiteSpace(SortBy))
+                            SortBy = "Titel";
+
+
+                        // SortOrder från view är den sortorder som visas i view.
+                        // Så nästa skall vara den omvända
+                        if (SortOrder == "descending")
+                            SortOrder = "ascending";
+                        else
+                            SortOrder = "descending";
+
+
+                        if (OrderAuthorByName == true || OrderAuthorByAge == true)
                         {// Vi skall sortera på författarens namn och/eller ålder
 
-                            foreach(var litteratur in model.Litteratur)
+                            foreach (var litteratur in model.Litteratur)
                             {
-                                if(litteratur.Forfattare != null && litteratur.Forfattare.Count() > 1)
+                                if (litteratur.Forfattare != null && litteratur.Forfattare.Count() > 1)
                                 {// Vi har författare som vi kan sortera på
 
-                                    if(OrderAuthorByName)
+                                    if (OrderAuthorByName)
                                     {// Vi skall sortera på namn
                                         litteratur.Forfattare = litteratur.Forfattare
                                             .OrderBy(n => n.Name);
                                     }
 
-                                    if(OrderAuthorByAge)
+                                    if (OrderAuthorByAge)
                                     {// Vi skall sorterad på ålder
                                         if (OrderAuthorByName)
                                         {// Vi skall också sortera på namn. Så gör dessa tillsammans
@@ -234,6 +315,11 @@ namespace LMS.Grupp4.Web.Controllers
                                 }
                             }
                         }
+
+                        // Nu skall jag sortera enligt användarens val
+                        model.Litteratur = SortLitteratur(model.Litteratur, SortOrder, SortBy);
+                        // Spara denna sortering till old variabeln
+                        OldSortBy = SortBy;
                     }
 
                     // Se till att det vi har sökt på syns i view
@@ -244,6 +330,10 @@ namespace LMS.Grupp4.Web.Controllers
 
                     if (!String.IsNullOrWhiteSpace(forfattare))
                         model.Forfattare = forfattare;
+
+                    model.OrderAuthorByName = OrderAuthorByName;
+
+                    model.OrderAuthorByAge = OrderAuthorByAge;
                 }
                 else
                 {
@@ -253,7 +343,12 @@ namespace LMS.Grupp4.Web.Controllers
             catch(Exception exc) 
             { }
 
-            if(User.IsInRole("Lärare"))
+
+            model.SortBy = SortBy;
+            model.SortOrder = SortOrder;
+            model.OldSortBy = OldSortBy;
+
+            if (User.IsInRole("Lärare"))
                 return View("SearchLitteraturAdmin", model);
 
             // Elev view utan administrationsmöjligheter
