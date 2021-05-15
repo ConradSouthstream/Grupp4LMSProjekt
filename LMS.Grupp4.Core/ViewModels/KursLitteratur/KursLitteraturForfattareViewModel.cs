@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.Grupp4.Core.ViewModels.KursLitteratur
 {
@@ -27,5 +28,16 @@ namespace LMS.Grupp4.Core.ViewModels.KursLitteratur
         /// </summary>
         [DisplayName("Ålder")]
         public int Age { get; set; }
+
+        /// <summary>
+        /// Returnerar namn på författaren
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return $"{ForNamn} {EfterNamn}";
+            }
+        }
     }
 }

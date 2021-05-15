@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -172,6 +173,7 @@ namespace LMS.Grupp4.Web.Controllers
 
         #endregion // End of region private metoder
 
+        #region SearchLitteratur
 
         /// <summary>
         /// Async action som söker efter litteratur
@@ -182,7 +184,7 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="AmneId">Söker på ämne. Om amne inte är större än 0 söks det inte på ämne</param>
         /// <param name="actionFrom">actionFrom=1 om anropet till action kommer från view. Då görs det en sökning mot web API. Annars kommer vi hoppa över sökningen</param>
         /// <returns>View</returns>
-        public async Task<ActionResult<LitteraturListViewModel>> SearchLitteratur(string titel, string forfattare, int AmneId = -1, int actionFrom = -1)
+        public async Task<ActionResult<LitteraturListViewModel>> SearchLitteratur(string titel, string forfattare, int AmneId = -1, int actionFrom = -1, bool OrderAuthorByName = false, bool OrderAuthorByAge = false)
         {
             LitteraturListViewModel model = new LitteraturListViewModel();
 
@@ -197,6 +199,42 @@ namespace LMS.Grupp4.Web.Controllers
                 {
                     // Sök efter kurslitteraturen
                     model.Litteratur = await SearchForLitteraturAsync(titel, forfattare, AmneId);
+
+                    // OrderAuthorByName = false, bool OrderAuthorByAge 
+                    if (model.Litteratur != null)
+                    {
+                        if(OrderAuthorByName == true || OrderAuthorByAge == true)
+                        {// Vi skall sortera på författarens namn och/eller ålder
+
+                            foreach(var litteratur in model.Litteratur)
+                            {
+                                if(litteratur.Forfattare != null && litteratur.Forfattare.Count() > 1)
+                                {// Vi har författare som vi kan sortera på
+
+                                    if(OrderAuthorByName)
+                                    {// Vi skall sortera på namn
+                                        litteratur.Forfattare = litteratur.Forfattare
+                                            .OrderBy(n => n.Name);
+                                    }
+
+                                    if(OrderAuthorByAge)
+                                    {// Vi skall sorterad på ålder
+                                        if (OrderAuthorByName)
+                                        {// Vi skall också sortera på namn. Så gör dessa tillsammans
+                                            litteratur.Forfattare = litteratur.Forfattare
+                                                .OrderBy(n => n.Name)
+                                                .ThenBy(a => a.Age);
+                                        }
+                                        else
+                                        {
+                                            litteratur.Forfattare = litteratur.Forfattare
+                                                .OrderBy(a => a.Age);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     // Se till att det vi har sökt på syns i view
                     model.Amnen = KursLitteraturHelper.CreateAmneDropDown(lsAmnen, AmneId.ToString());
@@ -221,6 +259,8 @@ namespace LMS.Grupp4.Web.Controllers
             // Elev view utan administrationsmöjligheter
             return View("SearchLitteratur", model);
         }
+
+        #endregion  // End of region SearchLitteratur
 
         #region Create litteratur
 
@@ -640,6 +680,7 @@ namespace LMS.Grupp4.Web.Controllers
 
         #endregion  // End region Radera författare
 
+        #region Radera litteratur
         /// <summary>
         /// Action som anropas när användaren skall radera litteraturen
         /// </summary>
@@ -705,5 +746,7 @@ namespace LMS.Grupp4.Web.Controllers
 
             return View(model);
         }
+
+        #endregion  // End of region Radera litteratur
     }
 }
