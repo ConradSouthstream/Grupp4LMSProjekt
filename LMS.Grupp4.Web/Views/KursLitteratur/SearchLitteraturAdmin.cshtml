@@ -14,8 +14,11 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="SearchLitteratur">
+        <form id="SearchLitteraturForm" name="SearchLitteraturForm" asp-action="SearchLitteratur">
             <input type="hidden" id="actionFrom" name="actionFrom" value="1" />
+            <input type="hidden" id="OldSortBy" name="OldSortBy" value="@Model.OldSortBy" />
+            <input type="hidden" id="SortBy" name="SortBy" value="@Model.SortBy" />
+            <input type="hidden" id="SortOrder" name="SortOrder" value="@Model.SortOrder" />
 
             <div class="form-group">
                 <label for="AmneId" class="control-label">Ämne</label>
@@ -33,7 +36,7 @@
                 <fieldset>
                     <legend style="font-size:1rem;">Sortera författare efter</legend>
                     <div class="form-check form-check-inline">
-                        @Html.CheckBox("OrderAuthorByName", new { @class= "form-check-input" })
+                        @Html.CheckBox("OrderAuthorByName", new { @class = "form-check-input" })
                         <label class="form-check-label" for="OrderAuthorByName">Namn</label>
                     </div>
                     <div class="form-check form-check-inline">
@@ -54,16 +57,24 @@
     <div class="col" id="accordion">
         <div class="row">
             <Ctop class="col-2 topbar center border-right-0 corner-left">
-                @Html.DisplayNameFor(model => model.Litteratur.First().Titel)
+                <a href="javascript:SortBy('Titel')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().Titel)
+                </a>
             </Ctop>
             <Ctop class="col-2 topbar center border-right-0">
-                @Html.DisplayNameFor(model => model.Litteratur.First().UtgivningsDatum)
+                <a href="javascript:SortBy('UtgivningsDatum')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().UtgivningsDatum)
+                </a>
             </Ctop>
             <Ctop class="col-2 topbar center border-right-0">
-                @Html.DisplayNameFor(model => model.Litteratur.First().Amne)
+                <a href="javascript:SortBy('Amne')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().Amne)
+                </a>
             </Ctop>
             <Ctop class="col-2 topbar center border-right-0">
-                @Html.DisplayNameFor(model => model.Litteratur.First().Niva)
+                <a href="javascript:SortBy('Niva')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().Niva)
+                </a>
             </Ctop>
             <Ctop class="col-2 topbar center border-right-0">
                 @Html.DisplayNameFor(model => model.Litteratur.First().Url)

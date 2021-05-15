@@ -10,8 +10,11 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="SearchLitteratur">
+        <form id="SearchLitteraturForm" name="SearchLitteraturForm" asp-action="SearchLitteratur">
             <input type="hidden" id="actionFrom" name="actionFrom" value="1" />
+            <input type="hidden" id="OldSortBy" name="OldSortBy" value="@Model.OldSortBy" />
+            <input type="hidden" id="SortBy" name="SortBy" value="@Model.SortBy" />
+            <input type="hidden" id="SortOrder" name="SortOrder" value="@Model.SortOrder" />
 
             <div class="form-group">
                 <label for="AmneId" class="control-label">Ämne</label>
@@ -50,16 +53,24 @@
     <div class="col" id="accordion">
         <div class="row">
             <Ctop class="col-3 topbar center border-right-0 corner-left">
-                @Html.DisplayNameFor(model => model.Litteratur.First().Titel)
+                <a href="javascript:SortBy('Titel')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().Titel)
+                </a>
             </Ctop>
             <Ctop class="col-2 topbar center border-right-0">
-                @Html.DisplayNameFor(model => model.Litteratur.First().UtgivningsDatum)
+                <a href="javascript:SortBy('UtgivningsDatum')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().UtgivningsDatum)
+                </a>
             </Ctop>
             <Ctop class="col-3 topbar center border-right-0">
-                @Html.DisplayNameFor(model => model.Litteratur.First().Amne)
+                <a href="javascript:SortBy('Amne')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().Amne)
+                </a>
             </Ctop>
             <Ctop class="col-2 topbar center border-right-0">
-                @Html.DisplayNameFor(model => model.Litteratur.First().Niva)
+                <a href="javascript:SortBy('Niva')" title="Sortera">
+                    @Html.DisplayNameFor(model => model.Litteratur.First().Niva)
+                </a>
             </Ctop>
             <Ctop class="col-1 topbar center border-right-0">
                 @Html.DisplayNameFor(model => model.Litteratur.First().Url)
@@ -78,7 +89,7 @@
                             @Html.DisplayFor(modelItem => item.UtgivningsDatum)
                         </h6>
                     </div>
-                    <div class="col-2 border border-right-0">
+                    <div class="col-3 border border-right-0">
                         <h6 class="center">
                             @Html.DisplayFor(modelItem => item.Amne)
                         </h6>
@@ -88,7 +99,7 @@
                             @Html.DisplayFor(modelItem => item.Niva)
                         </h6>
                     </div>
-                    <div class="col-2 border border-right-0">
+                    <div class="col-1 border border-right-0">
                         <h6 class="center">
                             <a href="@item.Url" target="_blank">Hemsida</a>
                         </h6>
