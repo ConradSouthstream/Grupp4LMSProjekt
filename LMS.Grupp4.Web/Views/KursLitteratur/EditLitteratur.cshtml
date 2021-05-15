@@ -77,7 +77,7 @@
                                 <td>@item.Age</td>
                                 <th>
                                     <a class="btn btn-mhm btn-sm" asp-controller="KursLitteratur" asp-action="EditForfattare" asp-route-ForfatterId="@item.ForfatterId" asp-route-LitteraturId="@Model.LitteraturId">Editera</a>
-                                    <a class="btn btn-mhm btn-sm" asp-controller="KursLitteratur" asp-action="DeleteForfattare" asp-route-ForfatterId="@item.ForfatterId" asp-route-LitteraturId="@Model.LitteraturId">Radera</a>
+                                    <a class="btn btn-danger btn-sm" asp-controller="KursLitteratur" asp-action="DeleteForfattare" asp-route-ForfatterId="@item.ForfatterId" asp-route-LitteraturId="@Model.LitteraturId">Radera</a>
                                 </th>
                             </tr>
                         }
