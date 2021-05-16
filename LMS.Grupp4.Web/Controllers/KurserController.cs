@@ -178,9 +178,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            //var type = await _context.Dokument
-            //   .Include(c => c.DokumentTyp).Where(d=>d.Id==upload.Id).FirstOrDefaultAsync();
-            //upload.DokumentTyp=_context.DokumentTyper.Where(d => d.Id == upload.DokumentTypId).FirstOrDefault();
+            if (upload.File==null)
+            {
+                _not.AddWarningToastMessage("Ni måste välja en fil");
+                return View();
+
+            }
             upload.Anvandare =await _userManager.GetUserAsync(User);
             await m_UnitOfWork.DokumentRepository.Create(upload);
             await m_UnitOfWork.CompleteAsync();
@@ -308,8 +311,15 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var kurs =  _context.Kurser.Include(k => k.Moduler)
+            var kurs =  _context.Kurser.Include(k=>k.AnvandareKurser).ThenInclude(a=>a.Anvandare)
+                .Include(k => k.Moduler)
                 .Where(k=>k.Id==id).First();
+            var anvandare = _context.AnvandareKurser.Where(a => a.Kurs.Id == id).ToList();
+            foreach (var item in anvandare)
+            {
+                _context.Remove(item.Anvandare);
+            }
+            //_context.SaveChanges();
             _context.Kurser.Remove(kurs);
             await _context.SaveChangesAsync();
             TempData["message"] = $"Har raderat kurs: {kurs.Namn}";

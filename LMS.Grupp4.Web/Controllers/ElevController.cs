@@ -72,8 +72,14 @@ namespace LMS.Grupp4.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
-        {    
-          upload.Anvandare = await m_UserManager.GetUserAsync(User);
+        {
+            if (upload.File == null)
+            {
+                _not.AddWarningToastMessage("Ni måste välja en fil");
+                return View();
+
+            }
+            upload.Anvandare = await m_UserManager.GetUserAsync(User);
             // var dokument = m_Mapper.Map<Dokument>(upload);
             await m_UnitOfWork.DokumentRepository.Create(upload);
             await m_UnitOfWork.CompleteAsync();
@@ -242,12 +248,17 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadDokument(Dokument upload)
         {
+            if (upload.File == null)
+            {
+                _not.AddWarningToastMessage("Ni måste välja en fil");
+                return View();
+
+            }
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
             // var dokument = m_Mapper.Map<Dokument>(upload);
             await m_UnitOfWork.DokumentRepository.Create(upload);
             await m_UnitOfWork.CompleteAsync();
             _not.AddSuccessToastMessage("Filen har laddats upp");
-            // TempData["msg"] = "Filen har laddats upp";
             return Redirect("/Elev/ModulDetails?ModulId=" + upload.ModulId);
         }
         private IEnumerable<SelectListItem> GetDokumentTypNamn2()
@@ -287,6 +298,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadAktivity(Dokument upload)
         {
+            if (upload.File == null)
+            {
+                _not.AddWarningToastMessage("Ni måste välja en fil");
+                return View();
+
+            }
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
             // var dokument = m_Mapper.Map<Dokument>(upload);
             await m_UnitOfWork.DokumentRepository.Create(upload);
