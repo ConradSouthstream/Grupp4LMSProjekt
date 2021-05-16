@@ -100,6 +100,27 @@ namespace LMS.Grupp4.Web.Controllers
 
             return View(kurs);
         }
+        public async Task<IActionResult> InlämningsVy(int? KursId)
+        {
+            if (KursId == null)
+            {
+                return NotFound();
+            }
+            var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
+
+            var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d => d.DokumentTyp)
+                .Where(d => d.KursId == kurs.Id).Where(d => d.DokumentTyp.Namn == "Inlämning").ToListAsync();
+            var uppgiftAktiviteter = await _context.Aktiviteter.Where(d => d.AktivitetTyp.Namn == "Uppgift").ToListAsync();
+
+            kurs.Dokument = dokument;
+            
+            if (kurs == null)
+            {
+                return NotFound();
+            }
+
+            return View(kurs);
+        }
 
         public async Task<ActionResult> GetAnvandarna(int? KursId)
         {
