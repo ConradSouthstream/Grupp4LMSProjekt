@@ -19,11 +19,15 @@ namespace LMS.Grupp4.Core.Entities
         public string Beskrivning { get; set; }
         public string Path{ get; set; }
         public DateTime UppladdningsDatum { get; set; }
+        //[ForeignKey("Kurs")]
         public int? KursId { get; set; }
+        //[ForeignKey("Modul")]
         public int? ModulId { get; set; }
+        //[ForeignKey("Aktivitet")]
         public int? AktivitetId { get; set; }
-        public int DokumentTypId { get; set; }
-        public int? AnvandareId { get; set; }
+        public int? DokumentTypId { get; set; }
+        //public int? AnvandareId { get; set; }
+        //public string  AnvandareId { get; set; }
         [NotMapped] //Tell Entity Framework to ignore property
         [Required]
         public IFormFile File { get; set; }
@@ -31,7 +35,7 @@ namespace LMS.Grupp4.Core.Entities
         [NotMapped]
         [Required]
         public IEnumerable<SelectListItem> GetDokumentTypNamn { get; set; }
-       // public string AnvandareId { get; set; }
+       
 
 
         //Navigation property

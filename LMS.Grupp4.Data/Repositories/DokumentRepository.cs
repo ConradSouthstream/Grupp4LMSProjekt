@@ -55,9 +55,6 @@ namespace LMS.Grupp4.Data.Repositories
                     using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fs);
-                   // item.Anvandare = await _usermanager.GetUserAsync(User);
-              //  item.Anvandare = await _usermanager.GetUserAsync(User);
-
                     }
                     _dbContext.Dokument.Add(item);
                     _dbContext.SaveChanges();
@@ -92,7 +89,7 @@ namespace LMS.Grupp4.Data.Repositories
             return list;
         }
 
-        public async Task<Dokument> UploadDokumentKurs(Dokument dokument, int? kursId, int? dokumentTypId)
+        public async Task<Dokument> UploadDokumentKurs(Dokument dokument, int kursId, int? dokumentTypId)
         {
             //Either use a viewmodel or remove photoURL. URL will
             //be generated programmatically

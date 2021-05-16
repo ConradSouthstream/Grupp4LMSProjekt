@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,8 @@ namespace LMS.Grupp4.Web.Controllers
     {
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _context;
+        private readonly IToastNotification _not;
+
 
         /// <summary>
         /// Konstruktor
@@ -31,16 +34,19 @@ namespace LMS.Grupp4.Web.Controllers
         /// <param name="uow">Unit of work. Används för att anropa olika Repository</param>
         /// <param name="mapper">Automapper</param>
         /// <param name="userManager">UserManager</param>
-        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IWebHostEnvironment env ) :
+        public ElevController(IUnitOfWork uow, IMapper mapper, UserManager<Anvandare> userManager, ApplicationDbContext context, IWebHostEnvironment env, IToastNotification not) :
             base(uow, mapper, userManager)
         {
             _context = context;
             _env = env;
+            _not = not;
         }
         public IActionResult Upload(int id)
         {
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Generalla Information").FirstOrDefault();
             var Dokument = new Dokument
             {
+                DokumentTypId = dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 KursId = id
             };
@@ -66,33 +72,14 @@ namespace LMS.Grupp4.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
-        {
-            //if (upload.File==null)
-            //{
-            //    TempData["msg"] = "Ni måste välja en fil";
-            //    upload.GetDokumentTypNamn = GetDokumentTypNamn();
-
-            //return View(upload);
-            //}
-            //if (!ModelState.IsValid)
-            //{
-            //    return View();
-            //}
-
-            upload.Anvandare = await m_UserManager.GetUserAsync(User);
-
+        {    
+          upload.Anvandare = await m_UserManager.GetUserAsync(User);
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
-            TempData["msg"] = "Filen har laddats upp";
-
-            // return Redirect("/Elev/Details/"+ upload.KursId);
-            //return Redirect("/Elev/ModulDetails/" + upload.KursId);
-
-           return View(upload);
+            // TempData["msg"] = "Filen har laddats upp";
+            _not.AddSuccessToastMessage("Filen har laddats upp");
+            return Redirect("/Elev/Details?KursId=" + upload.KursId);
         }
         public async Task<IActionResult> Details(int? KursId)
         {
@@ -102,9 +89,9 @@ namespace LMS.Grupp4.Web.Controllers
             }
             var kurs = await m_UnitOfWork.KursRepository.GetKursAsync(KursId);
 
-            var dokument = await _context.Dokument.Include(d => d.Anvandare)
+            var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d=>d.DokumentTyp)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
-          
+
             kurs.Dokument = dokument;
             if (kurs == null)
             {
@@ -242,8 +229,10 @@ namespace LMS.Grupp4.Web.Controllers
         }
         public IActionResult UploadDokument(int id)
         {
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Modul Information").FirstOrDefault();
             var Dokument = new Dokument
             {
+                DokumentTypId = dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 ModulId = id
             };
@@ -253,30 +242,43 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadDokument(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
-
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
+            _not.AddSuccessToastMessage("Filen har laddats upp");
+            // TempData["msg"] = "Filen har laddats upp";
+            return Redirect("/Elev/ModulDetails?ModulId=" + upload.ModulId);
+        }
+        private IEnumerable<SelectListItem> GetDokumentTypNamn2()
 
-            TempData["msg"] = "Filen har laddats upp";
-            //return Redirect("/Elev/Details/"+ dokument.KursId);
-            //return Redirect("/Elev/ModulDetails/" + upload.ModulId);
-            return Redirect("Elev/ModulDetails?ModulId ="+upload.ModulId);
-
-            // return View(dokument);
-        } public IActionResult UploadAktivity(int id)
         {
+            var TypeName = _context.DokumentTyper.Where(d=>d.Namn=="Inlämning");
+
+            var GetTypNamn = new List<SelectListItem>();
+            foreach (var type in TypeName)
+            {
+                
+                var newNamn = (new SelectListItem
+                {
+                    Text = type.Namn,
+                    Value = type.Id.ToString(),
+                    //Selected=t
+                });
+                GetTypNamn.Add(newNamn);
+
+                
+            }
+            return (GetTypNamn);
+        }
+        public IActionResult UploadAktivity(int id)
+        {
+
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Inlämning").FirstOrDefault();
             var Dokument = new Dokument
             {
-                GetDokumentTypNamn = GetDokumentTypNamn(),
+                DokumentTypId=dokumentTyp.Id,
+                GetDokumentTypNamn = GetDokumentTypNamn2(),
                 AktivitetId = id
             };
             return View(Dokument);
@@ -285,27 +287,13 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadAktivity(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
-
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
-
-            TempData["msg"] = "Filen har laddats upp";
-            //return Redirect("/Elev/Details/"+ dokument.KursId);
-            //return Redirect("/Elev/ModulDetails/" + upload.ModulId);
-          //return Redirect("Elev/AktivitetDetails/"+upload.AktivitetId);
-          // return Redirect("Aktivitet/Details/" + upload.AktivitetId);
-
-
-           return View(upload);
+            _not.AddSuccessToastMessage("Filen har laddats upp");
+            // TempData["msg"] = "Filen har laddats upp";
+            return Redirect("/Elev/AktivitetDetails?AktivietetId=" + upload.AktivitetId);
         }
         public FileResult DownloadFile(string filename)
         {
@@ -331,7 +319,7 @@ namespace LMS.Grupp4.Web.Controllers
                 if (modul != null)
                 {
                     // Mappa Modul till ViewModel
-                    var dokument = await _context.Dokument.Include(d => d.Anvandare)
+                    var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d=>d.DokumentTyp)
                         .Where(d => d.ModulId == modul.Id).ToListAsync();
                     modul.Dokument = dokument;
                     viewModel = m_Mapper.Map<ModulElevDetailsViewModel>(modul);
@@ -384,9 +372,13 @@ namespace LMS.Grupp4.Web.Controllers
                 // Har vi aktiviteter. Mappa info och lägg till i viewmodel
                 if (aktivitet != null)
                 {
-                    var dokument = await _context.Dokument.Include(d => d.Anvandare)
-                       .Where(d => d.AktivitetId == aktivitet.Id).ToListAsync();
+                    var adminList = await m_UserManager.GetUsersInRoleAsync("Lärare");
+                    var currentUser = await m_UserManager.GetUserAsync(User);
+                    var dokument = await _context.Dokument.Include(d => d.Anvandare).Include(d=>d.DokumentTyp)
+                       .Where(d => d.AktivitetId == aktivitet.Id && d.Anvandare== currentUser ||(adminList.Contains(d.Anvandare)&&d.AktivitetId==aktivitet.Id)).ToListAsync();
                     aktivitet.Dokument = dokument;
+                    var modul = aktivitet.Modul;
+
                     viewModel = m_Mapper.Map<AktivitetElevDetailsViewModel>(aktivitet);
                     viewModel.AktivitetStatus = AktivitetHelper.CalculateStatus(aktivitet);
                 }
@@ -394,7 +386,7 @@ namespace LMS.Grupp4.Web.Controllers
 
             return View(viewModel);
         }
-  
+
         //// GET: ElevController/Details/5
         //public ActionResult Details(int id)
         //{

@@ -54,35 +54,36 @@
     <a class="btn btn-mhm btn-lg" asp-controller="aktivitet" asp-action="Delete" asp-route-id="@Model.Id">Radera @Model.Namn</a>
 </div>
 
-<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+<a asp-action="Upload" asp-route-id="@Model.Id" type="button" class="btn btn-mhm btn-sm">Ladda upp Filer</a>
 <div>
-    @*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">*@
+    
         <table class="table table-responsive table-bordered">
-            <tr>
+            <tr class="table-primary">
+                <th>Dokuments Typ</th>
                 <th>Dokuments Namn</th>
                 <th>Uppladdnings Datum</th>
                 <th>Anvandare</th>
             </tr>
             @foreach (Dokument file in Model.Dokument)
             {
-                <tr>
-                    <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
-                    <td>@file.UppladdningsDatum</td>
-                    <td>@file.Anvandare.FullNamn</td>
-                    <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-                </tr>
+            <tr>
+                <td>@file.DokumentTyp.Namn</td>
+                <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                <td>@file.UppladdningsDatum</td>
+                <td>@file.Anvandare.FullNamn</td>
+                <td><a href="/Kurser/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+            </tr>
 
 
             }
         </table>
-    @*</div>*@
 </div>
 
 
 }
 else
 {
-<div class="alert alert-danger" role="alert">
-    Hittar inte sökt aktivitet
-</div>
+    <div class="alert alert-danger" role="alert">
+        Hittar inte sökt aktivitet
+    </div>
 }

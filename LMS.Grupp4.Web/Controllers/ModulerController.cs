@@ -14,6 +14,7 @@ using LMS.Grupp4.Web.Utils;
 using LMS.Grupp4.Core.Enum;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using NToastNotify;
 
 
 namespace LMS.Grupp4.Web.Controllers
@@ -23,20 +24,25 @@ namespace LMS.Grupp4.Web.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<Anvandare> _userManager;
+        private readonly IToastNotification _not;
 
 
-        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager): 
+
+        public ModulerController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager, IToastNotification not) : 
             base(uow, mapper, userManager)
         {
             _context = context;
             _env = env;
             _userManager = userManager;
+            _not = not;
         }
 
         public IActionResult Upload(int id)
         {
+            var dokumentTyp = _context.DokumentTyper.Where(dt => dt.Namn == "Modul Information").FirstOrDefault();
             var Dokument = new Dokument
             {
+                DokumentTypId = dokumentTyp.Id,
                 GetDokumentTypNamn = GetDokumentTypNamn(),
                 ModulId = id
                
@@ -64,24 +70,14 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return NotFound();
-            //}
             upload.Anvandare = await _userManager.GetUserAsync(User);
-
             // var dokument = m_Mapper.Map<Dokument>(upload);
-
-
             await m_UnitOfWork.DokumentRepository.Create(upload);
-
             await m_UnitOfWork.CompleteAsync();
 
-            TempData["msg"] = "Filen har laddats upp";
-            //return Redirect("/Elev/Details/"+ dokument.KursId);
+            //TempData["msg"] = "Filen har laddats upp";
+            _not.AddSuccessToastMessage("Filen har laddats upp");
             return Redirect("/Moduler/Details/" + upload.ModulId);
-
-            // return View(dokument);
         }
 
         // GET: Moduler
@@ -125,7 +121,7 @@ namespace LMS.Grupp4.Web.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var kurs = _context.Kurser.Where(k => k.Id == modul.KursId).FirstOrDefault();
-            var dokument = await _context.Dokument.Include(d=>d.Anvandare)
+            var dokument = await _context.Dokument.Include(d=>d.Anvandare).Include(d=>d.DokumentTyp)
                 .Where(d => d.ModulId == modul.Id).ToListAsync();
             modul.KursId = kurs.Id;                
             modul.Dokument = dokument;
@@ -280,7 +276,7 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var modul = await _context.Moduler.FindAsync(id);
+            var modul = _context.Moduler.Include(m => m.Aktiviteter).Where(m => m.Id == id).First();
             _context.Moduler.Remove(modul);
             await _context.SaveChangesAsync();
             TempData["message"] = $"Har raderat modul: {modul.Namn}";

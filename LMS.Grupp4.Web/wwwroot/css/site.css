@@ -69,3 +69,29 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+#logoNav {
+    width: 10%;
+    padding: -1em;
+    margin: 0em;
+    float: left;
+}
+/*html,
+#footerbody {
+    height: 100%;
+}
+
+#page-content {
+    flex: 1 0 auto;
+}
+
+#sticky-footer {
+    flex-shrink: none;
+}*/
+
+/* Other Classes for Page Styling */
+
+/*#footerbody {
+    background: #007bff;
+    background: linear-gradient(to right, #0062E6, #33AEFF);
+}*/
