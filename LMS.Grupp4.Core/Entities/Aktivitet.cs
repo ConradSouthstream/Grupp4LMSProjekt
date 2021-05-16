@@ -52,7 +52,7 @@ namespace LMS.Grupp4.Core.Entities
         public int AktivitetTypId { get; set; }
 
         //[ForeignKey("Modul")]
-        public int ModulId { get; set; }
+        public int? ModulId { get; set; }
 
 
         //Navigation property

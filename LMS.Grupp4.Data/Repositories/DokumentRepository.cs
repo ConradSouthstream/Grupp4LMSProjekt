@@ -89,7 +89,7 @@ namespace LMS.Grupp4.Data.Repositories
             return list;
         }
 
-        public async Task<Dokument> UploadDokumentKurs(Dokument dokument, int? kursId, int? dokumentTypId)
+        public async Task<Dokument> UploadDokumentKurs(Dokument dokument, int kursId, int? dokumentTypId)
         {
             //Either use a viewmodel or remove photoURL. URL will
             //be generated programmatically

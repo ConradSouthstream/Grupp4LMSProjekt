@@ -308,7 +308,8 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var kurs = await _context.Kurser.FindAsync(id);
+            var kurs =  _context.Kurser.Include(k => k.Moduler)
+                .Where(k=>k.Id==id).First();
             _context.Kurser.Remove(kurs);
             await _context.SaveChangesAsync();
             TempData["message"] = $"Har raderat kurs: {kurs.Namn}";

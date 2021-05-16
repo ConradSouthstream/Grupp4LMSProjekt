@@ -19,11 +19,14 @@ namespace LMS.Grupp4.Core.Entities
         public string Beskrivning { get; set; }
         public string Path{ get; set; }
         public DateTime UppladdningsDatum { get; set; }
+        //[ForeignKey("Kurs")]
         public int? KursId { get; set; }
+        //[ForeignKey("Modul")]
         public int? ModulId { get; set; }
+        //[ForeignKey("Aktivitet")]
         public int? AktivitetId { get; set; }
-        public int DokumentTypId { get; set; }
-        public int? AnvandareId { get; set; }
+        public int? DokumentTypId { get; set; }
+        //public int? AnvandareId { get; set; }
         //public string  AnvandareId { get; set; }
         [NotMapped] //Tell Entity Framework to ignore property
         [Required]
