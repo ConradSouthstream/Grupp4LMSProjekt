@@ -8,6 +8,10 @@
 
 @{ await Html.RenderPartialAsync("_MessageView"); }
 
+<div>
+    <a class="btn btn-mhm" asp-controller="KursLitteratur" asp-action="CreateLitteratur">Skapa ny litteratur</a>
+</div>
+
 <div class="row">
     <div class="col-md-6">
         <form id="SearchLitteraturForm" name="SearchLitteraturForm" asp-action="SearchLitteratur">
@@ -52,7 +56,7 @@
 {
     <div class="col" id="accordion">
         <div class="row">
-            <Ctop class="col-3 topbar center border-right-0 corner-left">
+            <Ctop class="col-2 topbar center border-right-0 corner-left">
                 <a href="javascript:SortBy('Titel')" title="Sortera">
                     @Html.DisplayNameFor(model => model.Litteratur.First().Titel)
                 </a>
@@ -62,7 +66,7 @@
                     @Html.DisplayNameFor(model => model.Litteratur.First().UtgivningsDatum)
                 </a>
             </Ctop>
-            <Ctop class="col-3 topbar center border-right-0">
+            <Ctop class="col-2 topbar center border-right-0">
                 <a href="javascript:SortBy('Amne')" title="Sortera">
                     @Html.DisplayNameFor(model => model.Litteratur.First().Amne)
                 </a>
@@ -72,16 +76,16 @@
                     @Html.DisplayNameFor(model => model.Litteratur.First().Niva)
                 </a>
             </Ctop>
-            <Ctop class="col-1 topbar center border-right-0">
+            <Ctop class="col-2 topbar center border-right-0">
                 @Html.DisplayNameFor(model => model.Litteratur.First().Url)
             </Ctop>
-            <Ctop class="col-1 topbar center corner-right">&nbsp;</Ctop>
+            <Ctop class="col-2 topbar center corner-right">&nbsp;</Ctop>
         </div>
         <div>
             @foreach (var item in Model.Litteratur)
             {
                 <listdivision class="row">
-                    <div class="col-3 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.LitteraturId)">
+                    <div class="col-2 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.LitteraturId)">
                         <h6 class="center">@Html.DisplayFor(modelItem => item.Titel)</h6>
                     </div>
                     <div class="col-2 border border-right-0">
@@ -89,7 +93,7 @@
                             @Html.DisplayFor(modelItem => item.UtgivningsDatum)
                         </h6>
                     </div>
-                    <div class="col-3 border border-right-0">
+                    <div class="col-2 border border-right-0">
                         <h6 class="center">
                             @Html.DisplayFor(modelItem => item.Amne)
                         </h6>
@@ -99,14 +103,16 @@
                             @Html.DisplayFor(modelItem => item.Niva)
                         </h6>
                     </div>
-                    <div class="col-1 border border-right-0">
+                    <div class="col-2 border border-right-0">
                         <h6 class="center">
                             <a href="@item.Url" target="_blank">Hemsida</a>
                         </h6>
                     </div>
-                    <div class="col-1 border">
+                    <div class="col-2 border">
                         <div class="row center">
+                            <a class="btn btn-mhm btn-sm" asp-controller="KursLitteratur" asp-action="EditLitteratur" asp-route-id="@item.LitteraturId">Editera</a>
                             <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.LitteraturId)">Mera</button>
+                            <a class="btn btn-danger btn-sm" asp-controller="KursLitteratur" asp-action="DeleteLitteratur" asp-route-LitteraturId="@item.LitteraturId">Radera</a>
                         </div>
                     </div>
                 </listdivision>
