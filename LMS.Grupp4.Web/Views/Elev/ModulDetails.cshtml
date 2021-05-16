@@ -7,76 +7,74 @@
 <div>
     @if (Model != null)
     {
-        <h4>@Model.KursNamn - @Model.Namn</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Namn)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Namn)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StartDatum)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StartDatum)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.SlutDatum)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.SlutDatum)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Beskrivning)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Beskrivning)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.KursNamn)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.KursNamn)
-            </dd>
-            <dt class="col-sm-2">
-                Status
-            </dt>
-            <dd class="col-sm-10">
-                <status start-datum="@(Model.StartDatum)" slut-datum="@(Model.SlutDatum)"></status>
-            </dd>
-        </dl>
-
-
-        <hr />
-        <h4>Aktiviteter</h4>
-        <hr />
-        @if (Model.Aktiviteter?.Count > 0)
-        {
-            <div class="col" id="accordion">
-                <div class="row">
-                    <h5 class="col-2 topbar center border-right-0 corner-left">
-                        @Html.DisplayNameFor(model => model.Aktiviteter.First().Namn)
-                    </h5>
-                    <h5 class="col-2 topbar center border-right-0">
-                        @Html.DisplayNameFor(model => model.Aktiviteter.First().StartDatum)
-                    </h5>
-                    <h5 class="col-2 topbar center border-right-0">
-                        @Html.DisplayNameFor(model => model.Aktiviteter.First().SlutDatum)
-                    </h5>
-                    <h5 class="col-2 topbar center border-right-0">
-                        @Html.DisplayNameFor(model => model.Aktiviteter.First().AktivitetTypNamn)
-                    </h5>
-                    <h5 class="col-2 topbar center border-right-0">
-                        &nbsp;
-                    </h5>
-                    <h5 class="col-2 topbar center corner-right">
-                        @Html.DisplayNameFor(model => model.Aktiviteter.First().AktivitetStatus)
-                    </h5>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Elev">Hem</a></li>
+                <li class="breadcrumb-item"><a href="@("/Elev/ModulDetails?ModulId="+Model.ModulId)">Modul</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Aktivitet</li>
+            </ol>
+        </nav>
+        <div class="row titlecardbox justify-content-center pad-0">
+            <div class="card topbar titlecardbox">
+                <h1 class="center">@Model.Namn Detaljer</h1>
+                <h4 class="center">Tillhör @Model.KursNamn</h4>
+            </div>
+        </div>
+        <div class="row titlecardbox margin-3 pad-0 justify-content-center ">
+            <div class="row border titlecardbox margin-3 pad-15 justify-content-center">
+                <div class="center">
+                    <div class="rows center">
+                        <h5 class="margin-3 center">
+                            Från @Html.DisplayFor(model => model.StartDatum)
+                        </h5>
+                        <h5 class="margin-3 center">
+                            Till @Html.DisplayFor(model => model.SlutDatum)
+                        </h5>
+                    </div>
                 </div>
+                <div class="rows center">
+                    <status start-datum="@(Model.StartDatum)" slut-datum="@(Model.SlutDatum)"></status>
+                </div>
+            </div>
+        </div>
+        <div class="row titlecardbox justify-content-center pad-0">
+            <div class="col-md-7 topbar rounded">
+                <h2 class="center">
+                    @Html.DisplayNameFor(model => model.Beskrivning)
+                </h2>
+            </div>
+            <div class="col-md-7 card card-body">
+                <div class="center">
+                    @Html.DisplayFor(model => model.Beskrivning)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md" id="accordion">
+                <div class="row">
+                    <Ctop class="col-2 topbar center border-right-0 corner-left">
+                        @Html.DisplayNameFor(model => model.Namn)
+                    </Ctop>
+                    <Ctop class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.StartDatum)
+                    </Ctop>
+                    <Ctop class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.SlutDatum)
+                    </Ctop>
+                    <Ctop class="col-2 topbar center border-right-0">
+                        @Html.DisplayNameFor(model => model.Aktiviteter.First().AktivitetTypNamn)
+                    </Ctop>
+                    <Ctop class="col-2 topbar center border-right-0">
+                        Mer info
+                    </Ctop>
+                    <Ctop class="col-2 topbar center corner-right">
+                        Status
+                    </Ctop>
+                </div>
+
                 <div>
-                    @foreach (var item in Model.Aktiviteter)
+                    @foreach (var item in Model.Aktiviteter.OrderBy(modul => modul.StartDatum))
                     {
                         <listdivision class="row">
                             <div class="col-2 border border-right-0" data-toggle="collapse" data-target="#@("collapse" + item.AktivitetId)">
@@ -100,70 +98,71 @@
                                 </h6>
                             </div>
                             <div class="col-2 border border-right-0">
-                                <div class="center">
+                                <div class="row center">
                                     <a class="btn btn-mhm btn-sm" asp-controller="Elev" asp-action="AktivitetDetails" asp-route-AktivietetId="@item.AktivitetId">Detaljer</a>
                                     <button class="btn btn-mhm btn-sm" data-toggle="collapse" data-target="#@("collapse" + item.AktivitetId)">Mera</button>
                                 </div>
                             </div>
                             <div class="col-2 border">
-                                <h6 class="center">
+                                <div class="center">
                                     <status start-datum="@(item.StartDatum)" slut-datum="@(item.SlutDatum)"></status>
-                                </h6>
+                                </div>
                             </div>
                         </listdivision>
                         <div>
-                            <div id="@("collapse" + item.AktivitetId)" class="row collapse" data-parent="#accordion">
-                                <div class="col-md-8 pad-0">
+                            <div id="@("collapse" + item.AktivitetId)" class="row collapse
+                 @(item.StartDatum < DateTime.Now && DateTime.Now < item.SlutDatum ? "show" : "")"
+                                 data-parent="#accordion">
+                                <div class="col-md-5 pad-0">
                                     <h5 class="topbar corner-rounded">
-                                        @Html.DisplayNameFor(model => model.Aktiviteter.First().Beskrivning)
+                                        Beskrivning
                                     </h5>
                                     <div class="card card-body">
                                         @Html.DisplayFor(modelItem => item.Beskrivning)
                                     </div>
                                 </div>
-                                <div class="col-md-2 pad-0">
+                                <div class="col-md-6 pad-0">
                                     <h5 class="topbar corner-rounded">
-                                        @Html.DisplayNameFor(model => model.Aktiviteter.First().KursNamn)
+                                        Aktivitetstyp
                                     </h5>
                                     <div class="card card-body">
-                                        @Html.DisplayFor(modelItem => item.KursNamn)
-                                    </div>
-                                </div>
-                                <div class="col-md-2 pad-0">
-                                    <h5 class="topbar corner-rounded">
-                                        @Html.DisplayNameFor(model => model.Aktiviteter.First().ModulNamn)
-                                    </h5>
-                                    <div class="card card-body">
-                                        @Html.DisplayFor(modelItem => item.ModulNamn)
+                                        @item.AktivitetTyp.Namn
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     }
                 </div>
             </div>
-            <a asp-action="UploadDokument" asp-route-id="@Model.ModulId" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
-            <dl class="row">
-                <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-                    <table class="table table-responsive table-bordered">
-                        <tr>
-                            <th>Moduldokumentens Namn</th>
-                            <th>Uppladdnings Datum</th>
-                            <th>Anvandare</th>
-                        </tr>
-                        @foreach (Dokument file in Model.Dokument)
-                        {
-                            <tr>
-                                <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
-                                <td>@file.UppladdningsDatum</td>
-                                <td>@file.Anvandare.FullNamn</td>
-                                <td><a href="/Elev/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
-                            </tr>
-                        }
-                    </table>
+        </div>
 
-                </div>
-            </dl>
+        <a asp-action="UploadDokument" asp-route-id="@Model.ModulId" type="button" class="btn btn-outline-success btn-sm">Ladda upp Filer</a>
+
+
+        <table class="table table-responsive table-bordered">
+            <tr>
+                <th>Moduldokumentens Namn</th>
+                <th>Uppladdnings Datum</th>
+                <th>Anvandare</th>
+            </tr>
+            @foreach (Dokument file in Model.Dokument)
+            {
+                <tr>
+                    <td><filextension namn="@(file.Namn)"></filextension>@file.Namn</td>
+                    <td>@file.UppladdningsDatum</td>
+                    <td>@file.Anvandare.FullNamn</td>
+                    <td><a href="/Elev/DownloadFile?filename=@file.Namn">Ladda ner</a></td>
+                </tr>
+            }
+        </table>
+        @if (Model.Aktiviteter?.Count > 0)
+        {
+
+
+
+
+
         }
         else
         {
@@ -176,7 +175,4 @@
             Hittar inte sökt modul
         </div>
     }
-</div>
-<div>
-    <a asp-action="Index">Tillbaka till kurs</a>
 </div>

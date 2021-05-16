@@ -7,52 +7,38 @@
 <div>
     @if (Model != null)
     {
-        <h4>Kurs</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.KursNamn)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.KursNamn)
-            </dd>
-        </dl>
-
-        <hr />
-        <h4>Lärare</h4>
+        <div class="row titlecardbox justify-content-center margin-3 pad-0">
+            <div class="card topbar titlecardbox">
+                <h1 class="center">@Model.KursNamn</h1>
+                <h3 class="center">Deltagare</h3>
+            </div>
+        </div>
+        <h4 class="center">Lärare</h4>
         <hr />
         @if (Model.Larare?.Count > 0)
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Larare.First().FullNamn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Larare.First().Email)
-                        </th>
-                        <th>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Larare)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FullNamn)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Email)
-                            </td>
-                            <td>
-                                <img src="@item.Avatar" alt="Image avatar" />
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div class="row justify-content-center">
+                @foreach (var item in Model.Larare)
+                {
+                    <div class="user-card justify-content-center">
+                        <div class="center">
+                            <img src="@item.Avatar" alt="Image avatar" />
+                        </div>
+                        <h4 class="center">
+                            @Html.DisplayNameFor(modelItem => item.FullNamn)
+                        </h4>
+                        <div class="center">
+                            @Html.DisplayFor(modelItem => item.FullNamn)
+                        </div>
+                        <h4 class="center">
+                            @Html.DisplayNameFor(modelItem => item.Email)
+                        </h4>
+                        <div class="center">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </div>
+                    </div>
+                }
+            </div>
         }
         else
         {
@@ -60,40 +46,32 @@
         }
 
         <hr />
-        <h4>Elever</h4>
+        <h4 class="center">Elever</h4>
         <hr />
         @if (Model.Elever?.Count > 0)
         {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Elever.First().FullNamn)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Elever.First().Email)
-                        </th>
-                        <th>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Elever)
-                    {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.FullNamn)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td>
+            <div class="row justify-content-center">
+                @foreach (var item in Model.Elever)
+                {
+                    <div class="user-card justify-content-center">
+                        <div class="center">
                             <img src="@item.Avatar" alt="Image avatar" />
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+                        </div>
+                        <h4 class="center">
+                            @Html.DisplayNameFor(modelItem => item.FullNamn)
+                        </h4>
+                        <div class="center">
+                            @Html.DisplayFor(modelItem => item.FullNamn)
+                        </div>
+                        <h4 class="center">
+                            @Html.DisplayNameFor(modelItem => item.Email)
+                        </h4>
+                        <div class="center">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </div>
+                    </div>
+                }
+            </div>            
         }
         else
         {
@@ -104,7 +82,4 @@
     {
         <div>Det finns ingen information</div>
     }
-</div>
-<div>
-    <a asp-action="Index">Tillbaka till kurs</a>
 </div>
