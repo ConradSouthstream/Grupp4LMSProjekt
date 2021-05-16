@@ -65,8 +65,12 @@
             Hittar inte sökt aktivitet
         </div>
     }
+    @if (Model.AktivitetTyp.Namn == "Uppgift")
+    {
+        <a asp-action="UploadAktivity" asp-route-id="@Model.AktivitetId" type="button" class="btn btn-mhm btn-sm">Lämna In</a>
+    }
+    
 
-    <a asp-action="UploadAktivity" asp-route-id="@Model.AktivitetId" type="button" class="btn btn-mhm btn-sm">Lämna In</a>
 <div class="row">
     <table class="table table-responsive table-bordered">
         <tr class="table-primary">

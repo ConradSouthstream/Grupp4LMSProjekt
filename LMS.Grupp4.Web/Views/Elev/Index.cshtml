@@ -19,8 +19,8 @@
                             @Html.DisplayFor(model => model.FullNamn)
                         </h5>
                     </div>
-                    <a class="btn btn-mhm btn-lg" asp-controller="Elev" asp-action="GetAnvandarna" asp-route-KursId="@Model.Kurs.KursId">Visa deltagare</a>
-                    <a class="btn btn-mhm btn-lg" asp-controller="Elev" asp-action="Details" asp-route-KursId="@Model.Kurs.KursId">Visa kurs material</a>
+                    <a asp-action="Details" asp-route-KursId="@Model.Kurs.KursId" class="btn btn-outline-info">Visa Kurs Material</a>
+                    <a asp-action="GetAnvandarna" asp-route-KursId="@Model.Kurs.KursId" class="btn btn-outline-info">Visa Kurs deltagare</a>
 
                 </div>
                 <div class="col-md-9">
