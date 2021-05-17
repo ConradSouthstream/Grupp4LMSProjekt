@@ -321,7 +321,7 @@ namespace LMS.Grupp4.Web.Controllers
             var enrollments = _context.AnvandareKurser.Where(a => a.Kurs.Id == id).ToList();
             foreach (var item in enrollments)
             {
-                _context.Remove(item.Anvandare);
+                _context.Remove(item);
             }
             _context.Kurser.Remove(kurs);
             await _context.SaveChangesAsync();
