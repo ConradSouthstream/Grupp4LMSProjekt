@@ -49,7 +49,8 @@ namespace LMS.Grupp4.Web.Controllers
 
         public IActionResult Index()
         {
-            return View(userManager.Users);
+
+            return View(userManager.Users.Include(u => u.KurserAnvandare).ThenInclude(u => u.Kurs));
         }
 
         public async Task<IActionResult> Create()
