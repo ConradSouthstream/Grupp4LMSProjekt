@@ -110,18 +110,7 @@ namespace LMS.Grupp4.Web.Controllers
             }
             return Ok();
         }
-        //public Kurs GetKursByIdForCloning(int id)
-        //{
-        //    try
-        //    {
-        //        var kursToCopy = _context.Kurser.Single(i => i.Id == id);
-        //        return (Kurs)_context.Entry(kursToCopy).CurrentValues.ToObject();
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //}
+      
 
 
         public async Task<IActionResult> Details(int? id)

@@ -31,10 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Uploads\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Grupp4Lms.Core">
       <HintPath>wwwroot\lib\Grupp4Lms.Core.dll</HintPath>
     </Reference>

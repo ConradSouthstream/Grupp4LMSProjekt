@@ -51,13 +51,13 @@ namespace LMS.Grupp4.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
             {
                 ProgressBar =true,
                 PositionClass=ToastPositions.TopRight,
                 PreventDuplicates=true,               
             } );
-
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<Anvandare>(options =>
