@@ -24,7 +24,7 @@ namespace LMS.Grupp4.Web.Controllers
     public class KurserController : BaseController
     {
         private readonly IMapper _mapper;
-        
+
         private readonly UserManager<Anvandare> _userManager;
         private readonly IWebHostEnvironment _env;
         private readonly ApplicationDbContext _context;
@@ -32,10 +32,10 @@ namespace LMS.Grupp4.Web.Controllers
 
 
 
-        public KurserController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager, IToastNotification not) : 
+        public KurserController(ApplicationDbContext context, IUnitOfWork uow, IMapper mapper, IWebHostEnvironment env, UserManager<Anvandare> userManager, IToastNotification not) :
             base(uow, mapper, userManager)
         {
-            _context = context;                        
+            _context = context;
             _userManager = userManager;
             _env = env;
             _not = not;
@@ -110,6 +110,8 @@ namespace LMS.Grupp4.Web.Controllers
             }
             return Ok();
         }
+      
+
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -126,7 +128,9 @@ namespace LMS.Grupp4.Web.Controllers
                 .ThenInclude(c => c.Aktiviteter)
                 .ThenInclude(c => c.AktivitetTyp)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            var dokument = await _context.Dokument.Include(e =>e.Anvandare).Include(d =>d.DokumentTyp)
+            var dokument = await _context.Dokument
+                .Include(e => e.Anvandare)
+                .Include(d => d.DokumentTyp)
                 .Where(d => d.KursId == kurs.Id).ToListAsync();
             kurs.Dokument = dokument;
             if (kurs == null)
@@ -178,10 +182,13 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
-            //var type = await _context.Dokument
-            //   .Include(c => c.DokumentTyp).Where(d=>d.Id==upload.Id).FirstOrDefaultAsync();
-            //upload.DokumentTyp=_context.DokumentTyper.Where(d => d.Id == upload.DokumentTypId).FirstOrDefault();
-            upload.Anvandare =await _userManager.GetUserAsync(User);
+            if (upload.File == null)
+            {
+                _not.AddWarningToastMessage("Ni måste välja en fil");
+                return View();
+
+            }
+            upload.Anvandare = await _userManager.GetUserAsync(User);
             await m_UnitOfWork.DokumentRepository.Create(upload);
             await m_UnitOfWork.CompleteAsync();
             _not.AddSuccessToastMessage("Filen har laddats upp");
@@ -195,7 +202,7 @@ namespace LMS.Grupp4.Web.Controllers
             var kurs = new Kurs
             {
                 StartDatum = DateTime.Now.Date,
-                SlutDatum = DateTime.Now.Date.AddDays(35),                
+                SlutDatum = DateTime.Now.Date.AddDays(35),
             };
             return View(kurs);
         }
@@ -308,8 +315,14 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var kurs =  _context.Kurser.Include(k => k.Moduler)
-                .Where(k=>k.Id==id).First();
+            var kurs = _context.Kurser.Include(k => k.AnvandareKurser).ThenInclude(a => a.Anvandare)
+                .Include(k => k.Moduler)
+                .Where(k => k.Id == id).First();
+            var enrollments = _context.AnvandareKurser.Where(a => a.Kurs.Id == id).ToList();
+            foreach (var item in enrollments)
+            {
+                _context.Remove(item.Anvandare);
+            }
             _context.Kurser.Remove(kurs);
             await _context.SaveChangesAsync();
             TempData["message"] = $"Har raderat kurs: {kurs.Namn}";

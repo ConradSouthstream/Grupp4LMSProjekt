@@ -348,6 +348,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
+            if (upload.File == null)
+            {
+                _not.AddWarningToastMessage("Ni måste välja en fil");
+                return View();
+
+            }
             upload.Anvandare = await m_UserManager.GetUserAsync(User);
             // var dokument = m_Mapper.Map<Dokument>(upload);
             await m_UnitOfWork.DokumentRepository.Create(upload);

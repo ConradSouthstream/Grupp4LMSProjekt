@@ -22,15 +22,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
     <PackageReference Include="NToastNotify" Version="7.0.0" />
+    <PackageReference Include="System.IO" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\LMS.Grupp4.Core\LMS.Grupp4.Core.csproj" />
     <ProjectReference Include="..\LMS.Grupp4.Data\LMS.Grupp4.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 
   <ItemGroup>

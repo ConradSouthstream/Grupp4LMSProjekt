@@ -70,6 +70,12 @@ namespace LMS.Grupp4.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upload(Dokument upload)
         {
+            if (upload.File == null)
+            {
+                _not.AddWarningToastMessage("Ni måste välja en fil");
+                return View();
+
+            }
             upload.Anvandare = await _userManager.GetUserAsync(User);
             // var dokument = m_Mapper.Map<Dokument>(upload);
             await m_UnitOfWork.DokumentRepository.Create(upload);
@@ -87,26 +93,6 @@ namespace LMS.Grupp4.Web.Controllers
             return View(await moduler.ToListAsync());
         }
 
-        // GET: Moduler/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-
-        //    var modul = await _context.Moduler
-        //                    .Include(c => c.Aktiviteter)
-        //                    .FirstOrDefaultAsync(m => m.Id == id);
-        //    var dokument = await _context.Dokument
-        //        .Where(d => d.ModulId == modul.Id).ToListAsync();
-
-        //    modul.Dokument = dokument;
-
-        //   // var modul = await mapper
-        //   //     .ProjectTo<ModulDetaljerViewModel>(_context.Moduler)
-        //   //     .FirstOrDefaultAsync(s => s.Id == id); 
-        //   // var dokument = await _context.Dokument
-        //   //.Where(d => d.ModulId == modul.Id).ToListAsync();
-        //   // modul.Dokument = dokument;
-        //    return View(modul);
-        //}
         public async Task<IActionResult> Details(int? id)
         {
             GetMessageFromTempData();

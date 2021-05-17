@@ -22,6 +22,7 @@ namespace LMS.Grupp4.Test
 
         }
         [Test]
+
         public void GetAllCourses()
         {
             IEnumerable<Kurs> courses =  _context.Kurser.ToList();

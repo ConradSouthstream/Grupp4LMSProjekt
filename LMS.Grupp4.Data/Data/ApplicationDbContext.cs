@@ -41,6 +41,13 @@ namespace LMS.Grupp4.Data
                .Property(d => d.UppladdningsDatum).HasDefaultValueSql("getdate()");
             builder.Entity<Dokument>().HasOne(d => d.Aktivitet).WithMany(a=>a.Dokument)
                 .OnDelete(DeleteBehavior.Cascade);
+            //
+            builder.Entity<AnvandareKurs>().HasOne(e => e.Kurs).WithMany(c => c.AnvandareKurser)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<AnvandareKurs>().HasOne(e => e.Anvandare).WithMany(c => c.KurserAnvandare)
+                .OnDelete(DeleteBehavior.Cascade); 
+            builder.Entity<Anvandare>().HasMany(e => e.KurserAnvandare).WithOne(k=>k.Anvandare)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
